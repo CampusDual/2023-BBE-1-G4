@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.campusdual</groupId>
-	<artifactId>continental</artifactId>
+	<artifactId>dominiondiamondhotel</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>continental</name>
+	<name>dominiondiamondhotel</name>
 	<description>Gestión hotelera G4</description>
 	<properties>
 		<java.version>11</java.version>

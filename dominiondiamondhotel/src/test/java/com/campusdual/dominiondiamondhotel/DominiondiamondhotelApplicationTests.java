@@ -1,10 +1,10 @@
-package com.campusdual.continental;
+package com.campusdual.dominiondiamondhotel;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ContinentalApplicationTests {
+class DominiondiamondhotelApplicationTests {
 
 	@Test
 	void contextLoads() {
