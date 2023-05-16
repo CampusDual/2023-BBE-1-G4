@@ -3,7 +3,7 @@ package com.campusdual.dominiondiamondhotel.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "HOTELES")
+@Table(name = "HOTELS")
 public class Hotel {
 
     @Id
