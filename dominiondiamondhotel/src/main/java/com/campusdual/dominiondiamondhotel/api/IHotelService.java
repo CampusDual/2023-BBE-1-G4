@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface IHotelService {
     int insertHotel(HotelDto hotelDto);
+    List<HotelDto> queryAll();
 
 }

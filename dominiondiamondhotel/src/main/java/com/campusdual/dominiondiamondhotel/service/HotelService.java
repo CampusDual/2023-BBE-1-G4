@@ -23,4 +23,10 @@ public class HotelService implements IHotelService {
         hotelDao.saveAndFlush(hotel);
         return hotel.getId();
     }
+
+    @Override
+    public List<HotelDto> queryAll() {
+        return HotelMapper.INSTANCE.toDtoList(hotelDao.findAll());
+    }
+
 }

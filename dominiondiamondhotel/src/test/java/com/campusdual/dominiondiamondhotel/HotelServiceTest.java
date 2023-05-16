@@ -12,6 +12,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,5 +42,15 @@ public class HotelServiceTest {
 
         assertEquals(1, hotelId);
         verify(this.hotelDao, times(1)).saveAndFlush(any(Hotel.class));
+    }
+
+    @Test
+    void getAllHotelsTest() {
+        List<Hotel> hotelList = new ArrayList<>();
+        hotelList.add(new Hotel());
+        when(this.hotelDao.findAll()).thenReturn(hotelList);
+        List<HotelDto> empList = this.hotelService.queryAll();
+        verify(this.hotelDao, times(1)).findAll();
+        assertEquals(1, empList.size());
     }
 }
