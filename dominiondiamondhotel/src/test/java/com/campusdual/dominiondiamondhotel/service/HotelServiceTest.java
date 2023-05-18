@@ -1,4 +1,4 @@
-package com.campusdual.dominiondiamondhotel;
+package com.campusdual.dominiondiamondhotel.service;
 
 import com.campusdual.dominiondiamondhotel.model.Hotel;
 import com.campusdual.dominiondiamondhotel.model.dao.HotelDao;
