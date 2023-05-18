@@ -1,3 +1,16 @@
 CREATE TABLE HOTELS(ID SERIAL, NAME VARCHAR(255) NOT NULL)
 insert into "HOTELS"  (name) values('Continental')
 insert into "HOTELS"  (name) values('RusoHotels')
+
+CREATE TABLE HOTELS(ID SERIAL, NAME VARCHAR(255) NOT NULL)
+insert into "HOTELS"  (name) values('Continental')
+ALTER TABLE hotels
+ADD CONSTRAINT hotels_pk PRIMARY KEY (id);
+select * from hotels
+CREATE TABLE rooms (
+    id SERIAL PRIMARY KEY,
+    number INTEGER,
+    hotel_id INTEGER REFERENCES hotels (id)
+);
+insert into "rooms"  (number, hotel_id) values(333,1)
+select * from "rooms"

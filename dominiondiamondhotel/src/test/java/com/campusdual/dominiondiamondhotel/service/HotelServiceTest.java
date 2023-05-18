@@ -1,8 +1,10 @@
 package com.campusdual.dominiondiamondhotel.service;
 
 import com.campusdual.dominiondiamondhotel.model.Hotel;
+import com.campusdual.dominiondiamondhotel.model.Room;
 import com.campusdual.dominiondiamondhotel.model.dao.HotelDao;
 import com.campusdual.dominiondiamondhotel.model.dto.HotelDto;
+import com.campusdual.dominiondiamondhotel.model.dto.RoomDto;
 import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.HotelMapper;
 import com.campusdual.dominiondiamondhotel.service.HotelService;
 import org.junit.jupiter.api.Test;
@@ -53,4 +55,5 @@ public class HotelServiceTest {
         verify(this.hotelDao, times(1)).findAll();
         assertEquals(1, empList.size());
     }
+
 }
