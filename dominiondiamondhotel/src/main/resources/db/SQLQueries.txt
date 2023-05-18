@@ -1,0 +1,3 @@
+CREATE TABLE HOTELS(ID SERIAL, NAME VARCHAR(255) NOT NULL)
+insert into "HOTELS"  (name) values('Continental')
+insert into "HOTELS"  (name) values('RusoHotels')

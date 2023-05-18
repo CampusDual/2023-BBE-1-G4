@@ -19,4 +19,10 @@ public class HotelController {
     public int addHotel(@RequestBody HotelDto hotelDto) {
         return hotelService.insertHotel(hotelDto);
     }
+
+    @GetMapping(value = "/getAll")
+    public List<HotelDto> getAllHotels() {
+        return hotelService.queryAll();
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.campusdual.dominiondiamondhotel;
+package com.campusdual.dominiondiamondhotel.service;
 
 import com.campusdual.dominiondiamondhotel.model.Hotel;
 import com.campusdual.dominiondiamondhotel.model.dao.HotelDao;
@@ -11,6 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,5 +42,15 @@ public class HotelServiceTest {
 
         assertEquals(1, hotelId);
         verify(this.hotelDao, times(1)).saveAndFlush(any(Hotel.class));
+    }
+
+    @Test
+    void getAllHotelsTest() {
+        List<Hotel> hotelList = new ArrayList<>();
+        hotelList.add(new Hotel());
+        when(this.hotelDao.findAll()).thenReturn(hotelList);
+        List<HotelDto> empList = this.hotelService.queryAll();
+        verify(this.hotelDao, times(1)).findAll();
+        assertEquals(1, empList.size());
     }
 }
