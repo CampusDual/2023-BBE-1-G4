@@ -55,5 +55,18 @@ public class HotelServiceTest {
         verify(this.hotelDao, times(1)).findAll();
         assertEquals(1, empList.size());
     }
+  
+    @Test
+    void deleteHotelTest() {
+        Hotel hotel = new Hotel();
+        hotel.setId(1);
+        hotel.setName("Continental");
+
+        HotelDto editHotelDto = HotelMapper.INSTANCE.toDto(hotel);
+
+        Integer deleteHotelId = this.hotelService.deleteHotel(editHotelDto);
+        verify(this.hotelDao, times(1)).delete(any(Hotel.class));
+        assertNotNull(deleteHotelId);
+    }
 
 }

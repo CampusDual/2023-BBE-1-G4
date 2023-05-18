@@ -25,4 +25,9 @@ public class HotelController {
         return hotelService.queryAll();
     }
 
+    @DeleteMapping(value = "/delete")
+    public int deleteHotel(@RequestBody HotelDto hotelDto) {
+        return hotelService.deleteHotel(hotelDto);
+    }
+
 }
