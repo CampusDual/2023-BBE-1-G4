@@ -29,4 +29,12 @@ public class HotelService implements IHotelService {
         return HotelMapper.INSTANCE.toDtoList(hotelDao.findAll());
     }
 
+    @Override
+    public int deleteHotel(HotelDto hotelDto) {
+        int id = hotelDto.getId();
+        Hotel hotel = HotelMapper.INSTANCE.toEntity(hotelDto);
+        hotelDao.delete(hotel);
+        return id;
+    }
+
 }
