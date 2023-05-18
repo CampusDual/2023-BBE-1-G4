@@ -4,6 +4,7 @@ import com.campusdual.dominiondiamondhotel.api.IRoomService;
 import com.campusdual.dominiondiamondhotel.model.dto.HotelDto;
 import com.campusdual.dominiondiamondhotel.model.dto.RoomDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,10 @@ public class RoomController {
     @GetMapping(value = "/getAll")
     public List<RoomDto> getAllRooms() {
         return roomService.queryAll();
+    }
+    @PutMapping(value = "/update")
+    public ResponseEntity<?> updateRoom(@RequestBody RoomDto roomDto) {
+        return roomService.updateRoom(roomDto);
     }
 
 }
