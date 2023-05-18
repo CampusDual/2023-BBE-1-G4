@@ -4,6 +4,7 @@ import com.campusdual.dominiondiamondhotel.api.IHotelService;
 import com.campusdual.dominiondiamondhotel.model.Hotel;
 import com.campusdual.dominiondiamondhotel.model.dto.HotelDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,11 @@ public class HotelController {
     @DeleteMapping(value = "/delete")
     public int deleteHotel(@RequestBody HotelDto hotelDto) {
         return hotelService.deleteHotel(hotelDto);
+    }
+
+    @PutMapping(value = "/update")
+    public ResponseEntity<?> updateHotel(@RequestBody HotelDto hotelDto) {
+        return hotelService.updateHotel(hotelDto);
     }
 
 }

@@ -7,6 +7,8 @@ import com.campusdual.dominiondiamondhotel.model.dto.HotelDto;
 import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.HotelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +37,17 @@ public class HotelService implements IHotelService {
         Hotel hotel = HotelMapper.INSTANCE.toEntity(hotelDto);
         hotelDao.delete(hotel);
         return id;
+    }
+
+    @Override
+    public ResponseEntity<?> updateHotel(HotelDto hotelDto) {
+        for (HotelDto hotel : queryAll()) {
+            if (hotel.getId() == hotelDto.getId()) {
+                int updatedHotelId = insertHotel(hotelDto);
+                return ResponseEntity.ok(updatedHotelId);
+            }
+        }
+        return ResponseEntity.badRequest().body("Hotel no encontrado.");
     }
 
 }
