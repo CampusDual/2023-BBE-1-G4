@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("RoomService")
 @Lazy
 public class RoomService implements IRoomService {
@@ -20,5 +22,10 @@ public class RoomService implements IRoomService {
         Room room = RoomMapper.INSTANCE.toEntity(roomDto);
         roomDao.saveAndFlush(room);
         return room.getId();
+    }
+
+    @Override
+    public List<RoomDto> queryAll() {
+        return RoomMapper.INSTANCE.toDtoList(roomDao.findAll());
     }
 }
