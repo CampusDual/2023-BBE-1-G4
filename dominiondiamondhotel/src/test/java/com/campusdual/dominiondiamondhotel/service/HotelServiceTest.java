@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ public class HotelServiceTest {
     HotelService hotelService;
 
     @Test
-    void addHotelTest(){
+    void addHotelTest() {
         Hotel hotel = new Hotel();
         hotel.setId(1);
         hotel.setName("Continental");
@@ -55,7 +57,7 @@ public class HotelServiceTest {
         verify(this.hotelDao, times(1)).findAll();
         assertEquals(1, empList.size());
     }
-  
+
     @Test
     void deleteHotelTest() {
         Hotel hotel = new Hotel();
@@ -67,6 +69,27 @@ public class HotelServiceTest {
         Integer deleteHotelId = this.hotelService.deleteHotel(editHotelDto);
         verify(this.hotelDao, times(1)).delete(any(Hotel.class));
         assertNotNull(deleteHotelId);
+    }
+
+    @Test
+    void updateHotelTest() {
+        List<Hotel> hotelList = new ArrayList<>();
+        Hotel hotel = new Hotel();
+        hotel.setId(1);
+        hotel.setName("Continental");
+        HotelDto createHotelDto = HotelMapper.INSTANCE.toDto(hotel);
+        hotelList.add(hotel);
+
+        when(this.hotelDao.findAll()).thenReturn(hotelList);
+        when(this.hotelDao.saveAndFlush(any(Hotel.class))).thenReturn(hotel);
+
+        HttpStatus status = hotelService.updateHotel(createHotelDto).getStatusCode();
+        int hotelIdUpdated = (int) hotelService.updateHotel(createHotelDto).getBody();
+
+        assertEquals(1, hotelIdUpdated);
+        assertEquals(HttpStatus.OK, status);
+
+        verify(this.hotelDao, times(2)).findAll();
     }
 
 }

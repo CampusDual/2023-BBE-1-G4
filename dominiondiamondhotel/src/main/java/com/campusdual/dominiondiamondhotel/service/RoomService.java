@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service("RoomService")
 @Lazy
 public class RoomService implements IRoomService {
-
     @Autowired
     private RoomDao roomDao;
 
