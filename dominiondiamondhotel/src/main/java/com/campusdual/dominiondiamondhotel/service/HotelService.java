@@ -50,4 +50,11 @@ public class HotelService implements IHotelService {
         return ResponseEntity.badRequest().body("Hotel no encontrado.");
     }
 
+    @Override
+    public HotelDto manageGetHotel(HotelDto hotelDto) {
+
+        Hotel hotel = HotelMapper.INSTANCE.toEntity(hotelDto);
+        return HotelMapper.INSTANCE.toDto(hotelDao.getReferenceById(hotel.getId()));
+    }
+
 }
