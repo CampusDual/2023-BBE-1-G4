@@ -92,4 +92,22 @@ public class HotelServiceTest {
         verify(this.hotelDao, times(2)).findAll();
     }
 
+    @Test
+    void manageGetHotelTest(){
+
+        Hotel hotel = new Hotel();
+        hotel.setId(1);
+        hotel.setName("Continental");
+
+        when(this.hotelDao.getReferenceById(1)).thenReturn(hotel);
+
+        HotelDto createHotelDto = this.hotelService.manageGetHotel(HotelMapper.INSTANCE.toDto(hotel));
+
+        assertEquals(1, hotel.getId());
+        assertEquals("Continental", hotel.getName());
+
+        verify(this.hotelDao, times(1)).getReferenceById(1);
+
+    }
+
 }

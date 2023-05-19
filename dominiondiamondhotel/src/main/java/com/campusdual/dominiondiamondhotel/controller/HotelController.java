@@ -36,4 +36,8 @@ public class HotelController {
         return hotelService.updateHotel(hotelDto);
     }
 
+    @GetMapping(value = "/manageGet")
+    public HotelDto manageGetHotel(@RequestBody HotelDto hotelDto){
+        return hotelService.manageGetHotel(hotelDto);
+    }
 }
