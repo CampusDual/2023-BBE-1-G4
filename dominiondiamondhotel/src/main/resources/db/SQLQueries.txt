@@ -14,3 +14,22 @@ CREATE TABLE rooms (
 );
 insert into "rooms"  (number, hotel_id) values(333,1)
 select * from "rooms"
+-----
+create table customers(
+	id serial PRIMARY KEY,
+	name varchar(255) not null,
+	lastname1 varchar(255) not null,
+	lastname2 varchar(255) not null,
+	phone char(13)not null,
+	dni char(9)not null,
+	mail varchar(255) not null
+)
+ALTER TABLE customers
+ALTER COLUMN phone TYPE CHAR(14);
+
+INSERT INTO customers (name, lastname1, lastname2, phone, dni, mail)
+VALUES ('Lucas', 'Fernández', 'Gordillo', '+34666666666', '12345678Z', 'lucasfernández@gmail.com');
+INSERT INTO customers (name, lastname1, lastname2, phone, dni, mail)
+VALUES ('Paco', 'Miranda', 'López', '+34999999999', '87654321A', 'pacomiranda@gmail.com');
+
+select * from customers
