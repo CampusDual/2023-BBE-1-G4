@@ -20,12 +20,6 @@ public class CustomerController {
     @Autowired
     private ICustomerService customerService;
 
-    @Autowired
-    private IHotelService hotelService;
-
-    @Autowired
-    private HotelDao hotelDao;
-
     @PostMapping(value = "/add")
     public int addCustomer(@RequestBody CustomerDto customerDto) {
         return customerService.insertCustomer(customerDto);
