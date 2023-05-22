@@ -21,4 +21,9 @@ public class CustomerController {
     public ResponseEntity<?> deleteCustomer(@RequestBody CustomerDto customerDto) {
         return customerService.deleteCustomer(customerDto);
     }
+
+    @PutMapping(value = "/update")
+    public ResponseEntity<?> updateCustomer(@RequestBody CustomerDto customerDto){
+        return customerService.updateCustomer(customerDto);
+    }
 }

@@ -66,4 +66,22 @@ public class CustomerServiceTest {
         assertEquals(1, deletedCustomer);
         assertEquals(HttpStatus.OK, status);
     }
+
+    @Test
+    void updateCustomerTest() {
+        List<Customer> customerList = new ArrayList<>();
+        Customer c = new Customer();
+        c.setId(1);
+        customerList.add(c);
+        CustomerDto customerDto = CustomerMapper.INSTANCE.toDto(c);
+
+        when(this.customerDao.findAll()).thenReturn(customerList);
+        ResponseEntity<?> responseEntity = customerService.updateCustomer(customerDto);
+        HttpStatus status = responseEntity.getStatusCode();
+        int updatedCustomerId = Integer.parseInt(responseEntity.getBody() != null ? responseEntity.getBody().toString() : "-1");
+        verify(this.customerDao, times(1)).findAll();
+        verify(this.customerDao, times(1)).saveAndFlush(any(Customer.class));
+        assertEquals(1, updatedCustomerId);
+        assertEquals(HttpStatus.OK, status);
+    }
 }
