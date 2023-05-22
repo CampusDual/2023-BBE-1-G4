@@ -43,6 +43,6 @@ public class CustomerService implements ICustomerService {
                 return ResponseEntity.ok(String.valueOf(c.getId()));
             }
         }
-        return ResponseEntity.badRequest().body("Error updating customer.");
+        return ResponseEntity.notFound().build();
     }
 }
