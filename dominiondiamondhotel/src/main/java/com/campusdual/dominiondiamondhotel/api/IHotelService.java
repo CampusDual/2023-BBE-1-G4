@@ -1,6 +1,5 @@
 package com.campusdual.dominiondiamondhotel.api;
 
-import com.campusdual.dominiondiamondhotel.model.Hotel;
 import com.campusdual.dominiondiamondhotel.model.dto.HotelDto;
 import org.springframework.http.ResponseEntity;
 
@@ -12,4 +11,6 @@ public interface IHotelService {
     int deleteHotel(HotelDto hotelDto);
     ResponseEntity<?> updateHotel(HotelDto hotelDto);
     HotelDto manageGetHotel(HotelDto hotelDto);
+
+    List<HotelDto> getByName(String name);
 }
