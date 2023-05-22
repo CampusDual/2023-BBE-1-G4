@@ -1,7 +1,6 @@
 package com.campusdual.dominiondiamondhotel.controller;
 
 import com.campusdual.dominiondiamondhotel.api.IHotelService;
-import com.campusdual.dominiondiamondhotel.model.Hotel;
 import com.campusdual.dominiondiamondhotel.model.dao.HotelDao;
 import com.campusdual.dominiondiamondhotel.model.dto.HotelDto;
 import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.HotelMapper;
@@ -43,5 +42,9 @@ public class HotelController {
     @GetMapping(value = "/managerGetHotel/{id}")
     public HotelDto manageGetHotel(@PathVariable int id){
         return hotelService.manageGetHotel(HotelMapper.INSTANCE.toDto(hotelDao.getReferenceById(id)));
+    }
+    @GetMapping(value = "/getByName/{name}")
+    public List<HotelDto> getByName(@PathVariable String name) {
+        return hotelService.getByName(name);
     }
 }

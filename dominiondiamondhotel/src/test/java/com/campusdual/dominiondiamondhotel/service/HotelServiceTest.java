@@ -109,5 +109,24 @@ public class HotelServiceTest {
         verify(this.hotelDao, times(1)).getReferenceById(1);
 
     }
+    @Test
+    void getByName(){
+        Hotel hotel1 = new Hotel();
+        Hotel hotel2 = new Hotel();
+        List<Hotel> hotelList = new ArrayList<>();
+        hotel1.setId(1);
+        hotel1.setName("Continental");
+        hotel2.setId(2);
+        hotel2.setName("Cont");
+        hotelList.add(hotel1);
+        hotelList.add(hotel2);
+
+        when(this.hotelDao.findByNameContainingIgnoreCase("Cont")).thenReturn(hotelList);
+
+        List<HotelDto> createHotelDto = this.hotelService.getByName("Cont");
+
+        assertEquals(2,createHotelDto.size());
+        verify(this.hotelDao,times(1)).findByNameContainingIgnoreCase("Cont");
+    }
 
 }
