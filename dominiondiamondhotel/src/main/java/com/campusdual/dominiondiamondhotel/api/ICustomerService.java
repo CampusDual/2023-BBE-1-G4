@@ -7,4 +7,5 @@ import org.springframework.http.ResponseEntity;
 public interface ICustomerService {
     int insertCustomer(CustomerDto customerDto);
     ResponseEntity<?> deleteCustomer(CustomerDto customerDto);
+    ResponseEntity<?> updateCustomer(CustomerDto customerDto);
 }

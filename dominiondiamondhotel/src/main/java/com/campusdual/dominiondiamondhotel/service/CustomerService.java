@@ -26,9 +26,6 @@ public class CustomerService implements ICustomerService {
         return customer.getId();
     }
 
-
-
-
     @Override
     public ResponseEntity<?> deleteCustomer(CustomerDto customerDto) {
         for (Customer c : customerDao.findAll()) {
@@ -40,4 +37,14 @@ public class CustomerService implements ICustomerService {
         return ResponseEntity.badRequest().body("Customer not found.");
     }
 
+    @Override
+    public ResponseEntity<?> updateCustomer(CustomerDto customerDto) {
+        for (Customer c : customerDao.findAll()){
+            if (c.getId() == CustomerMapper.INSTANCE.toEntity(customerDto).getId()){
+                customerDao.saveAndFlush(CustomerMapper.INSTANCE.toEntity(customerDto));
+                return ResponseEntity.ok(String.valueOf(c.getId()));
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

@@ -25,11 +25,13 @@ public class CustomerController {
         return customerService.insertCustomer(customerDto);
     }
 
-
-
     @DeleteMapping(value = "/delete")
     public ResponseEntity<?> deleteCustomer(@RequestBody CustomerDto customerDto) {
         return customerService.deleteCustomer(customerDto);
     }
 
+    @PutMapping(value = "/update")
+    public ResponseEntity<?> updateCustomer(@RequestBody CustomerDto customerDto){
+        return customerService.updateCustomer(customerDto);
+    }
 }
