@@ -8,6 +8,7 @@ import com.campusdual.dominiondiamondhotel.model.dto.CustomerDto;
 import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -18,9 +19,6 @@ public class CustomerService implements ICustomerService {
     @Autowired
     private CustomerDao customerDao;
 
-    @Autowired
-    private HotelDao hotelDao;
-
     @Override
     public int insertCustomer(CustomerDto customerDto) {
         Customer customer = CustomerMapper.INSTANCE.toEntity(customerDto);
@@ -28,5 +26,18 @@ public class CustomerService implements ICustomerService {
         return customer.getId();
     }
 
+
+
+
+    @Override
+    public ResponseEntity<?> deleteCustomer(CustomerDto customerDto) {
+        for (Customer c : customerDao.findAll()) {
+            if (c.getId() == CustomerMapper.INSTANCE.toEntity(customerDto).getId()) {
+                customerDao.delete(CustomerMapper.INSTANCE.toEntity(customerDto));
+                return ResponseEntity.ok(String.valueOf(c.getId()));
+            }
+        }
+        return ResponseEntity.badRequest().body("Customer not found.");
+    }
 
 }
