@@ -2,9 +2,12 @@ package com.campusdual.dominiondiamondhotel.service;
 
 import com.campusdual.dominiondiamondhotel.api.IHotelService;
 import com.campusdual.dominiondiamondhotel.model.Hotel;
+import com.campusdual.dominiondiamondhotel.model.Room;
 import com.campusdual.dominiondiamondhotel.model.dao.HotelDao;
 import com.campusdual.dominiondiamondhotel.model.dto.HotelDto;
+import com.campusdual.dominiondiamondhotel.model.dto.RoomDto;
 import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.HotelMapper;
+import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.RoomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
