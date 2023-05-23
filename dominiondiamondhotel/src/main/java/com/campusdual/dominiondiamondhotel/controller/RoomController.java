@@ -20,9 +20,6 @@ public class RoomController {
     @Autowired
     private IRoomService roomService;
 
-    @Autowired
-    private RoomDao roomDao;
-
     @PostMapping(value = "/add")
     public int addRoom(@RequestBody RoomDto roomDto) {
         return roomService.insertRoom(roomDto);
