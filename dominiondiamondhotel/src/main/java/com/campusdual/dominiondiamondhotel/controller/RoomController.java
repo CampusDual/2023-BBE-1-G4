@@ -43,7 +43,7 @@ public class RoomController {
         try {
             return roomService.manageGetRoom(RoomMapper.INSTANCE.toDto(roomDao.getReferenceById(id)));
         }catch(EntityNotFoundException e){
-            return ResponseEntity.badRequest().body("Habitación no encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
         }
 
     }
