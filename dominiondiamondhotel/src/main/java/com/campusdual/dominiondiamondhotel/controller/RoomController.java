@@ -40,11 +40,7 @@ public class RoomController {
     @GetMapping(value = "/manageGetRoom/{id}")
     public ResponseEntity<?> manageGetRoom(@PathVariable int id){
 
-        try {
-            return roomService.manageGetRoom(RoomMapper.INSTANCE.toDto(roomDao.getReferenceById(id)));
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
-        }
+        return roomService.manageGetRoom(id);
 
     }
 

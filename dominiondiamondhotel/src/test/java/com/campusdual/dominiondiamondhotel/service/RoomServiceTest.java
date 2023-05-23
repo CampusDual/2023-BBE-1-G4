@@ -98,20 +98,16 @@ public class RoomServiceTest {
         room.setNumber(1);
         room.setHotel_id(hotel);
 
-        List<Room> list = new ArrayList<>();
+        when(this.roomDao.getReferenceById(1)).thenReturn(room);
 
-        list.add(room);
-
-        when(this.roomDao.findAll()).thenReturn(list);
-
-        ResponseEntity<?> responseEntity = roomService.manageGetRoom(RoomMapper.INSTANCE.toDto(room));
+        ResponseEntity<?> responseEntity = roomService.manageGetRoom(1);
         HttpStatus status = responseEntity.getStatusCode();
         RoomDto roomDto = (RoomDto) responseEntity.getBody();
 
         assertEquals(HttpStatus.OK, status);
         assertEquals(1, roomDto.getId());
 
-        verify(this.roomDao, times(1)).findAll();
+        verify(this.roomDao, times(1)).getReferenceById(any(Integer.class));
 
     }
 

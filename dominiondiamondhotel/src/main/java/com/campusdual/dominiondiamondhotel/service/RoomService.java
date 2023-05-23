@@ -10,9 +10,11 @@ import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.HotelMapper;
 import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.RoomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service("RoomService")
@@ -44,16 +46,15 @@ public class RoomService implements IRoomService {
         return ResponseEntity.badRequest().body("Habitación no encontrada.");
     }
 
-    public ResponseEntity<?> manageGetRoom(RoomDto roomDto) {
+    public ResponseEntity<?> manageGetRoom(int id) {
 
-        for(RoomDto roomToSearch : queryAll()) {
+        try{
 
-            if(roomToSearch.getId() == roomDto.getId()) {
-                return ResponseEntity.ok(roomDto);
-            }
+            return ResponseEntity.ok(RoomMapper.INSTANCE.toDto(roomDao.getReferenceById(id)));
 
+        }catch (EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
         }
 
-        returnResponseEntity.status(HttpStatus.NOT_FOUND).body("");
     }
 }

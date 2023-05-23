@@ -12,6 +12,6 @@ public interface IRoomService {
     List<RoomDto> queryAll();
     ResponseEntity<?> updateRoom(RoomDto roomDto);
 
-    ResponseEntity<?> manageGetRoom(RoomDto roomDto);
+    ResponseEntity<?> manageGetRoom(int id);
 
 }
