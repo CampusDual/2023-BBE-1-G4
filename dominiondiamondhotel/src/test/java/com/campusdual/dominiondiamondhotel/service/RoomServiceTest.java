@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +86,33 @@ public class RoomServiceTest {
         assertEquals(HttpStatus.OK, status);
 
         verify(this.roomDao, times(2)).findAll();
+    }
+
+    @Test
+    void manageGetRoom(){
+
+        Room room = new Room();
+        Hotel hotel = new Hotel();
+        hotel.setId(1);
+        room.setId(1);
+        room.setNumber(1);
+        room.setHotel_id(hotel);
+
+        List<Room> list = new ArrayList<>();
+
+        list.add(room);
+
+        when(this.roomDao.findAll()).thenReturn(list);
+
+        ResponseEntity<?> responseEntity = roomService.manageGetRoom(RoomMapper.INSTANCE.toDto(room));
+        HttpStatus status = responseEntity.getStatusCode();
+        RoomDto roomDto = (RoomDto) responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, status);
+        assertEquals(1, roomDto.getId());
+
+        verify(this.roomDao, times(1)).findAll();
+
     }
 
 }

@@ -1,10 +1,12 @@
 package com.campusdual.dominiondiamondhotel.service;
 
 import com.campusdual.dominiondiamondhotel.api.IRoomService;
+import com.campusdual.dominiondiamondhotel.model.Hotel;
 import com.campusdual.dominiondiamondhotel.model.Room;
 import com.campusdual.dominiondiamondhotel.model.dao.RoomDao;
 import com.campusdual.dominiondiamondhotel.model.dto.HotelDto;
 import com.campusdual.dominiondiamondhotel.model.dto.RoomDto;
+import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.HotelMapper;
 import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.RoomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -40,5 +42,18 @@ public class RoomService implements IRoomService {
             }
         }
         return ResponseEntity.badRequest().body("Habitación no encontrada.");
+    }
+
+    public ResponseEntity<?> manageGetRoom(RoomDto roomDto) {
+
+        for(RoomDto roomToSearch : queryAll()) {
+
+            if(roomToSearch.getId() == roomDto.getId()) {
+                return ResponseEntity.ok(roomDto);
+            }
+
+        }
+
+        return ResponseEntity.badRequest().body("Habitación no encontrada");
     }
 }

@@ -3,6 +3,7 @@ package com.campusdual.dominiondiamondhotel.controller;
 import com.campusdual.dominiondiamondhotel.api.IHotelService;
 import com.campusdual.dominiondiamondhotel.model.dao.HotelDao;
 import com.campusdual.dominiondiamondhotel.model.dto.HotelDto;
+import com.campusdual.dominiondiamondhotel.model.dto.RoomDto;
 import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.HotelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,4 +48,5 @@ public class HotelController {
     public List<HotelDto> getByName(@PathVariable String name) {
         return hotelService.getByName(name);
     }
+
 }
