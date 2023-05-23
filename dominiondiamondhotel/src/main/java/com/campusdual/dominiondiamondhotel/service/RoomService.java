@@ -54,6 +54,6 @@ public class RoomService implements IRoomService {
 
         }
 
-        return ResponseEntity.badRequest().body("Habitación no encontrada");
+        returnResponseEntity.status(HttpStatus.NOT_FOUND).body("");
     }
 }
