@@ -6,7 +6,7 @@ public class RoomDto {
 
     private int number;
 
-    private int hotel_id;
+    private int hotelId;
 
     public int getId() {
         return id;
@@ -24,11 +24,11 @@ public class RoomDto {
         this.number = number;
     }
 
-    public int getHotel_id() {
-        return hotel_id;
+    public int getHotelId() {
+        return hotelId;
     }
 
-    public void setHotel_id(int hotel_id) {
-        this.hotel_id = hotel_id;
+    public void setHotelId(int hotelId) {
+        this.hotelId = hotelId;
     }
 }

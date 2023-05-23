@@ -15,7 +15,7 @@ public class Room {
 
     @ManyToOne
     @JoinColumn (name = "hotel_id")
-    private Hotel hotel_id;
+    private Hotel hotelId;
 
     public int getId() {
         return id;
@@ -33,11 +33,11 @@ public class Room {
         this.number = number;
     }
 
-    public Hotel getHotel_id() {
-        return hotel_id;
+    public Hotel getHotelId() {
+        return hotelId;
     }
 
-    public void setHotel_id(Hotel hotel_id) {
-        this.hotel_id = hotel_id;
+    public void setHotelId(Hotel hotelId) {
+        this.hotelId = hotelId;
     }
 }
