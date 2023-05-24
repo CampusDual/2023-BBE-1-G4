@@ -14,4 +14,6 @@ public interface IRoomService {
 
     ResponseEntity<?> manageGetRoom(int id);
 
+    ResponseEntity<?> getRoomsFromHotel(int id);
+
 }

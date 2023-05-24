@@ -41,7 +41,7 @@ public class RoomServiceTest {
         room.setNumber(1);
         Hotel h = new Hotel();
         h.setId(1);
-        room.setHotel_id(h);
+        room.setHotelId(h);
         RoomDto createRoomDto = RoomMapper.INSTANCE.toDto(room);
 
         when(this.roomDao.saveAndFlush(any(Room.class))).thenReturn(room);
@@ -58,7 +58,7 @@ public class RoomServiceTest {
         Hotel hotel = new Hotel();
         hotel.setId(1);
         Room room = new Room();
-        room.setHotel_id(hotel);
+        room.setHotelId(hotel);
         roomList.add(room);
         when(this.roomDao.findAll()).thenReturn(roomList);
         List<RoomDto> empList = this.roomService.queryAll();
@@ -71,7 +71,7 @@ public class RoomServiceTest {
         Hotel hotel = new Hotel();
         Room room= new Room();
         hotel.setId(1);
-        room.setHotel_id(hotel);
+        room.setHotelId(hotel);
         room.setId(1);
         RoomDto createRoomDto = RoomMapper.INSTANCE.toDto(room);
         roomList.add(room);
@@ -96,7 +96,7 @@ public class RoomServiceTest {
         hotel.setId(1);
         room.setId(1);
         room.setNumber(1);
-        room.setHotel_id(hotel);
+        room.setHotelId(hotel);
 
         when(this.roomDao.getReferenceById(1)).thenReturn(room);
 
@@ -108,6 +108,43 @@ public class RoomServiceTest {
         assertEquals(1, roomDto.getId());
 
         verify(this.roomDao, times(1)).getReferenceById(any(Integer.class));
+
+    }
+
+    @Test
+    void getRoomsFromHotel(){
+
+        List<Room> rooms = new ArrayList<>();
+
+        Room room = new Room();
+        Room room2 = new Room();
+        Room room3 = new Room();
+        Hotel hotel = new Hotel();
+        hotel.setId(1);
+        room.setId(1);
+        room2.setId(2);
+        room3.setId(3);
+        room.setNumber(1);
+        room2.setNumber(2);
+        room3.setNumber(3);
+        room.setHotelId(hotel);
+        room2.setHotelId(hotel);
+        room3.setHotelId(hotel);
+
+        rooms.add(room);
+        rooms.add(room2);
+        rooms.add(room3);
+
+        when(this.roomDao.findByHotelId(any(Hotel.class))).thenReturn(rooms);
+
+        ResponseEntity<?> responseEntity = roomService.getRoomsFromHotel(any(Integer.class));
+        HttpStatus status = responseEntity.getStatusCode();
+        List<Room> roomR = (List<Room>) responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, status);
+        assertEquals(3, roomR.size());
+
+        verify(this.roomDao, times(1)).findByHotelId(any(Hotel.class));
 
     }
 

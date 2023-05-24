@@ -57,4 +57,15 @@ public class RoomService implements IRoomService {
         }
 
     }
+
+
+    public ResponseEntity<?> getRoomsFromHotel(int id){
+        try{
+            Hotel hotel = new Hotel();
+            hotel.setId(id);
+            return ResponseEntity.ok(roomDao.findByHotelId(hotel));
+        }catch(EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        }
+    }
 }

@@ -17,9 +17,9 @@ public interface RoomMapper {
 
     RoomMapper INSTANCE = Mappers.getMapper(RoomMapper.class);
 
-    @Mapping(source = "hotel_id", target = "hotel_id", qualifiedByName = "entityToHotelId")
+    @Mapping(source = "hotelId", target = "hotelId", qualifiedByName = "entityToHotelId")
     RoomDto toDto(Room room);
-    @Mapping(source = "hotel_id", target = "hotel_id", qualifiedByName = "hotelIdToEntity")
+    @Mapping(source = "hotelId", target = "hotelId", qualifiedByName = "hotelIdToEntity")
     Room toEntity(RoomDto roomDto);
 
     List<RoomDto> toDtoList(List<Room>rooms);

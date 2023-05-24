@@ -41,4 +41,11 @@ public class RoomController {
 
     }
 
+    @GetMapping(value = "/customerGetRoom/{id}")
+    public ResponseEntity<?> customerGetRoom(@PathVariable int id){
+
+        return roomService.getRoomsFromHotel(id);
+
+    }
+
 }
