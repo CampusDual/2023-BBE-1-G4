@@ -10,14 +10,13 @@ import java.util.List;
 
 @Mapper
 public interface CustomerMapper {
-
     CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
 
     CustomerDto toDto(Customer customer);
 
     Customer toEntity(CustomerDto customerDto);
 
-    List<CustomerDto> toDtoList(List<Customer>customers);
+    List<CustomerDto> toDtoList(List<Customer> customers);
 
-    List<Customer>toEntityList(List<CustomerDto>customerDtos);
+    List<Customer> toEntityList(List<CustomerDto> customerDtos);
 }

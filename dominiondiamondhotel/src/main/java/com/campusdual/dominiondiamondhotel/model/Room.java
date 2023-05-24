@@ -14,8 +14,12 @@ public class Room {
     private int number;
 
     @ManyToOne
-    @JoinColumn (name = "hotel_id")
+    @JoinColumn(name = "hotel_id")
     private Hotel hotelId;
+
+    @ManyToOne
+    @JoinColumn(name = "state_id")
+    private State stateId;
 
     public int getId() {
         return id;
@@ -39,5 +43,13 @@ public class Room {
 
     public void setHotelId(Hotel hotelId) {
         this.hotelId = hotelId;
+    }
+
+    public State getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(State stateId) {
+        this.stateId = stateId;
     }
 }

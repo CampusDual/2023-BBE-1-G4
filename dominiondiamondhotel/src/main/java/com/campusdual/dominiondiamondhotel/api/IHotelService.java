@@ -11,6 +11,5 @@ public interface IHotelService {
     int deleteHotel(HotelDto hotelDto);
     ResponseEntity<?> updateHotel(HotelDto hotelDto);
     HotelDto manageGetHotel(HotelDto hotelDto);
-
     List<HotelDto> getByName(String name);
 }

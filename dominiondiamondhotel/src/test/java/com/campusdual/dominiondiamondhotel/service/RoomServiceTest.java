@@ -2,8 +2,10 @@ package com.campusdual.dominiondiamondhotel.service;
 
 import com.campusdual.dominiondiamondhotel.model.Hotel;
 import com.campusdual.dominiondiamondhotel.model.Room;
+import com.campusdual.dominiondiamondhotel.model.State;
 import com.campusdual.dominiondiamondhotel.model.dao.HotelDao;
 import com.campusdual.dominiondiamondhotel.model.dao.RoomDao;
+import com.campusdual.dominiondiamondhotel.model.dao.StateDao;
 import com.campusdual.dominiondiamondhotel.model.dto.HotelDto;
 import com.campusdual.dominiondiamondhotel.model.dto.RoomDto;
 import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.HotelMapper;
@@ -31,6 +33,9 @@ public class RoomServiceTest {
     @Mock
     RoomDao roomDao;
 
+    @Mock
+    StateDao stateDao;
+
     @InjectMocks
     RoomService roomService;
 
@@ -40,6 +45,9 @@ public class RoomServiceTest {
         room.setId(1);
         room.setNumber(1);
         Hotel h = new Hotel();
+        State state = new State();
+        state.setId(1);
+        room.setStateId(state);
         h.setId(1);
         room.setHotelId(h);
         RoomDto createRoomDto = RoomMapper.INSTANCE.toDto(room);
@@ -56,9 +64,12 @@ public class RoomServiceTest {
     void getAllRoomsTest() {
         List<Room> roomList = new ArrayList<>();
         Hotel hotel = new Hotel();
+        State state = new State();
+        state.setId(1);
         hotel.setId(1);
         Room room = new Room();
         room.setHotelId(hotel);
+        room.setStateId(state);
         roomList.add(room);
         when(this.roomDao.findAll()).thenReturn(roomList);
         List<RoomDto> empList = this.roomService.queryAll();
@@ -69,10 +80,13 @@ public class RoomServiceTest {
     void updateRoomTest() {
         List<Room> roomList = new ArrayList<>();
         Hotel hotel = new Hotel();
+        State state = new State();
         Room room= new Room();
         hotel.setId(1);
+        state.setId(1);
         room.setHotelId(hotel);
         room.setId(1);
+        room.setStateId(state);
         RoomDto createRoomDto = RoomMapper.INSTANCE.toDto(room);
         roomList.add(room);
 
@@ -93,10 +107,13 @@ public class RoomServiceTest {
 
         Room room = new Room();
         Hotel hotel = new Hotel();
+        State st = new State();
+        st.setId(1);
         hotel.setId(1);
         room.setId(1);
         room.setNumber(1);
         room.setHotelId(hotel);
+        room.setStateId(st);
 
         when(this.roomDao.getReferenceById(1)).thenReturn(room);
 
@@ -120,6 +137,8 @@ public class RoomServiceTest {
         Room room2 = new Room();
         Room room3 = new Room();
         Hotel hotel = new Hotel();
+        State state = new State();
+        state.setId(1);
         hotel.setId(1);
         room.setId(1);
         room2.setId(2);
@@ -130,6 +149,9 @@ public class RoomServiceTest {
         room.setHotelId(hotel);
         room2.setHotelId(hotel);
         room3.setHotelId(hotel);
+        room.setStateId(state);
+        room2.setStateId(state);
+        room3.setStateId(state);
 
         rooms.add(room);
         rooms.add(room2);
@@ -146,6 +168,34 @@ public class RoomServiceTest {
 
         verify(this.roomDao, times(1)).findByHotelId(any(Hotel.class));
 
+    }
+
+    @Test
+    void updateRoomStateTest() {
+        Hotel hotel = new Hotel();
+        State state = new State();
+        Room room= new Room();
+        hotel.setId(1);
+        state.setId(1);
+        room.setHotelId(hotel);
+        room.setId(1);
+        room.setStateId(state);
+        RoomDto createRoomDto = RoomMapper.INSTANCE.toDto(room);
+
+        when(this.roomDao.saveAndFlush(any(Room.class))).thenReturn(room);
+        when(this.roomDao.existsById(any(Integer.class))).thenReturn(true);
+        when(this.stateDao.existsById(any(Integer.class))).thenReturn(true);
+        when(this.roomDao.getReferenceById(any(Integer.class))).thenReturn(room);
+        when(this.stateDao.getReferenceById(any(Integer.class))).thenReturn(state);
+
+        ResponseEntity<?> responseEntity = roomService.updateRoomState(createRoomDto);
+        HttpStatus status = responseEntity.getStatusCode();
+        RoomDto roomDtoUpdated = (RoomDto) responseEntity.getBody();
+
+        assertEquals(state.getId(), roomDtoUpdated.getStateId());
+        assertEquals(HttpStatus.OK, status);
+
+        verify(this.roomDao, times(1)).saveAndFlush(any(Room.class));
     }
 
 }

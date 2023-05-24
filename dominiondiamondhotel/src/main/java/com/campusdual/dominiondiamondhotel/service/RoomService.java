@@ -3,10 +3,10 @@ package com.campusdual.dominiondiamondhotel.service;
 import com.campusdual.dominiondiamondhotel.api.IRoomService;
 import com.campusdual.dominiondiamondhotel.model.Hotel;
 import com.campusdual.dominiondiamondhotel.model.Room;
+import com.campusdual.dominiondiamondhotel.model.State;
 import com.campusdual.dominiondiamondhotel.model.dao.RoomDao;
-import com.campusdual.dominiondiamondhotel.model.dto.HotelDto;
+import com.campusdual.dominiondiamondhotel.model.dao.StateDao;
 import com.campusdual.dominiondiamondhotel.model.dto.RoomDto;
-import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.HotelMapper;
 import com.campusdual.dominiondiamondhotel.model.dto.dtomapper.RoomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -22,6 +22,9 @@ import java.util.List;
 public class RoomService implements IRoomService {
     @Autowired
     private RoomDao roomDao;
+
+    @Autowired
+    private StateDao stateDao;
 
     @Override
     public int insertRoom(RoomDto roomDto) {
@@ -47,25 +50,35 @@ public class RoomService implements IRoomService {
     }
 
     public ResponseEntity<?> manageGetRoom(int id) {
-
-        try{
-
+        try {
             return ResponseEntity.ok(RoomMapper.INSTANCE.toDto(roomDao.getReferenceById(id)));
-
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
         }
-
     }
 
-
-    public ResponseEntity<?> getRoomsFromHotel(int id){
-        try{
+    public ResponseEntity<?> getRoomsFromHotel(int id) {
+        try {
             Hotel hotel = new Hotel();
             hotel.setId(id);
             return ResponseEntity.ok(roomDao.findByHotelId(hotel));
-        }catch(EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> updateRoomState(RoomDto roomDto) {
+        try {
+            if (roomDao.existsById(roomDto.getId()) && stateDao.existsById(roomDto.getStateId())) {
+                Room newRoom = roomDao.getReferenceById(roomDto.getId());
+                State state = stateDao.getReferenceById(roomDto.getStateId());
+                newRoom.setStateId(state);
+                return ResponseEntity.ok(RoomMapper.INSTANCE.toDto(roomDao.saveAndFlush(newRoom)));
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Habitación o estado no encontrado.");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Habitación o estado no encontrado.");
         }
     }
 }
