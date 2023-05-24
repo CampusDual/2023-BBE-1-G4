@@ -1,35 +1,64 @@
 CREATE TABLE HOTELS(ID SERIAL, NAME VARCHAR(255) NOT NULL)
-insert into "HOTELS"  (name) values('Continental')
-insert into "HOTELS"  (name) values('RusoHotels')
 
-CREATE TABLE HOTELS(ID SERIAL, NAME VARCHAR(255) NOT NULL)
-insert into "HOTELS"  (name) values('Continental')
+insert into "HOTELS" (name) values('Continental')
+
 ALTER TABLE hotels
+
 ADD CONSTRAINT hotels_pk PRIMARY KEY (id);
+
 select * from hotels
+
+------
+
 CREATE TABLE rooms (
     id SERIAL PRIMARY KEY,
     number INTEGER,
     hotel_id INTEGER REFERENCES hotels (id)
 );
-insert into "rooms"  (number, hotel_id) values(333,1)
+
+insert into "rooms" (number, hotel_id) values(333,1)
+
+ALTER TABLE rooms
+ADD COLUMN state_id INTEGER REFERENCES states (id);
+
+ALTER TABLE rooms
+ALTER COLUMN state_id SET DEFAULT 1;
+
+UPDATE rooms
+
+SET state_id = 1;
+
 select * from "rooms"
------
-create table customers(
-	id serial PRIMARY KEY,
-	name varchar(255) not null,
-	lastname1 varchar(255) not null,
-	lastname2 varchar(255) not null,
-	phone char(13)not null,
-	dni char(9)not null,
-	mail varchar(255) not null
+
+------
+
+CREATE TABLE CUSTOMERS(
+    id serial PRIMARY KEY,
+    name varchar(255) not null,
+    lastname1 varchar(255) not null,
+    lastname2 varchar(255) not null,
+    phone char(13)not null,
+    dni char(9)not null,
+    mail varchar(255) not null
 )
+
 ALTER TABLE customers
 ALTER COLUMN phone TYPE CHAR(14);
 
-INSERT INTO customers (name, lastname1, lastname2, phone, dni, mail)
-VALUES ('Lucas', 'Fernández', 'Gordillo', '+34666666666', '12345678Z', 'lucasfernández@gmail.com');
-INSERT INTO customers (name, lastname1, lastname2, phone, dni, mail)
-VALUES ('Paco', 'Miranda', 'López', '+34999999999', '87654321A', 'pacomiranda@gmail.com');
+INSERT INTO customers (name, lastname1, lastname2, phone, dni, mail) VALUES ('Lucas', 'Fernández', 'Gordillo', '+34666666666', '12345678Z', 'lucasfernández@gmail.com');
+INSERT INTO customers (name, lastname1, lastname2, phone, dni, mail) VALUES ('Paco', 'Miranda', 'López', '+34999999999', '87654321A', 'pacomiranda@gmail.com');
 
 select * from customers
+
+------
+
+CREATE TABLE states (
+    id SERIAL PRIMARY KEY,
+    state VARCHAR(20) NOT NULL CHECK (state IN ('free', 'busy', 'maintenance'))
+);
+
+INSERT INTO states (state) VALUES ('free');
+INSERT INTO states (state) VALUES ('busy');
+INSERT INTO states (state) VALUES ('maintenance');
+
+select * from states

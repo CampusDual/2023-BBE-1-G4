@@ -8,6 +8,8 @@ public class RoomDto {
 
     private int hotelId;
 
+    private int stateId;
+
     public int getId() {
         return id;
     }
@@ -30,5 +32,13 @@ public class RoomDto {
 
     public void setHotelId(int hotelId) {
         this.hotelId = hotelId;
+    }
+
+    public int getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(int stateId) {
+        this.stateId = stateId;
     }
 }
