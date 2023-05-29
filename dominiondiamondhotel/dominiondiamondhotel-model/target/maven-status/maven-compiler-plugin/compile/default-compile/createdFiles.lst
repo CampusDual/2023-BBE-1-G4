@@ -1,0 +1,7 @@
+com\ontimize\dominiondiamondhotel\model\core\dao\RoomDao.class
+com\ontimize\dominiondiamondhotel\model\core\dao\UserDao.class
+com\ontimize\dominiondiamondhotel\model\core\service\UserService.class
+com\ontimize\dominiondiamondhotel\model\core\dao\HotelDao.class
+com\ontimize\dominiondiamondhotel\model\core\service\HotelService.class
+com\ontimize\dominiondiamondhotel\model\core\service\RoomService.class
+com\ontimize\dominiondiamondhotel\model\core\dao\UserRoleDao.class
