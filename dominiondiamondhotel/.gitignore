@@ -5,8 +5,8 @@ misc.xml
 modules.xml
 vcs.xml
 2023-BBE-1-G4.iml
-**/target/
-dominiondiamondhotel/.idea
+!**/src/main/**/target/
+!**/src/test/**/target/
 
 HELP.md
 target/
