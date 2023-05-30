@@ -12,7 +12,7 @@
 	<artifactId>dominiondiamondhotel-boot</artifactId>
 	<packaging>jar</packaging>
 	<properties>
-		<start-class>com.ontimize.dominiondiamondhotel.ServerApplication</start-class>
+		<start-class>com.ontimize.dominiondiamondhotel.DominiondiamondhotelApplication</start-class>
 		<spring-boot.repackage.skip>false</spring-boot.repackage.skip>
 	</properties>
 	<dependencies>

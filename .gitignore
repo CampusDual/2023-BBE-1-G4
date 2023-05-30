@@ -1,0 +1,41 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+misc.xml
+modules.xml
+vcs.xml
+2023-BBE-1-G4.iml
+**/target/
+dominiondiamondhotel/.idea
+
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
