@@ -1,8 +1,15 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+misc.xml
+modules.xml
+vcs.xml
+2023-BBE-1-G4.iml
+!**/target/
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
 
 ### STS ###
 .apt_generated
