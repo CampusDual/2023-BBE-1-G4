@@ -5,8 +5,7 @@ misc.xml
 modules.xml
 vcs.xml
 2023-BBE-1-G4.iml
-!**/src/main/**/target/
-!**/src/test/**/target/
+!**/target/
 
 HELP.md
 target/
