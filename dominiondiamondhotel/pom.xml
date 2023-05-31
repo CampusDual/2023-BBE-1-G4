@@ -53,6 +53,12 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.ontimize.jee</groupId>
+            <artifactId>ontimize-jee-common</artifactId>
+        </dependency>
+    </dependencies>
     <modules>
         <module>dominiondiamondhotel-api</module>
         <module>dominiondiamondhotel-model</module>
