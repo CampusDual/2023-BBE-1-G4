@@ -48,21 +48,11 @@ public class ValidatorUtils {
 
     public static boolean dateValidator(String entry_date, String exit_date){
 
-        String[] entryDatePart = entry_date.split("-");
-        int entryYear = Integer.parseInt(entryDatePart[0]);
-        int entryMonth = Integer.parseInt(entryDatePart[1]);
-        int entryDay = Integer.parseInt(entryDatePart[2]);
-
-        String[] exitDatePart = exit_date.split("-");
-        int exitYear = Integer.parseInt(exitDatePart[0]);
-        int exitMonth = Integer.parseInt(exitDatePart[1]);
-        int exitDay = Integer.parseInt(exitDatePart[2]);
-
         try{
 
             LocalDate nowDate = LocalDate.now();
-            LocalDate entryDate = LocalDate.of(entryYear, entryMonth, entryDay);
-            LocalDate exitDate = LocalDate.of(exitYear, exitMonth, exitDay);
+            LocalDate entryDate = LocalDate.parse(entry_date);
+            LocalDate exitDate = LocalDate.parse(exit_date);
 
             if((entryDate.isBefore(exitDate) || entryDate.isEqual(exitDate)) && (entryDate.isAfter(nowDate) || entryDate.isEqual(nowDate))){
                 return true;
