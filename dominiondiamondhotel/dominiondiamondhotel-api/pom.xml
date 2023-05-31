@@ -10,10 +10,4 @@
     <description>${project.artifactId}</description>
     <artifactId>dominiondiamondhotel-api</artifactId>
     <packaging>jar</packaging>
-    <dependencies>
-        <dependency>
-            <groupId>com.ontimize.jee</groupId>
-            <artifactId>ontimize-jee-common</artifactId>
-        </dependency>
-    </dependencies>
 </project>
