@@ -17,6 +17,7 @@ public class CustomerDao extends OntimizeJdbcDaoSupport {
     public static final String ATTR_LASTNAME1 = "lastname1";
     public static final String ATTR_LASTNAME2 = "lastname2";
     public static final String ATTR_PHONE = "phone";
-    public static final String ATTR_DNI = "dni";
+    public static final String ATTR_IDNUMBER = "idnumber";
     public static final String ATTR_EMAIL = "mail";
+    public static final String ATTR_IDTYPE_ID = "idtype_id";
 }

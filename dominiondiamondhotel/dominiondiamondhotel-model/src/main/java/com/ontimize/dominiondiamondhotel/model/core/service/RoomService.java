@@ -3,12 +3,15 @@ package com.ontimize.dominiondiamondhotel.model.core.service;
 import com.ontimize.dominiondiamondhotel.api.core.service.IRoomService;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
 import com.ontimize.jee.common.dto.EntityResult;
+import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +32,20 @@ public class RoomService implements IRoomService {
 
     @Override
     public EntityResult roomInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException {
-        return this.daoHelper.insert(this.roomDao, attrMap);
+        int number = Integer.parseInt(String.valueOf(attrMap.get("number")));
+        Map<String, Object> roomKeyMap = new HashMap<>();
+        roomKeyMap.put(RoomDao.ATTR_NUMBER, number);
+        List<String> roomAttrList = new ArrayList<>();
+        roomAttrList.add(RoomDao.ATTR_ID);
+        EntityResult roomNumberAlreadyExists = this.daoHelper.query(this.roomDao, roomKeyMap, roomAttrList);
+        EntityResult er = new EntityResultMapImpl();
+        if (roomNumberAlreadyExists.get("id") == null) {
+            return this.daoHelper.insert(this.roomDao, attrMap);
+        } else {
+            er.setMessage("Invalid data");
+        }
+        er.setCode(EntityResult.OPERATION_WRONG);
+        return er;
     }
 
     @Override
