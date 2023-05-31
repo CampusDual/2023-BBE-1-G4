@@ -3,6 +3,8 @@ package com.ontimize.dominiondiamondhotel.api.core.utils;
 
 import org.apache.poi.ss.formula.functions.Match;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,5 +44,35 @@ public class ValidatorUtils {
         Pattern pattern = Pattern.compile(phonePatterns);
         Matcher matcher = pattern.matcher(phone);
         return matcher.matches();
+    }
+
+    public static boolean dateValidator(String entry_date, String exit_date){
+
+        String[] entryDatePart = entry_date.split("-");
+        int entryYear = Integer.parseInt(entryDatePart[0]);
+        int entryMonth = Integer.parseInt(entryDatePart[1]);
+        int entryDay = Integer.parseInt(entryDatePart[2]);
+
+        String[] exitDatePart = exit_date.split("-");
+        int exitYear = Integer.parseInt(exitDatePart[0]);
+        int exitMonth = Integer.parseInt(exitDatePart[1]);
+        int exitDay = Integer.parseInt(exitDatePart[2]);
+
+        try{
+
+            LocalDate nowDate = LocalDate.now();
+            LocalDate entryDate = LocalDate.of(entryYear, entryMonth, entryDay);
+            LocalDate exitDate = LocalDate.of(exitYear, exitMonth, exitDay);
+
+            if((entryDate.isBefore(exitDate) || entryDate.isEqual(exitDate)) && (entryDate.isAfter(nowDate) || entryDate.isEqual(nowDate))){
+                return true;
+            }else{
+                return false;
+            }
+
+        }catch (Exception e){
+            return false;
+        }
+
     }
 }
