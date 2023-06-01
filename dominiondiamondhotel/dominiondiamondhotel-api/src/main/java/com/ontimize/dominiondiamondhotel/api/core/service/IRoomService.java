@@ -13,4 +13,5 @@ public interface IRoomService {
     public EntityResult roomDelete(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
     public EntityResult getRoomByIdQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException;
     public EntityResult getRoomByHotelIdQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException;
+    public EntityResult getRoomByHotelIdAndStatusQuery(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
 }

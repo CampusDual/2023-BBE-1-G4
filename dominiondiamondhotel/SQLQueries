@@ -120,4 +120,7 @@ ALTER TABLE customers
 ADD COLUMN idType_id INTEGER REFERENCES iddocumenttypes (id);
 ALTER TABLE public.customers ALTER COLUMN idtype_id SET NOT NULL;
 
-
+-----
+ALTER TABLE bookings
+ADD check_in date,
+ADD room_id INTEGER REFERENCES rooms (id);
