@@ -2,6 +2,7 @@ package com.ontimize.dominiondiamondhotel.ws.core.rest;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IHotelService;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
+import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
@@ -39,19 +40,16 @@ public class HotelRestController extends ORestController<IHotelService> {
             List<String> columns = new ArrayList<>();
             columns.add("name");
             Map<String, Object> key = new HashMap<String, Object>();
-            key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, searchByName(name));
-            return hotelService.getHotelByNameQuery(key, columns);
+            BasicExpression be = HotelUtils.searchBy(BasicOperator.LIKE_OP, HotelDao.ATTR_NAME, name);
+            if (be != null) {
+                key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
+            }
+            return hotelService.hotelQuery(key, columns);
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
             return res;
         }
-    }
-
-    private BasicExpression searchByName(String name) {
-        BasicField pvName = new BasicField("'%" + name.toLowerCase() + "%'");
-        BasicField attr = new BasicField("lower(" + HotelDao.ATTR_NAME + ")");
-        return new BasicExpression(attr, BasicOperator.LIKE_OP, pvName);
     }
 
     @RequestMapping(value = "hotelById/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -59,12 +57,15 @@ public class HotelRestController extends ORestController<IHotelService> {
         try {
             List<String> columns = new ArrayList<>();
             for (Field f : HotelDao.class.getDeclaredFields()) {
-                String field = f.toString().substring(f.toString().lastIndexOf("_")+1);
+                String field = f.toString().substring(f.toString().indexOf("_") + 1);
                 columns.add(field.toLowerCase());
             }
             Map<String, Object> key = new HashMap<String, Object>();
-            key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, searchById(id));
-            return hotelService.getHotelByIdQuery(key, columns);
+            BasicExpression be = HotelUtils.searchBy(BasicOperator.EQUAL_OP, HotelDao.ATTR_NAME, String.valueOf(id));
+            if (be != null) {
+                key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
+            }
+            return hotelService.hotelQuery(key, columns);
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
@@ -72,9 +73,21 @@ public class HotelRestController extends ORestController<IHotelService> {
         }
     }
 
-    private BasicExpression searchById(int id) {
-        BasicField attr = new BasicField(HotelDao.ATTR_ID);
-        return new BasicExpression(attr, BasicOperator.EQUAL_OP, id);
+    @RequestMapping(value = "hotelByZip/{zip}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult hotelSearchByZip(@PathVariable int zip) {
+        try {
+            List<String> columns = new ArrayList<>();
+            columns.add("name");
+            Map<String, Object> key = new HashMap<String, Object>();
+            BasicExpression be = HotelUtils.searchBy(BasicOperator.EQUAL_OP, HotelDao.ATTR_ZIP_ID, String.valueOf(zip));
+            if (be != null) {
+                key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
+            }
+            return hotelService.hotelQuery(key, columns);
+        } catch (Exception e) {
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
     }
-
 }

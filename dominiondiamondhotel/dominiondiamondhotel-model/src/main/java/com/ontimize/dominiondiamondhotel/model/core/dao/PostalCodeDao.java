@@ -1,20 +1,17 @@
 package com.ontimize.dominiondiamondhotel.model.core.dao;
 
-
 import com.ontimize.jee.server.dao.common.ConfigurationFile;
 import com.ontimize.jee.server.dao.jdbc.OntimizeJdbcDaoSupport;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
-@Repository(value = "HotelDao")
+@Repository(value = "PostalCodeDao")
 @Lazy
 @ConfigurationFile(
-        configurationFile = "dao/HotelDao.xml",
+        configurationFile = "dao/PostalCodeDao.xml",
         configurationFilePlaceholder = "dao/placeholders.properties"
 )
-public class HotelDao extends OntimizeJdbcDaoSupport {
+public class PostalCodeDao extends OntimizeJdbcDaoSupport {
     public static final String ATTR_ID = "id";
-    public static final String ATTR_NAME = "name";
-    public static final String ATTR_ZIP_ID = "zip_id";
-
+    public static final String ATTR_ZIP = "zip";
 }
