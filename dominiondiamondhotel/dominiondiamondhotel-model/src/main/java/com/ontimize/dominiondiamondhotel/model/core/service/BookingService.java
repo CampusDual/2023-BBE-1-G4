@@ -65,6 +65,7 @@ public class BookingService implements IBookingService {
         bookingAttrList.add(BookingDao.ATTR_ROOM_ID);
         bookingAttrList.add(BookingDao.ATTR_CUSTOMER_ID);
         bookingAttrList.add(BookingDao.ATTR_CHECK_IN);
+        bookingAttrList.add(BookingDao.ATTR_CHECK_OUT);
         bookingAttrList.add(BookingDao.ATTR_EXIT_DATE);
         EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, bookingAttrList);
         int hotelIdFromBooking = Integer.parseInt(String.valueOf(((List<String>)bookingExists.get("hotel_id")).get(0)));
@@ -77,7 +78,7 @@ public class BookingService implements IBookingService {
         EntityResult customerExists = this.daoHelper.query(this.customerDao, customerKeyMap, customerAttrList);
         int customerExistsId = Integer.parseInt(String.valueOf(((List<String>)customerExists.get("id")).get(0)));
         EntityResult er = new EntityResultMapImpl();
-        if (bookingExists.get("id") != null && customerId == customerExistsId) {
+        if (((List<String>) bookingExists.get("id")).get(0) != null && customerId == customerExistsId && ((List<String>) bookingExists.get("check_out")).get(0) == null) {
             Map<String, Object> req = new HashMap<>();
             Map<String, Object> hotelId = new HashMap<>();
             hotelId.put("hotel_id", hotelIdFromBooking);
@@ -85,7 +86,7 @@ public class BookingService implements IBookingService {
             Map<String, Object> filter = new HashMap<>();
             filter.put("id", ((List<String>) bookingExists.get("id")).get(0));
             Map<String, Object> data = new HashMap<>();
-            data.put("check_in", LocalDate.now());
+            data.put("check_in", LocalDateTime.now());
             EntityResult erRoomId = this.roomService.getRoomByHotelIdAndStatusQuery(req);
             data.put("room_id", ((List<Integer>) erRoomId.get("id")).get(0));
             this.daoHelper.update(this.bookingDao, data, filter);
