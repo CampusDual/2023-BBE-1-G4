@@ -127,6 +127,5 @@ ADD room_id INTEGER REFERENCES rooms (id);
 
 ----
 ALTER TABLE bookings
-ADD check_out date
-ALTER TABLE bookings
-ALTER COLUMN check_out TYPE timestamp;
+ADD check_out timestamp
+
