@@ -2,6 +2,7 @@ package com.ontimize.dominiondiamondhotel.model.core.service;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IHotelService;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
+import com.ontimize.dominiondiamondhotel.model.core.dao.PostalCodeDao;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
@@ -21,13 +22,11 @@ public class HotelService implements IHotelService {
     @Autowired
     private HotelDao hotelDao;
 
-    @Override
-    public EntityResult hotelQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
-        return this.daoHelper.query(this.hotelDao, keyMap, attrList);
-    }
+    @Autowired
+    PostalCodeDao postalCodeDao;
 
     @Override
-    public EntityResult managerGetHotelQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
+    public EntityResult hotelQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
         return this.daoHelper.query(this.hotelDao, keyMap, attrList);
     }
 
@@ -45,15 +44,4 @@ public class HotelService implements IHotelService {
     public EntityResult hotelDelete(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
         return this.daoHelper.delete(this.hotelDao, keyMap);
     }
-
-    @Override
-    public EntityResult getHotelByNameQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
-        return this.daoHelper.query(this.hotelDao, keyMap, attrList);
-    }
-
-    @Override
-    public EntityResult getHotelByIdQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
-        return this.daoHelper.query(this.hotelDao, keyMap, attrList);
-    }
-
 }
