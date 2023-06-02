@@ -9,4 +9,5 @@ import java.util.Map;
 public interface IBookingService {
     public EntityResult bookingInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException;
     public EntityResult bookingCheckUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
+    public EntityResult bookingCheckOutUpdate(Map<String, Object> keyMap) throws  OntimizeJEERuntimeException;
 }
