@@ -102,7 +102,7 @@ public class CustomerServiceTest {
             EntityResult result = customerService.customerUpdate(filter, data);
             Assertions.assertEquals(0, result.getCode());
             verify(daoHelper, times(1)).query(any(CustomerDao.class), anyMap(), anyList());
-            verify(daoHelper, times(1)).delete(any(CustomerDao.class), anyMap());
+            verify(daoHelper, times(1)).update(any(CustomerDao.class), anyMap(),anyMap());
         }
     }
 
