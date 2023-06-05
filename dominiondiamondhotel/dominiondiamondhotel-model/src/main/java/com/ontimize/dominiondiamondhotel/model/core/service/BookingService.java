@@ -54,7 +54,7 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public EntityResult bookingCheckUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
+    public EntityResult bookingCheckInUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
         Map<String, Object> getFilter = (Map<String, Object>) keyMap.get("filter");
         int bookingId = Integer.parseInt(String.valueOf(getFilter.get("id")));
         Map<String, Object> bookingIdKeyMap = new HashMap<>();
@@ -122,7 +122,6 @@ public class BookingService implements IBookingService {
         bookingAttrList.add(BookingDao.ATTR_EXIT_DATE);
         EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, bookingAttrList);
         EntityResult er = new EntityResultMapImpl();
-
         if (bookingExists.get("id") != null && ((List<String>) bookingExists.get("check_in")).get(0) != null ) {
             int roomIdFromBooking = Integer.parseInt(String.valueOf(((List<String>)bookingExists.get("room_id")).get(0)));
             Map<String, Object> filter = new HashMap<>();
@@ -151,8 +150,5 @@ public class BookingService implements IBookingService {
         }
         er.setCode(EntityResult.OPERATION_WRONG);
         return er;
-
     }
-
-
 }
