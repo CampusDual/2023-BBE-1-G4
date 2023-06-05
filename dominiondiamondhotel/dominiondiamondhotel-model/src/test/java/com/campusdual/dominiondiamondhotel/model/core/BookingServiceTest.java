@@ -26,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.cglib.core.Local;
 
 @ExtendWith(MockitoExtension.class)
 public class BookingServiceTest {
@@ -102,7 +103,30 @@ public class BookingServiceTest {
 
         @Test
         void testBookingCheckOut() {
-
+            EntityResult er = new EntityResultMapImpl();
+            er.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            er.put("id", List.of(1));
+            er.put("room_id", List.of(1));
+            er.put("check_in", List.of(LocalDate.now().plusDays(10)));
+            er.put("check_out", List.of(LocalDate.now().plusDays(15)));
+            Map<String, Object> bookingToInsert = new HashMap<>();
+            Map<String, Object> filter = new HashMap<>();
+            Map<String, Object> sqltypes = new HashMap<>();
+            filter.put("id", 1);
+            sqltypes.put("check_out", 91);
+            sqltypes.put("id", 12);
+            bookingToInsert.put("filter", filter);
+            bookingToInsert.put("sqltypes", sqltypes);
+            EntityResult roomUpdate = new EntityResultMapImpl();
+            roomUpdate.put("state_id", List.of(1));
+            roomUpdate.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            when(daoHelper.query(any(BookingDao.class), anyMap(), anyList())).thenReturn(er);
+            when(daoHelper.query(any(RoomDao.class), anyMap(), anyList())).thenReturn(roomUpdate);
+            when(roomService.roomUpdate(anyMap(), anyMap())).thenReturn(er);
+            EntityResult result = bookingService.bookingCheckOutUpdate(bookingToInsert);
+            Assertions.assertEquals(0, result.getCode());
+            verify(daoHelper, times(2)).query(any(BookingDao.class), anyMap(), anyList());
+            verify(daoHelper, times(1)).update(any(BookingDao.class), anyMap(), anyMap());
         }
     }
 }
