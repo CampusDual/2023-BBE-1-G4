@@ -72,7 +72,7 @@ public class CustomerService implements ICustomerService {
         idtype.add(CustomerDao.ATTR_IDTYPE_ID.toLowerCase());
         EntityResult entityResult = this.daoHelper.query(this.customerDao, keyMap, idtype);
         int idTypeid = (int) ((List<?>) entityResult.get("idtype_id")).get(0);
-        String email = String.valueOf(attrMap.get("email"));
+        String email = String.valueOf(attrMap.get("mail"));
         String phone = String.valueOf(attrMap.get("phone"));
         EntityResult er = new EntityResultMapImpl();
         if (ValidatorUtils.idValidator(idTypeid, idNumber) && ValidatorUtils.emailValidator(email) && ValidatorUtils.phoneValidator(phone)) {
@@ -86,7 +86,7 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public EntityResult customerDelete(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
-        return this.customerDao.delete(keyMap);
+        return this.daoHelper.delete(this.customerDao, keyMap);
     }
 
 
