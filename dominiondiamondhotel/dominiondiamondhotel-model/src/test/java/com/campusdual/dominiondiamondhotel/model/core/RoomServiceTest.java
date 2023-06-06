@@ -1,5 +1,7 @@
 package com.campusdual.dominiondiamondhotel.model.core;
 
+import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
+import com.ontimize.dominiondiamondhotel.model.core.dao.CustomerDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.IdDocumentTypesDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
 import com.ontimize.dominiondiamondhotel.model.core.service.RoomService;
@@ -146,6 +148,35 @@ public class RoomServiceTest {
             EntityResult result = roomService.roomUpdate(filter, data);
             Assertions.assertEquals(0, result.getCode());
             verify(daoHelper, times(1)).update(any(RoomDao.class), anyMap(),anyMap());
+        }
+
+        @Test
+        void testCleaningManagement() {
+            EntityResult er = new EntityResultMapImpl();
+            er.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            er.put("id", List.of(1));
+            er.put("state_id", List.of(1));
+            Map<String, Object> roomToUpdate = new HashMap<>();
+            Map<String, Object> filter = new HashMap<>();
+            Map<String, Object> sqltypes = new HashMap<>();
+            filter.put("id", 1);
+            sqltypes.put("id", 1);
+            roomToUpdate.put("filter", filter);
+            roomToUpdate.put("sqltypes", sqltypes);
+            EntityResult erRoom = new EntityResultMapImpl();
+            erRoom.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            erRoom.put("id", List.of(1));
+            erRoom.put("state_id", List.of(4));
+            EntityResult erRoomUpdated = new EntityResultMapImpl();
+            erRoomUpdated.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            erRoomUpdated.put("id", List.of(1));
+            erRoomUpdated.put("state_id", List.of(1));
+            when(daoHelper.query(any(RoomDao.class), anyMap(), anyList())).thenReturn(erRoom, erRoomUpdated);
+            when(daoHelper.update(any(RoomDao.class),anyMap(), anyMap())).thenReturn(er);
+            EntityResult result = roomService.cleaningManagement(roomToUpdate);
+            Assertions.assertEquals(0, result.getCode());
+            verify(daoHelper, times(2)).query(any(RoomDao.class), anyMap(), anyList());
+            verify(daoHelper, times(1)).update(any(RoomDao.class), anyMap(), anyMap());
         }
     }
 
