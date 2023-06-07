@@ -1,6 +1,5 @@
 package com.ontimize.dominiondiamondhotel.model.core.utils;
 
-import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 
 public class HotelUtils {
