@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,7 @@ public class RoomRestController extends ORestController<IRoomService> {
             List<String> columns = (List<String>) req.get("columns");
             Map<String, Object> filter = (Map<String, Object>) req.get("filter");
             int id = (int) filter.get("id");
-            Map<String, Object> key = new HashMap<String, Object>();
+            Map<String, Object> key = new HashMap<>();
             key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, searchById(id));
             return roomService.getRoomByIdQuery(key, columns);
         } catch (Exception e) {
