@@ -2,7 +2,6 @@ package com.ontimize.dominiondiamondhotel.api.core.service;
 
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
-import org.springframework.security.core.parameters.P;
 
 import java.util.Map;
 
