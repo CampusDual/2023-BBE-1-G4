@@ -83,4 +83,15 @@ public class RoomRestController extends ORestController<IRoomService> {
         }
     }
 
+    @RequestMapping(value = "cleaningManagement", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult cleaningManagement(@RequestBody Map<String, Object> req) {
+        try {
+            return this.roomService.cleaningManagement(req);
+        } catch (Exception e) {
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
+    }
+
 }
