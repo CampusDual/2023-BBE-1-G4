@@ -1,22 +1,13 @@
 package com.campusdual.dominiondiamondhotel.model.core;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-
 import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.CustomerDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
 import com.ontimize.dominiondiamondhotel.model.core.service.BookingService;
-import com.ontimize.dominiondiamondhotel.model.core.service.CustomerService;
 import com.ontimize.dominiondiamondhotel.model.core.service.RoomService;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,7 +17,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.cglib.core.Local;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BookingServiceTest {

@@ -1,7 +1,5 @@
 package com.campusdual.dominiondiamondhotel.model.core;
 
-import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
-import com.ontimize.dominiondiamondhotel.model.core.dao.CustomerDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.IdDocumentTypesDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
 import com.ontimize.dominiondiamondhotel.model.core.service.RoomService;
@@ -23,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,12 +55,10 @@ public class RoomServiceTest {
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
             er.put("id",List.of(1));
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            List<String>attrList = new ArrayList<>();
-            attrList.add(RoomDao.ATTR_ID);
             Map<String, Object>roombyId= new HashMap<>();
             roombyId.put("id",1);
             when(daoHelper.query(any(RoomDao.class),anyMap(),anyList())).thenReturn(er);
-            EntityResult result = roomService.roomQuery(roombyId,attrList);
+            EntityResult result = roomService.roomQuery(roombyId, List.of(RoomDao.ATTR_ID));
             Assertions.assertEquals(0,result.getCode());
             verify(daoHelper, times(1)).query(any(RoomDao.class),anyMap(),anyList());
         }
@@ -90,12 +85,12 @@ public class RoomServiceTest {
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
             er.put("id",List.of(1));
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            List<String>attrList = new ArrayList<>();
+            List<String> attrList = new ArrayList<>();
             attrList.add(RoomDao.ATTR_ID);
             Map<String, Object>roombyHotelId= new HashMap<>();
             roombyHotelId.put("id",1);
             when(roomService.getRoomByHotelIdQuery(roombyHotelId, attrList)).thenReturn(er);
-            EntityResult result = roomService.roomQuery(roombyHotelId,attrList);
+            EntityResult result = roomService.roomQuery(roombyHotelId, attrList);
             Assertions.assertEquals(0,result.getCode());
             verify(daoHelper, times(1)).query(any(RoomDao.class),anyMap(),anyList());
         }

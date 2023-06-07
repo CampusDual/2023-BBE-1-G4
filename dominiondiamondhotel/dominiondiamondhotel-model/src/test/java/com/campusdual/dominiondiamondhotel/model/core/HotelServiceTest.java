@@ -1,8 +1,6 @@
 package com.campusdual.dominiondiamondhotel.model.core;
 
-import com.ontimize.dominiondiamondhotel.model.core.dao.CustomerDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
-import com.ontimize.dominiondiamondhotel.model.core.dao.IdDocumentTypesDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.PostalCodeDao;
 import com.ontimize.dominiondiamondhotel.model.core.service.HotelService;
 import com.ontimize.jee.common.dto.EntityResult;
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,69 +37,71 @@ public class HotelServiceTest {
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    public class HotelServiceQuery{
+    public class HotelServiceQuery {
         @Test
-        void testHotelQuery(){
+        void testHotelQuery() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            List<String>attrList = new ArrayList<>();
-            attrList.add(HotelDao.ATTR_ID);
-            when(daoHelper.query(any(HotelDao.class),anyMap(),anyList())).thenReturn(er);
-            EntityResult result = hotelService.hotelQuery(new HashMap<>(),attrList);
-            Assertions.assertEquals(0,result.getCode());
-            verify(daoHelper, times(1)).query(any(HotelDao.class),anyMap(),anyList());
+            when(daoHelper.query(any(HotelDao.class), anyMap(), anyList())).thenReturn(er);
+            EntityResult result = hotelService.hotelQuery(new HashMap<>(), List.of(HotelDao.ATTR_ID));
+            Assertions.assertEquals(0, result.getCode());
+            verify(daoHelper, times(1)).query(any(HotelDao.class), anyMap(), anyList());
         }
+
         @Test
-        void hotelByName(){
+        void hotelByName() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            er.put("name",List.of(1));
+            er.put("name", List.of(1));
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            List<String>attrList = new ArrayList<>();
+            List<String> attrList = new ArrayList<>();
             attrList.add(HotelDao.ATTR_ID);
-            Map<String, Object>hotelbyName= new HashMap<>();
-            hotelbyName.put("name",null);
-            when(daoHelper.query(any(HotelDao.class),anyMap(),anyList())).thenReturn(er);
-            EntityResult result = hotelService.hotelQuery(hotelbyName,attrList);
-            Assertions.assertEquals(0,result.getCode());
-            verify(daoHelper, times(1)).query(any(HotelDao.class),anyMap(),anyList());
+            Map<String, Object> hotelbyName = new HashMap<>();
+            hotelbyName.put("name", null);
+            when(daoHelper.query(any(HotelDao.class), anyMap(), anyList())).thenReturn(er);
+            EntityResult result = hotelService.hotelQuery(hotelbyName, attrList);
+            Assertions.assertEquals(0, result.getCode());
+            verify(daoHelper, times(1)).query(any(HotelDao.class), anyMap(), anyList());
         }
+
         @Test
-        void hotelById(){
+        void hotelById() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            er.put("id",List.of(1));
+            er.put("id", List.of(1));
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            List<String>attrList = new ArrayList<>();
+            List<String> attrList = new ArrayList<>();
             attrList.add(HotelDao.ATTR_ID);
-            Map<String, Object>hotelbyId= new HashMap<>();
-            hotelbyId.put("id",1);
-            when(daoHelper.query(any(HotelDao.class),anyMap(),anyList())).thenReturn(er);
-            EntityResult result = hotelService.hotelQuery(hotelbyId,attrList);
-            Assertions.assertEquals(0,result.getCode());
-            verify(daoHelper, times(1)).query(any(HotelDao.class),anyMap(),anyList());
+            Map<String, Object> hotelbyId = new HashMap<>();
+            hotelbyId.put("id", 1);
+            when(daoHelper.query(any(HotelDao.class), anyMap(), anyList())).thenReturn(er);
+            EntityResult result = hotelService.hotelQuery(hotelbyId, attrList);
+            Assertions.assertEquals(0, result.getCode());
+            verify(daoHelper, times(1)).query(any(HotelDao.class), anyMap(), anyList());
         }
     }
+
     @Test
-    void hotelByZip(){
+    void hotelByZip() {
         EntityResult er = new EntityResultMapImpl();
         er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-        er.put("zip_id",List.of(1));
+        er.put("zip_id", List.of(1));
         er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-        List<String>attrList = new ArrayList<>();
+        List<String> attrList = new ArrayList<>();
         attrList.add(HotelDao.ATTR_ID);
-        Map<String, Object>hotelbyZip= new HashMap<>();
-        hotelbyZip.put("zip_id",1);
-        when(daoHelper.query(any(HotelDao.class),anyMap(),anyList())).thenReturn(er);
-        EntityResult result = hotelService.hotelQuery(hotelbyZip,attrList);
-        Assertions.assertEquals(0,result.getCode());
-        verify(daoHelper, times(1)).query(any(HotelDao.class),anyMap(),anyList());
+        Map<String, Object> hotelbyZip = new HashMap<>();
+        hotelbyZip.put("zip_id", 1);
+        when(daoHelper.query(any(HotelDao.class), anyMap(), anyList())).thenReturn(er);
+        EntityResult result = hotelService.hotelQuery(hotelbyZip, attrList);
+        Assertions.assertEquals(0, result.getCode());
+        verify(daoHelper, times(1)).query(any(HotelDao.class), anyMap(), anyList());
     }
+
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    public class HotelServiceInsert{
+    public class HotelServiceInsert {
         @Test
-        void testHotelInsert(){
+        void testHotelInsert() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
             er.put("id", List.of(2));
@@ -119,11 +118,12 @@ public class HotelServiceTest {
             verify(daoHelper, times(1)).insert(any(HotelDao.class), anyMap());
         }
     }
+
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    public class HotelServiceUpdate{
+    public class HotelServiceUpdate {
         @Test
-        void testHotelUpdate(){
+        void testHotelUpdate() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
             er.put("id", List.of(2));
@@ -135,14 +135,15 @@ public class HotelServiceTest {
             when(daoHelper.update(any(HotelDao.class), anyMap(), anyMap())).thenReturn(er);
             EntityResult result = hotelService.hotelUpdate(filter, data);
             Assertions.assertEquals(0, result.getCode());
-            verify(daoHelper, times(1)).update(any(HotelDao.class), anyMap(),anyMap());
+            verify(daoHelper, times(1)).update(any(HotelDao.class), anyMap(), anyMap());
         }
     }
+
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    public class HotelServiceDelete{
+    public class HotelServiceDelete {
         @Test
-        void testHotelDelete(){
+        void testHotelDelete() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
             Map<String, Object> filter = new HashMap<>();
@@ -152,10 +153,5 @@ public class HotelServiceTest {
             Assertions.assertEquals(0, result.getCode());
             verify(daoHelper, times(1)).delete(any(HotelDao.class), anyMap());
         }
-
     }
-
-
-
-
 }
