@@ -129,4 +129,10 @@ ADD room_id INTEGER REFERENCES rooms (id);
 ALTER TABLE bookings
 ADD check_out timestamp
 
+----
+ALTER TABLE states
+ALTER COLUMN state TYPE VARCHAR(20) USING state::VARCHAR(20),
+ADD CONSTRAINT states_state_check CHECK (state IN ('free', 'busy', 'maintenance', 'cleaning'));
+INSERT INTO states (state) VALUES ('cleaning');
+
 

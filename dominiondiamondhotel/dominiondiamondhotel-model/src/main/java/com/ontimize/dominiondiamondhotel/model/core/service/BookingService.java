@@ -123,8 +123,8 @@ public class BookingService implements IBookingService {
         bookingAttrList.add(BookingDao.ATTR_EXIT_DATE);
         EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, bookingAttrList);
         EntityResult er = new EntityResultMapImpl();
-        if (bookingExists.get("id") != null && ((List<String>) bookingExists.get("check_in")).get(0) != null) {
-            int roomIdFromBooking = Integer.parseInt(String.valueOf(((List<String>) bookingExists.get("room_id")).get(0)));
+        if (((List<String>) bookingExists.get("id")).get(0) != null && ((List<String>) bookingExists.get("check_in")).get(0) != null ) {
+            int roomIdFromBooking = Integer.parseInt(String.valueOf(((List<String>)bookingExists.get("room_id")).get(0)));
             Map<String, Object> filter = new HashMap<>();
             filter.put("id", ((List<String>) bookingExists.get("id")).get(0));
             Map<String, Object> data = new HashMap<>();
@@ -136,7 +136,7 @@ public class BookingService implements IBookingService {
                 Map<String, Object> roomUpdateFilter = new HashMap<>();
                 Map<String, Object> roomUpdateData = new HashMap<>();
                 roomUpdateFilter.put("id", roomIdFromBooking);
-                roomUpdateData.put("state_id", 1);
+                roomUpdateData.put("state_id", 4);
                 this.roomService.roomUpdate(roomUpdateData, roomUpdateFilter);
                 List<String> roomAttrList = new ArrayList<>();
                 roomAttrList.add(RoomDao.ATTR_ID);
