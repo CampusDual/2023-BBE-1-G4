@@ -10,7 +10,6 @@ import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,7 +87,6 @@ public class RoomService implements IRoomService {
 
     @Override
     public EntityResult cleaningManagement(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
-
         Map<String, Object> filter = (Map<String, Object>) keyMap.get("filter");
         List<String> columns = new ArrayList<>();
         columns.add("id");
@@ -98,9 +96,7 @@ public class RoomService implements IRoomService {
         roomIdKeyMap.put(RoomDao.ATTR_ID, roomId);
         EntityResult roomExists = this.daoHelper.query(this.roomDao, roomIdKeyMap, columns);
         EntityResult er = new EntityResultMapImpl();
-
         if(((List<String>) roomExists.get("id")).get(0) != null && Integer.parseInt(String.valueOf(((List<String>)roomExists.get("state_id")).get(0))) == 4){
-
             Map<String, Object> roomUpdateFilter = new HashMap<>();
             Map<String, Object> roomUpdateData = new HashMap<>();
             roomUpdateFilter.put("id", roomId);

@@ -42,15 +42,11 @@ public class CustomerService implements ICustomerService {
         int idTypeid = (int) attrMap.get("idtype_id");
         Map<String, Object> idDocKeyMap = new HashMap<>();
         idDocKeyMap.put(IdDocumentTypesDao.ATTR_ID, idTypeid);
-        List<String> idDocAttrList = new ArrayList<>();
-        idDocAttrList.add(IdDocumentTypesDao.ATTR_IDTYPE);
         String email = String.valueOf(attrMap.get("mail"));
-        EntityResult typeIdExist = this.daoHelper.query(this.idDocumentTypesDao, idDocKeyMap, idDocAttrList);
+        EntityResult typeIdExist = this.daoHelper.query(this.idDocumentTypesDao, idDocKeyMap, List.of(IdDocumentTypesDao.ATTR_IDTYPE));
         Map<String, Object> customerKeyMap = new HashMap<>();
         customerKeyMap.put(CustomerDao.ATTR_IDNUMBER, idNumber);
-        List<String> customerAttrList = new ArrayList<>();
-        customerAttrList.add(CustomerDao.ATTR_ID);
-        EntityResult idDocNumberAlreadyExist = this.daoHelper.query(this.customerDao, customerKeyMap, customerAttrList);
+        EntityResult idDocNumberAlreadyExist = this.daoHelper.query(this.customerDao, customerKeyMap, List.of(CustomerDao.ATTR_ID));
         EntityResult er = new EntityResultMapImpl();
         if (typeIdExist.get("idtype") != null &&
                 ValidatorUtils.idValidator(idTypeid, idNumber) &&
@@ -88,6 +84,4 @@ public class CustomerService implements ICustomerService {
     public EntityResult customerDelete(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
         return this.daoHelper.delete(this.customerDao, keyMap);
     }
-
-
 }
