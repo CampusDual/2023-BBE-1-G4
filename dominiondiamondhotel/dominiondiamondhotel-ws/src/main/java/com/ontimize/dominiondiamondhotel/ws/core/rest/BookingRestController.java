@@ -46,4 +46,15 @@ public class BookingRestController extends ORestController<IBookingService> {
         }
     }
 
+    @RequestMapping(value = "calification", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult addCalificationsAndComments(@RequestBody Map<String, Object> req){
+        try {
+            return this.bookingService.bookingCalificationsAndCommentUpdate(req);
+        } catch (Exception e) {
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
+    }
+
 }

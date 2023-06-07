@@ -13,5 +13,4 @@ public class RoomUtils {
         SQLStatementBuilder.BasicField attr = new SQLStatementBuilder.BasicField(RoomDao.ATTR_HOTEL_ID);
         return new SQLStatementBuilder.BasicExpression(attr, SQLStatementBuilder.BasicOperator.EQUAL_OP, id);
     }
-
 }

@@ -9,4 +9,5 @@ public interface IBookingService {
     public EntityResult bookingInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException;
     public EntityResult bookingCheckInUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
     public EntityResult bookingCheckOutUpdate(Map<String, Object> keyMap) throws  OntimizeJEERuntimeException;
+    public EntityResult bookingCalificationsAndCommentUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
 }
