@@ -32,6 +32,7 @@ public class BookingService implements IBookingService {
 
     @Autowired
     private BookingDao bookingDao;
+
     @Autowired
     private RoomDao roomDao;
 
@@ -61,7 +62,7 @@ public class BookingService implements IBookingService {
         int bookingId = Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
         Map<String, Object> bookingIdKeyMap = new HashMap<>();
         bookingIdKeyMap.put(BookingDao.ATTR_ID, bookingId);
-        EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumnNames());
+        EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumns());
         int hotelIdFromBooking = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_HOTEL_ID)).get(0)));
         int customerId = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_CUSTOMER_ID)).get(0)));
         String customerIdNumber = String.valueOf(getFilter.get(CustomerDao.ATTR_IDNUMBER));
@@ -73,16 +74,16 @@ public class BookingService implements IBookingService {
         if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null && customerId == customerExistsId && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) == null) {
             Map<String, Object> req = new HashMap<>();
             Map<String, Object> hotelId = new HashMap<>();
-            hotelId.put(HotelDao.ATTR_ID, hotelIdFromBooking);
+            hotelId.put(BookingDao.ATTR_HOTEL_ID, hotelIdFromBooking);
             req.put(FILTER, hotelId);
             Map<String, Object> filter = new HashMap<>();
             filter.put(BookingDao.ATTR_ID, ((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0));
             Map<String, Object> data = new HashMap<>();
             data.put(BookingDao.ATTR_CHECK_IN, LocalDateTime.now());
             EntityResult erRoomId = this.roomService.getRoomByHotelIdAndStatusQuery(req);
-            data.put(RoomDao.ATTR_ID, ((List<?>) erRoomId.get(RoomDao.ATTR_ID)).get(0));
+            data.put(BookingDao.ATTR_ROOM_ID, ((List<?>) erRoomId.get(RoomDao.ATTR_ID)).get(0));
             this.daoHelper.update(this.bookingDao, data, filter);
-            EntityResult result = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumnNames());
+            EntityResult result = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumns());
             if (result.getCode() == EntityResult.OPERATION_SUCCESSFUL) {
                 Map<String, Object> roomUpdateFilter = new HashMap<>();
                 Map<String, Object> roomUpdateData = new HashMap<>();
@@ -90,7 +91,7 @@ public class BookingService implements IBookingService {
                 roomUpdateData.put(RoomDao.ATTR_STATE_ID, 2);
                 this.roomService.roomUpdate(roomUpdateData, roomUpdateFilter);
             }
-            return this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumnNames());
+            return this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumns());
         } else {
             er.setMessage(INVALID_DATA);
         }
@@ -104,9 +105,9 @@ public class BookingService implements IBookingService {
         int bookingId = Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
         Map<String, Object> bookingIdKeyMap = new HashMap<>();
         bookingIdKeyMap.put(BookingDao.ATTR_ID, bookingId);
-        EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumnNames());
+        EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumns());
         EntityResult er = new EntityResultMapImpl();
-        if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) != null) {
+        if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) == null) {
             int roomIdFromBooking = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_ROOM_ID)).get(0)));
             Map<String, Object> filter = new HashMap<>();
             filter.put("id", ((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0));
@@ -114,7 +115,7 @@ public class BookingService implements IBookingService {
             LocalDateTime now = LocalDateTime.now();
             data.put(BookingDao.ATTR_CHECK_OUT, now);
             this.daoHelper.update(this.bookingDao, data, filter);
-            EntityResult result = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumnNames());
+            EntityResult result = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumns());
             if (result.getCode() == EntityResult.OPERATION_SUCCESSFUL) {
                 Map<String, Object> roomUpdateFilter = new HashMap<>();
                 Map<String, Object> roomUpdateData = new HashMap<>();
@@ -151,14 +152,14 @@ public class BookingService implements IBookingService {
         if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) != null && bookingCustomerId == customerExistsId) {
             int cleaning = Integer.parseInt(String.valueOf(getData.get(BookingDao.ATTR_CLEANING)));
             int facilities = Integer.parseInt(String.valueOf(getData.get(BookingDao.ATTR_FACILITIES)));
-            int pricequality = Integer.parseInt(String.valueOf(getData.get(BookingDao.ATTR_PRICE_QUALITY)));
+            int pricequality = Integer.parseInt(String.valueOf(getData.get(BookingDao.ATTR_PRICEQUALITY)));
             Map<String, Object> filter = new HashMap<>();
             filter.put(BookingDao.ATTR_ID, bookingId);
             getData.put(BookingDao.ATTR_MEAN, (cleaning + facilities + pricequality) / 3.0);
             if (BookingUtils.calificationCheck(cleaning) &&
                     BookingUtils.calificationCheck(facilities) && BookingUtils.calificationCheck(pricequality) &&
                     this.daoHelper.update(this.bookingDao, getData, filter).getCode() == EntityResult.OPERATION_SUCCESSFUL) {
-                return this.daoHelper.query(this.bookingDao, bookingIdKeyMap, List.of(BookingDao.ATTR_ID, BookingDao.ATTR_COMMENTS, BookingDao.ATTR_MEAN));
+                return this.daoHelper.query(this.bookingDao, bookingIdKeyMap, List.of(BookingDao.ATTR_ID, BookingDao.ATTR_COMM, BookingDao.ATTR_MEAN));
             }
         }
         er.setMessage(INVALID_DATA);

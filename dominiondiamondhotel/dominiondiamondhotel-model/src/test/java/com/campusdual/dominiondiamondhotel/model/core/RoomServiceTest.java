@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.FILTER;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -148,7 +149,7 @@ public class RoomServiceTest {
             Map<String, Object> sqltypes = new HashMap<>();
             filter.put(RoomDao.ATTR_ID, 1);
             sqltypes.put(RoomDao.ATTR_ID, 1);
-            roomToUpdate.put("filter", filter);
+            roomToUpdate.put(FILTER, filter);
             roomToUpdate.put("sqltypes", sqltypes);
             EntityResult erRoom = new EntityResultMapImpl();
             erRoom.setCode(EntityResult.OPERATION_SUCCESSFUL);
