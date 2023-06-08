@@ -4,6 +4,10 @@ import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 
 public class RoomUtils {
+    private RoomUtils() {
+
+    }
+
     public static SQLStatementBuilder.BasicExpression searchByStatus(int status) {
         SQLStatementBuilder.BasicField attrStateId = new SQLStatementBuilder.BasicField(RoomDao.ATTR_STATE_ID);
         return new SQLStatementBuilder.BasicExpression(attrStateId, SQLStatementBuilder.BasicOperator.EQUAL_OP, status);

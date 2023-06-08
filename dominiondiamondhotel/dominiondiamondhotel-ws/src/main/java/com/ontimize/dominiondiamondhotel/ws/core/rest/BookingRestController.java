@@ -6,9 +6,9 @@ import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.rest.ORestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -24,7 +24,7 @@ public class BookingRestController extends ORestController<IBookingService> {
         return this.bookingService;
     }
 
-    @RequestMapping(value = "bookingCheck", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "bookingCheck", produces = MediaType.APPLICATION_JSON_VALUE)
     public EntityResult bookingCheck(@RequestBody Map<String, Object> req) {
         try {
             return this.bookingService.bookingCheckInUpdate(req);
@@ -35,7 +35,7 @@ public class BookingRestController extends ORestController<IBookingService> {
         }
     }
 
-    @RequestMapping(value = "bookingCheckOut", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "bookingCheckOut", produces = MediaType.APPLICATION_JSON_VALUE)
     public EntityResult bookingCheckOut(@RequestBody Map<String, Object> req) {
         try {
             return this.bookingService.bookingCheckOutUpdate(req);
@@ -46,8 +46,8 @@ public class BookingRestController extends ORestController<IBookingService> {
         }
     }
 
-    @RequestMapping(value = "calification", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public EntityResult addCalificationsAndComments(@RequestBody Map<String, Object> req){
+    @PutMapping(value = "calification", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult addCalificationsAndComments(@RequestBody Map<String, Object> req) {
         try {
             return this.bookingService.bookingCalificationsAndCommentUpdate(req);
         } catch (Exception e) {
@@ -56,5 +56,4 @@ public class BookingRestController extends ORestController<IBookingService> {
             return res;
         }
     }
-
 }

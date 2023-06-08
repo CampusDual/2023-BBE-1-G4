@@ -12,10 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.INVALID_DATA;
 
 @Lazy
 @Service("CustomerService")
@@ -37,25 +38,25 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public EntityResult customerInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException {
-        String idNumber = String.valueOf(attrMap.get("idnumber"));
-        String phone = String.valueOf(attrMap.get("phone"));
-        int idTypeid = (int) attrMap.get("idtype_id");
+        String idNumber = String.valueOf(attrMap.get(CustomerDao.ATTR_IDNUMBER));
+        String phone = String.valueOf(attrMap.get(CustomerDao.ATTR_PHONE));
+        int idTypeid = (int) attrMap.get(CustomerDao.ATTR_IDTYPE_ID);
         Map<String, Object> idDocKeyMap = new HashMap<>();
         idDocKeyMap.put(IdDocumentTypesDao.ATTR_ID, idTypeid);
-        String email = String.valueOf(attrMap.get("mail"));
+        String email = String.valueOf(attrMap.get(CustomerDao.ATTR_EMAIL));
         EntityResult typeIdExist = this.daoHelper.query(this.idDocumentTypesDao, idDocKeyMap, List.of(IdDocumentTypesDao.ATTR_IDTYPE));
         Map<String, Object> customerKeyMap = new HashMap<>();
         customerKeyMap.put(CustomerDao.ATTR_IDNUMBER, idNumber);
         EntityResult idDocNumberAlreadyExist = this.daoHelper.query(this.customerDao, customerKeyMap, List.of(CustomerDao.ATTR_ID));
         EntityResult er = new EntityResultMapImpl();
-        if (typeIdExist.get("idtype") != null &&
+        if (typeIdExist.get(CustomerDao.ATTR_IDTYPE_ID) != null &&
                 ValidatorUtils.idValidator(idTypeid, idNumber) &&
                 ValidatorUtils.emailValidator(email) &&
-                idDocNumberAlreadyExist.get("id") == null &&
+                idDocNumberAlreadyExist.get(IdDocumentTypesDao.ATTR_ID) == null &&
                 ValidatorUtils.phoneValidator(phone)) {
             return this.daoHelper.insert(this.customerDao, attrMap);
         } else {
-            er.setMessage("Invalid data");
+            er.setMessage(INVALID_DATA);
         }
         er.setCode(EntityResult.OPERATION_WRONG);
         return er;
@@ -63,18 +64,16 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public EntityResult customerUpdate(Map<?, ?> attrMap, Map<?, ?> keyMap) throws OntimizeJEERuntimeException {
-        String idNumber = String.valueOf(keyMap.get("idnumber"));
-        ArrayList<String> idtype = new ArrayList<>();
-        idtype.add(CustomerDao.ATTR_IDTYPE_ID.toLowerCase());
-        EntityResult entityResult = this.daoHelper.query(this.customerDao, keyMap, idtype);
-        int idTypeid = (int) ((List<?>) entityResult.get("idtype_id")).get(0);
-        String email = String.valueOf(attrMap.get("mail"));
-        String phone = String.valueOf(attrMap.get("phone"));
+        String idNumber = String.valueOf(keyMap.get(CustomerDao.ATTR_IDNUMBER));
+        EntityResult entityResult = this.daoHelper.query(this.customerDao, keyMap, List.of(CustomerDao.ATTR_IDTYPE_ID));
+        int idTypeid = (int) ((List<?>) entityResult.get(CustomerDao.ATTR_IDTYPE_ID)).get(0);
+        String email = String.valueOf(attrMap.get(CustomerDao.ATTR_EMAIL));
+        String phone = String.valueOf(attrMap.get(CustomerDao.ATTR_PHONE));
         EntityResult er = new EntityResultMapImpl();
         if (ValidatorUtils.idValidator(idTypeid, idNumber) && ValidatorUtils.emailValidator(email) && ValidatorUtils.phoneValidator(phone)) {
             return this.daoHelper.update(this.customerDao, attrMap, keyMap);
         } else {
-            er.setMessage("Invalid data");
+            er.setMessage(INVALID_DATA);
         }
         er.setCode(EntityResult.OPERATION_WRONG);
         return er;
