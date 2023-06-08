@@ -89,7 +89,7 @@ public class RoomService implements IRoomService {
         roomIdKeyMap.put(RoomDao.ATTR_ID, roomId);
         EntityResult roomExists = this.daoHelper.query(this.roomDao, roomIdKeyMap, List.of(RoomDao.ATTR_ID, RoomDao.ATTR_STATE_ID));
         EntityResult er = new EntityResultMapImpl();
-        if (((List<?>) roomExists.get(RoomDao.ATTR_ID)).get(0) != null && Integer.parseInt(String.valueOf(((List<?>) roomExists.get(RoomDao.ATTR_STATE_ID)).get(0))) == 4) {
+        if (((List<?>) roomExists.get(RoomDao.ATTR_ID)).get(0) != null && Integer.parseInt(String.valueOf(((List<?>) roomExists.get(RoomDao.ATTR_STATE_ID)).get(0))) == 1) {
             Map<String, Object> roomUpdateFilter = new HashMap<>();
             Map<String, Object> roomUpdateData = new HashMap<>();
             roomUpdateFilter.put(RoomDao.ATTR_ID, roomId);

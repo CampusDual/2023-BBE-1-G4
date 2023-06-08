@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.FILTER;
+import static com.ontimize.jee.common.dto.EntityResult.OPERATION_WRONG;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -46,7 +48,7 @@ public class BookingServiceTest {
     @TestInstance(Lifecycle.PER_CLASS)
     class BookingServiceInsert {
         @Test
-        void testBookingInsert() {
+        void testBookingInsertAssertsSuccesful() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
             Map<String, Object> bookingToInsert = new HashMap<>();
@@ -55,6 +57,19 @@ public class BookingServiceTest {
             when(daoHelper.insert(any(BookingDao.class), anyMap())).thenReturn(er);
             EntityResult result = bookingService.bookingInsert(bookingToInsert);
             Assertions.assertEquals(0, result.getCode());
+            verify(daoHelper, times(1)).insert(any(BookingDao.class), anyMap());
+        }
+
+        @Test
+        void testBookingInsertAssertsWrong() {
+            EntityResult er = new EntityResultMapImpl();
+            er.setCode(OPERATION_WRONG);
+            Map<String, Object> bookingToInsert = new HashMap<>();
+            bookingToInsert.put(BookingDao.ATTR_ENTRY_DATE, LocalDate.now().plusDays(10));
+            bookingToInsert.put(BookingDao.ATTR_EXIT_DATE, LocalDate.now().plusDays(17));
+            when(daoHelper.insert(any(BookingDao.class), anyMap())).thenReturn(er);
+            EntityResult result = bookingService.bookingInsert(bookingToInsert);
+            Assertions.assertEquals(OPERATION_WRONG, result.getCode());
             verify(daoHelper, times(1)).insert(any(BookingDao.class), anyMap());
         }
     }
@@ -79,7 +94,7 @@ public class BookingServiceTest {
             filter.put(CustomerDao.ATTR_IDNUMBER, "47407434H");
             sqltypes.put(BookingDao.ATTR_ID, 12);
             sqltypes.put(BookingDao.ATTR_CHECK_IN, 91);
-            bookingToInsert.put("filter", filter);
+            bookingToInsert.put(FILTER, filter);
             bookingToInsert.put("sqltypes", sqltypes);
             EntityResult erCustomer = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,11 +56,11 @@ public class HotelRestController extends ORestController<IHotelService> {
     public EntityResult hotelSearchById(@PathVariable int id) {
         try {
             Map<String, Object> key = new HashMap<>();
-            BasicExpression be = HotelUtils.searchBy(BasicOperator.EQUAL_OP, HotelDao.ATTR_NAME, String.valueOf(id));
+            BasicExpression be = HotelUtils.searchBy(BasicOperator.EQUAL_OP, HotelDao.ATTR_ID, String.valueOf(id));
             if (be != null) {
                 key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
             }
-            return hotelService.hotelQuery(key, this.hotelDao.getColumnNames());
+            return hotelService.hotelQuery(key, this.hotelDao.getColumns());
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
