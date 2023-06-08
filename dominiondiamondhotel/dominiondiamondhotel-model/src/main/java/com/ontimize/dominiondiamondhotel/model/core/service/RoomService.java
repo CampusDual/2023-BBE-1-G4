@@ -11,11 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.FILTER;
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.INVALID_DATA;
 import static com.ontimize.dominiondiamondhotel.model.core.utils.RoomUtils.searchByHotelId;
 import static com.ontimize.dominiondiamondhotel.model.core.utils.RoomUtils.searchByStatus;
 
@@ -36,17 +37,15 @@ public class RoomService implements IRoomService {
 
     @Override
     public EntityResult roomInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException {
-        int number = Integer.parseInt(String.valueOf(attrMap.get("number")));
+        int number = Integer.parseInt(String.valueOf(attrMap.get(RoomDao.ATTR_NUMBER)));
         Map<String, Object> roomKeyMap = new HashMap<>();
         roomKeyMap.put(RoomDao.ATTR_NUMBER, number);
-        List<String> roomAttrList = new ArrayList<>();
-        roomAttrList.add(RoomDao.ATTR_ID);
-        EntityResult roomNumberAlreadyExists = this.daoHelper.query(this.roomDao, roomKeyMap, roomAttrList);
+        EntityResult roomNumberAlreadyExists = this.daoHelper.query(this.roomDao, roomKeyMap, List.of(RoomDao.ATTR_ID));
         EntityResult er = new EntityResultMapImpl();
         if (roomNumberAlreadyExists.get("id") == null) {
             return this.daoHelper.insert(this.roomDao, attrMap);
         } else {
-            er.setMessage("Invalid data");
+            er.setMessage(INVALID_DATA);
         }
         er.setCode(EntityResult.OPERATION_WRONG);
         return er;
@@ -63,63 +62,49 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public EntityResult getRoomByIdQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
+    public EntityResult getRoomByIdQuery(Map<String, Object> keyMap, List<?> attrList) throws OntimizeJEERuntimeException {
         return this.daoHelper.query(this.roomDao, keyMap, attrList);
     }
 
     @Override
-    public EntityResult getRoomByHotelIdQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
+    public EntityResult getRoomByHotelIdQuery(Map<String, Object> keyMap, List<?> attrList) throws OntimizeJEERuntimeException {
         return this.daoHelper.query(this.roomDao, keyMap, attrList);
     }
 
     @Override
     public EntityResult getRoomByHotelIdAndStatusQuery(Map<String, Object> req) throws OntimizeJEERuntimeException {
-        List<String> columnsToShow = new ArrayList<>();
-        columnsToShow.add("id");
-        columnsToShow.add("number");
-        Map<String, Object> filter = (Map<String, Object>) req.get("filter");
-        int hotelId = (int) filter.get("hotel_id");
-        Map<String, Object> key = new HashMap<String, Object>();
+        Map<?, ?> filter = (Map<?, ?>) req.get(FILTER);
+        int hotelId = (int) filter.get(RoomDao.ATTR_HOTEL_ID);
+        Map<String, Object> key = new HashMap<>();
         key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY,
                 new SQLStatementBuilder.BasicExpression(searchByHotelId(hotelId), SQLStatementBuilder.BasicOperator.AND_OP, searchByStatus(1)));
-        return this.daoHelper.query(this.roomDao, key, columnsToShow);
+        return this.daoHelper.query(this.roomDao, key, List.of(RoomDao.ATTR_ID, RoomDao.ATTR_NUMBER));
     }
 
     @Override
     public EntityResult cleaningManagement(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
-        Map<String, Object> filter = (Map<String, Object>) keyMap.get("filter");
-        List<String> columns = new ArrayList<>();
-        columns.add("id");
-        columns.add("state_id");
-        int roomId = (int) filter.get("id");
+        Map<?, ?> filter = (Map<?, ?>) keyMap.get(FILTER);
+        int roomId = (int) filter.get(RoomDao.ATTR_ID);
         Map<String, Object> roomIdKeyMap = new HashMap<>();
         roomIdKeyMap.put(RoomDao.ATTR_ID, roomId);
-        EntityResult roomExists = this.daoHelper.query(this.roomDao, roomIdKeyMap, columns);
+        EntityResult roomExists = this.daoHelper.query(this.roomDao, roomIdKeyMap, List.of(RoomDao.ATTR_ID, RoomDao.ATTR_STATE_ID));
         EntityResult er = new EntityResultMapImpl();
-        if(((List<String>) roomExists.get("id")).get(0) != null && Integer.parseInt(String.valueOf(((List<String>)roomExists.get("state_id")).get(0))) == 4){
+        if (((List<?>) roomExists.get(RoomDao.ATTR_ID)).get(0) != null && Integer.parseInt(String.valueOf(((List<?>) roomExists.get(RoomDao.ATTR_STATE_ID)).get(0))) == 4) {
             Map<String, Object> roomUpdateFilter = new HashMap<>();
             Map<String, Object> roomUpdateData = new HashMap<>();
-            roomUpdateFilter.put("id", roomId);
-            roomUpdateData.put("state_id", 1);
+            roomUpdateFilter.put(RoomDao.ATTR_ID, roomId);
+            roomUpdateData.put(RoomDao.ATTR_STATE_ID, 1);
             roomUpdate(roomUpdateData, roomUpdateFilter);
-            List<String> roomAttrList = new ArrayList<>();
-            roomAttrList.add(RoomDao.ATTR_ID);
-            roomAttrList.add(RoomDao.ATTR_STATE_ID);
-            EntityResult room = this.daoHelper.query(this.roomDao, roomUpdateFilter, roomAttrList);
-            int roomIdAfterUpdate = Integer.parseInt(String.valueOf(((List<String>)roomExists.get("id")).get(0)));
-            String roomStatus = String.valueOf(((List<String>)room.get("state_id")).get(0));
-            er.setMessage("Id de la habitación: "+roomIdAfterUpdate+" Estado de la habitación: "+roomStatus);
-            return er;
-
-        }else {
+            EntityResult room = this.daoHelper.query(this.roomDao, roomUpdateFilter, List.of(RoomDao.ATTR_ID, RoomDao.ATTR_STATE_ID));
+            int roomIdAfterUpdate = Integer.parseInt(String.valueOf(((List<?>) roomExists.get(RoomDao.ATTR_ID)).get(0)));
+            String roomStatus = String.valueOf(((List<?>) room.get(RoomDao.ATTR_STATE_ID)).get(0));
+            er.setMessage("Id de la habitación: " + roomIdAfterUpdate + " Estado de la habitación: " + roomStatus);
+        } else {
             er.setMessage("Invalid data");
             er.setCode(EntityResult.OPERATION_WRONG);
-            return er;
         }
+        return er;
     }
-
-
-
 }
 
 

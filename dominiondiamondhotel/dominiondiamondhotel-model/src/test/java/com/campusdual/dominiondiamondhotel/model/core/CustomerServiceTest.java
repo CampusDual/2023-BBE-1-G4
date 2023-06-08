@@ -37,41 +37,38 @@ public class CustomerServiceTest {
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    public class CustomerServiceQuery {
+    class CustomerServiceQuery {
         @Test
         void testCustomerQuery() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            List<String> attrList = new ArrayList<>();
-            attrList.add(CustomerDao.ATTR_ID);
             when(daoHelper.query(any(CustomerDao.class), anyMap(), anyList())).thenReturn(er);
-            EntityResult result = customerService.customerQuery(new HashMap<>(), attrList);
+            EntityResult result = customerService.customerQuery(new HashMap<>(), List.of(CustomerDao.ATTR_ID));
             Assertions.assertEquals(0, result.getCode());
             verify(daoHelper, times(1)).query(any(CustomerDao.class), anyMap(), anyList());
         }
     }
 
-
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    public class CustomerServiceInsert {
+    class CustomerServiceInsert {
         @Test
         void testCustomerInsert() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            er.put("idtype", List.of(2));
+            er.put(CustomerDao.ATTR_IDTYPE_ID, List.of(2));
             EntityResult idDocAlreadyExists = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
             List<String> nullList = new ArrayList<>();
             nullList.add(null);
-            er.put("id", nullList);
+            er.put(CustomerDao.ATTR_ID, nullList);
             Map<String, Object> customerToInsert = new HashMap<>();
-            customerToInsert.put("name", "Prueba");
-            customerToInsert.put("lastname1", "PruebaLastName");
-            customerToInsert.put("mail", "prueba@gmail.com");
-            customerToInsert.put("idnumber", "47407434H");
-            customerToInsert.put("idtype_id", 2);
-            customerToInsert.put("phone", 644257396);
+            customerToInsert.put(CustomerDao.ATTR_NAME, "Prueba");
+            customerToInsert.put(CustomerDao.ATTR_LASTNAME1, "PruebaLastName");
+            customerToInsert.put(CustomerDao.ATTR_EMAIL, "prueba@gmail.com");
+            customerToInsert.put(CustomerDao.ATTR_IDNUMBER, "47407434H");
+            customerToInsert.put(CustomerDao.ATTR_IDTYPE_ID, 2);
+            customerToInsert.put(CustomerDao.ATTR_PHONE, 644257396);
             when(daoHelper.query(any(IdDocumentTypesDao.class), anyMap(), anyList())).thenReturn(er);
             when(daoHelper.query(any(CustomerDao.class), anyMap(), anyList())).thenReturn(idDocAlreadyExists);
             when(daoHelper.insert(any(CustomerDao.class), anyMap())).thenReturn(er);
@@ -85,18 +82,18 @@ public class CustomerServiceTest {
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    public class CustomerServiceUpdate {
+    class CustomerServiceUpdate {
         @Test
         void testCustomerUpdate() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            er.put("idtype_id", List.of(2));
+            er.put(CustomerDao.ATTR_IDTYPE_ID, List.of(2));
             Map<String, Object> filter = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
-            data.put("id", List.of(1));
-            data.put("idnumber", "47407434H");
-            filter.put("mail", "prueba@gmail.com");
-            filter.put("phone", "644257396");
+            data.put(CustomerDao.ATTR_ID, List.of(1));
+            data.put(CustomerDao.ATTR_IDNUMBER, "47407434H");
+            filter.put(CustomerDao.ATTR_EMAIL, "prueba@gmail.com");
+            filter.put(CustomerDao.ATTR_PHONE, "644257396");
             when(daoHelper.query(any(CustomerDao.class), anyMap(), anyList())).thenReturn(er);
             when(daoHelper.update(any(CustomerDao.class), anyMap(), anyMap())).thenReturn(er);
             EntityResult result = customerService.customerUpdate(filter, data);
@@ -108,18 +105,17 @@ public class CustomerServiceTest {
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    public class CustomerServiceDelete {
+    class CustomerServiceDelete {
         @Test
         void testCustomerDelete() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
             Map<String, Object> filter = new HashMap<>();
-            filter.put("id", List.of(1));
+            filter.put(CustomerDao.ATTR_ID, List.of(1));
             when(daoHelper.delete(any(CustomerDao.class), anyMap())).thenReturn(er);
             EntityResult result = customerService.customerDelete(filter);
             Assertions.assertEquals(0, result.getCode());
             verify(daoHelper, times(1)).delete(any(CustomerDao.class), anyMap());
         }
     }
-
 }

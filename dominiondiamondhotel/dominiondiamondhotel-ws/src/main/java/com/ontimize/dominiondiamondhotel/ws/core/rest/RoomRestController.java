@@ -8,15 +8,14 @@ import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.rest.ORestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.COLUMNS;
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.FILTER;
 import static com.ontimize.dominiondiamondhotel.model.core.utils.RoomUtils.searchByHotelId;
 
 @RestController
@@ -30,15 +29,14 @@ public class RoomRestController extends ORestController<IRoomService> {
         return this.roomService;
     }
 
-    @RequestMapping(value = "managerGetRoom", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "managerGetRoom", produces = MediaType.APPLICATION_JSON_VALUE)
     public EntityResult managerGetRoom(@RequestBody Map<String, Object> req) {
         try {
-            List<String> columns = (List<String>) req.get("columns");
-            Map<String, Object> filter = (Map<String, Object>) req.get("filter");
+            Map<?, ?> filter = (Map<?, ?>) req.get(FILTER);
             int id = (int) filter.get("id");
             Map<String, Object> key = new HashMap<>();
             key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, searchById(id));
-            return roomService.getRoomByIdQuery(key, columns);
+            return roomService.getRoomByIdQuery(key, (List<?>) req.get(COLUMNS));
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
@@ -51,15 +49,14 @@ public class RoomRestController extends ORestController<IRoomService> {
         return new SQLStatementBuilder.BasicExpression(attr, SQLStatementBuilder.BasicOperator.EQUAL_OP, id);
     }
 
-    @RequestMapping(value = "getRoomFromHotelId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "getRoomFromHotelId", produces = MediaType.APPLICATION_JSON_VALUE)
     public EntityResult roomFromHotelId(@RequestBody Map<String, Object> req) {
         try {
-            List<String> columns = (List<String>) req.get("columns");
-            Map<String, Object> filter = (Map<String, Object>) req.get("filter");
-            int id = (int) filter.get("hotel_id");
-            Map<String, Object> key = new HashMap<String, Object>();
+            Map<?, ?> filter = (Map<?, ?>) req.get(FILTER);
+            int id = Integer.parseInt(String.valueOf(filter.get(RoomDao.ATTR_HOTEL_ID)));
+            Map<String, Object> key = new HashMap<>();
             key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, searchByHotelId(id));
-            return roomService.getRoomByHotelIdQuery(key, columns);
+            return roomService.getRoomByHotelIdQuery(key, (List<?>) req.get(COLUMNS));
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
@@ -67,13 +64,13 @@ public class RoomRestController extends ORestController<IRoomService> {
         }
     }
 
-    @RequestMapping(value = "assignRoom", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "assignRoom", produces = MediaType.APPLICATION_JSON_VALUE)
     public EntityResult assignRoom(@RequestBody Map<String, Object> req) {
         try {
             EntityResult er = roomService.getRoomByHotelIdAndStatusQuery(req);
             EntityResult result = new EntityResultMapImpl();
-            result.put("id", ((List<String>) er.get("id")).get(0));
-            result.put("number", ((List<String>) er.get("number")).get(0));
+            result.put(RoomDao.ATTR_ID, ((List<?>) er.get(RoomDao.ATTR_ID)).get(0));
+            result.put(RoomDao.ATTR_NUMBER, ((List<?>) er.get(RoomDao.ATTR_NUMBER)).get(0));
             return result;
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
@@ -82,7 +79,7 @@ public class RoomRestController extends ORestController<IRoomService> {
         }
     }
 
-    @RequestMapping(value = "cleaningManagement", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "cleaningManagement", produces = MediaType.APPLICATION_JSON_VALUE)
     public EntityResult cleaningManagement(@RequestBody Map<String, Object> req) {
         try {
             return this.roomService.cleaningManagement(req);
@@ -92,5 +89,4 @@ public class RoomRestController extends ORestController<IRoomService> {
             return res;
         }
     }
-
 }

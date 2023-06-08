@@ -44,14 +44,14 @@ public class BookingServiceTest {
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
-    public class BookingServiceInsert {
+    class BookingServiceInsert {
         @Test
         void testBookingInsert() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
             Map<String, Object> bookingToInsert = new HashMap<>();
-            bookingToInsert.put("entry_date", LocalDate.now().plusDays(10));
-            bookingToInsert.put("exit_date", LocalDate.now().plusDays(15));
+            bookingToInsert.put(BookingDao.ATTR_ENTRY_DATE, LocalDate.now().plusDays(10));
+            bookingToInsert.put(BookingDao.ATTR_EXIT_DATE, LocalDate.now().plusDays(15));
             when(daoHelper.insert(any(BookingDao.class), anyMap())).thenReturn(er);
             EntityResult result = bookingService.bookingInsert(bookingToInsert);
             Assertions.assertEquals(0, result.getCode());
@@ -61,30 +61,30 @@ public class BookingServiceTest {
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
-    public class BookingServiceCheck {
+    class BookingServiceCheck {
         @Test
         void testBookingCheckIn() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            er.put("hotel_id", List.of(1));
-            er.put("id", List.of(1));
-            er.put("customer_id", List.of(1));
+            er.put(BookingDao.ATTR_ID, List.of(1));
+            er.put(BookingDao.ATTR_HOTEL_ID, List.of(1));
+            er.put(BookingDao.ATTR_CUSTOMER_ID, List.of(1));
             List<String> nullList = new ArrayList<>();
             nullList.add(null);
             er.put("check_out", nullList);
             Map<String, Object> bookingToInsert = new HashMap<>();
             Map<String, Object> filter = new HashMap<>();
             Map<String, Object> sqltypes = new HashMap<>();
-            filter.put("id", 1);
-            filter.put("idnumber", "47407434H");
-            sqltypes.put("check_in", 91);
-            sqltypes.put("id", 12);
+            filter.put(BookingDao.ATTR_ID, 1);
+            filter.put(CustomerDao.ATTR_IDNUMBER, "47407434H");
+            sqltypes.put(BookingDao.ATTR_ID, 12);
+            sqltypes.put(BookingDao.ATTR_CHECK_IN, 91);
             bookingToInsert.put("filter", filter);
             bookingToInsert.put("sqltypes", sqltypes);
             EntityResult erCustomer = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            erCustomer.put("id", List.of(1));
-            erCustomer.put("idnumber", List.of("47407434H"));
+            erCustomer.put(BookingDao.ATTR_ID, List.of(1));
+            erCustomer.put(CustomerDao.ATTR_IDNUMBER, List.of("47407434H"));
             EntityResult erRoom = new EntityResultMapImpl();
             erRoom.setCode(EntityResult.OPERATION_SUCCESSFUL);
             erRoom.put("id", List.of(1));
@@ -104,20 +104,20 @@ public class BookingServiceTest {
         void testBookingCheckOut() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
-            er.put("id", List.of(1));
-            er.put("room_id", List.of(1));
-            er.put("check_in", List.of(LocalDate.now().plusDays(10)));
-            er.put("check_out", List.of(LocalDate.now().plusDays(15)));
+            er.put(BookingDao.ATTR_ID, List.of(1));
+            er.put(BookingDao.ATTR_ROOM_ID, List.of(1));
+            er.put(BookingDao.ATTR_CHECK_IN, List.of(LocalDate.now().plusDays(10)));
+            er.put(BookingDao.ATTR_CHECK_OUT, List.of(LocalDate.now().plusDays(15)));
             Map<String, Object> bookingToInsert = new HashMap<>();
             Map<String, Object> filter = new HashMap<>();
             Map<String, Object> sqltypes = new HashMap<>();
-            filter.put("id", 1);
-            sqltypes.put("check_out", 91);
-            sqltypes.put("id", 12);
+            sqltypes.put(BookingDao.ATTR_ID, 12);
+            filter.put(BookingDao.ATTR_ID, 1);
+            sqltypes.put(BookingDao.ATTR_CHECK_OUT, 91);
             bookingToInsert.put("filter", filter);
             bookingToInsert.put("sqltypes", sqltypes);
             EntityResult roomUpdate = new EntityResultMapImpl();
-            roomUpdate.put("state_id", List.of(1));
+            roomUpdate.put(RoomDao.ATTR_STATE_ID, List.of(1));
             roomUpdate.setCode(EntityResult.OPERATION_SUCCESSFUL);
             when(daoHelper.query(any(BookingDao.class), anyMap(), anyList())).thenReturn(er);
             when(daoHelper.query(any(RoomDao.class), anyMap(), anyList())).thenReturn(roomUpdate);

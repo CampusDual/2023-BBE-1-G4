@@ -1,9 +1,11 @@
 package com.ontimize.dominiondiamondhotel.model.core.service;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IBookingService;
+import com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils;
 import com.ontimize.dominiondiamondhotel.api.core.utils.ValidatorUtils;
 import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.CustomerDao;
+import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
 import com.ontimize.dominiondiamondhotel.model.core.utils.BookingUtils;
 import com.ontimize.jee.common.dto.EntityResult;
@@ -15,10 +17,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.*;
 
 @Lazy
 @Service("BookingService")
@@ -40,15 +43,13 @@ public class BookingService implements IBookingService {
 
     @Override
     public EntityResult bookingInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException {
-        String entry_date = String.valueOf(attrMap.get("entry_date"));
-        String exit_date = String.valueOf(attrMap.get("exit_date"));
-
+        String entryDate = String.valueOf(attrMap.get(BookingDao.ATTR_ENTRY_DATE));
+        String exitDate = String.valueOf(attrMap.get(BookingDao.ATTR_EXIT_DATE));
         EntityResult entityResult = new EntityResultMapImpl();
-
-        if (ValidatorUtils.dateValidator(entry_date, exit_date)) {
+        if (ValidatorUtils.dateValidator(entryDate, exitDate)) {
             return this.daoHelper.insert(this.bookingDao, attrMap);
         } else {
-            entityResult.setMessage("Invalidad date");
+            entityResult.setMessage(INVALID_DATA);
             entityResult.setCode(EntityResult.OPERATION_WRONG);
             return entityResult;
         }
@@ -56,44 +57,42 @@ public class BookingService implements IBookingService {
 
     @Override
     public EntityResult bookingCheckInUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
-        Map<String, Object> getFilter = (Map<String, Object>) keyMap.get("filter");
-        int bookingId = Integer.parseInt(String.valueOf(getFilter.get("id")));
+        Map<?, ?> getFilter = (Map<?, ?>) keyMap.get(FILTER);
+        int bookingId = Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
         Map<String, Object> bookingIdKeyMap = new HashMap<>();
         bookingIdKeyMap.put(BookingDao.ATTR_ID, bookingId);
         EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumnNames());
-        int hotelIdFromBooking = Integer.parseInt(String.valueOf(((List<String>) bookingExists.get("hotel_id")).get(0)));
-        int customerId = Integer.parseInt(String.valueOf(((List<String>) bookingExists.get("customer_id")).get(0)));
-        String customerIdNumber = String.valueOf(getFilter.get("idnumber"));
+        int hotelIdFromBooking = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_HOTEL_ID)).get(0)));
+        int customerId = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_CUSTOMER_ID)).get(0)));
+        String customerIdNumber = String.valueOf(getFilter.get(CustomerDao.ATTR_IDNUMBER));
         Map<String, Object> customerKeyMap = new HashMap<>();
         customerKeyMap.put(CustomerDao.ATTR_IDNUMBER, customerIdNumber);
-        List<String> customerAttrList = new ArrayList<>();
-        customerAttrList.add(CustomerDao.ATTR_ID);
-        EntityResult customerExists = this.daoHelper.query(this.customerDao, customerKeyMap, customerAttrList);
-        int customerExistsId = Integer.parseInt(String.valueOf(((List<String>) customerExists.get("id")).get(0)));
+        EntityResult customerExists = this.daoHelper.query(this.customerDao, customerKeyMap, List.of(CustomerDao.ATTR_ID));
+        int customerExistsId = Integer.parseInt(String.valueOf(((List<?>) customerExists.get(CustomerDao.ATTR_ID)).get(0)));
         EntityResult er = new EntityResultMapImpl();
-        if (((List<String>) bookingExists.get("id")).get(0) != null && customerId == customerExistsId && ((List<String>) bookingExists.get("check_out")).get(0) == null) {
+        if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null && customerId == customerExistsId && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) == null) {
             Map<String, Object> req = new HashMap<>();
             Map<String, Object> hotelId = new HashMap<>();
-            hotelId.put("hotel_id", hotelIdFromBooking);
-            req.put("filter", hotelId);
+            hotelId.put(HotelDao.ATTR_ID, hotelIdFromBooking);
+            req.put(FILTER, hotelId);
             Map<String, Object> filter = new HashMap<>();
-            filter.put("id", ((List<String>) bookingExists.get("id")).get(0));
+            filter.put(BookingDao.ATTR_ID, ((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0));
             Map<String, Object> data = new HashMap<>();
-            data.put("check_in", LocalDateTime.now());
+            data.put(BookingDao.ATTR_CHECK_IN, LocalDateTime.now());
             EntityResult erRoomId = this.roomService.getRoomByHotelIdAndStatusQuery(req);
-            data.put("room_id", ((List<Integer>) erRoomId.get("id")).get(0));
+            data.put(RoomDao.ATTR_ID, ((List<?>) erRoomId.get(RoomDao.ATTR_ID)).get(0));
             this.daoHelper.update(this.bookingDao, data, filter);
             EntityResult result = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumnNames());
             if (result.getCode() == EntityResult.OPERATION_SUCCESSFUL) {
                 Map<String, Object> roomUpdateFilter = new HashMap<>();
                 Map<String, Object> roomUpdateData = new HashMap<>();
-                roomUpdateFilter.put("id", ((List<String>) erRoomId.get("id")).get(0));
-                roomUpdateData.put("state_id", 2);
+                roomUpdateFilter.put(RoomDao.ATTR_ID, ((List<?>) erRoomId.get(RoomDao.ATTR_ID)).get(0));
+                roomUpdateData.put(RoomDao.ATTR_STATE_ID, 2);
                 this.roomService.roomUpdate(roomUpdateData, roomUpdateFilter);
             }
             return this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumnNames());
         } else {
-            er.setMessage("Invalid data");
+            er.setMessage(INVALID_DATA);
         }
         er.setCode(EntityResult.OPERATION_WRONG);
         return er;
@@ -101,37 +100,34 @@ public class BookingService implements IBookingService {
 
     @Override
     public EntityResult bookingCheckOutUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
-        Map<String, Object> getFilter = (Map<String, Object>) keyMap.get("filter");
-        int bookingId = Integer.parseInt(String.valueOf(getFilter.get("id")));
+        Map<?, ?> getFilter = (Map<?, ?>) keyMap.get(FILTER);
+        int bookingId = Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
         Map<String, Object> bookingIdKeyMap = new HashMap<>();
         bookingIdKeyMap.put(BookingDao.ATTR_ID, bookingId);
         EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumnNames());
         EntityResult er = new EntityResultMapImpl();
-        if (((List<String>) bookingExists.get("id")).get(0) != null && ((List<String>) bookingExists.get("check_in")).get(0) != null ) {
-            int roomIdFromBooking = Integer.parseInt(String.valueOf(((List<String>)bookingExists.get("room_id")).get(0)));
+        if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) != null) {
+            int roomIdFromBooking = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_ROOM_ID)).get(0)));
             Map<String, Object> filter = new HashMap<>();
-            filter.put("id", ((List<String>) bookingExists.get("id")).get(0));
+            filter.put("id", ((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0));
             Map<String, Object> data = new HashMap<>();
             LocalDateTime now = LocalDateTime.now();
-            data.put("check_out", now);
+            data.put(BookingDao.ATTR_CHECK_OUT, now);
             this.daoHelper.update(this.bookingDao, data, filter);
             EntityResult result = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumnNames());
             if (result.getCode() == EntityResult.OPERATION_SUCCESSFUL) {
                 Map<String, Object> roomUpdateFilter = new HashMap<>();
                 Map<String, Object> roomUpdateData = new HashMap<>();
-                roomUpdateFilter.put("id", roomIdFromBooking);
-                roomUpdateData.put("state_id", 4);
+                roomUpdateFilter.put(RoomDao.ATTR_ID, roomIdFromBooking);
+                roomUpdateData.put(RoomDao.ATTR_STATE_ID, 4);
                 this.roomService.roomUpdate(roomUpdateData, roomUpdateFilter);
-                List<String> roomAttrList = new ArrayList<>();
-                roomAttrList.add(RoomDao.ATTR_ID);
-                roomAttrList.add(RoomDao.ATTR_STATE_ID);
-                EntityResult room = this.daoHelper.query(this.roomDao, roomUpdateFilter, roomAttrList);
-                String roomStatus = String.valueOf(((List<String>) room.get("state_id")).get(0));
+                EntityResult room = this.daoHelper.query(this.roomDao, roomUpdateFilter, List.of(RoomDao.ATTR_ID, RoomDao.ATTR_STATE_ID));
+                String roomStatus = String.valueOf(((List<?>) room.get(RoomDao.ATTR_STATE_ID)).get(0));
                 er.setMessage("Fecha de check_out: " + now + " Estado de la habitación: " + roomStatus);
                 return er;
             }
         } else {
-            er.setMessage("Invalid data");
+            er.setMessage(INVALID_DATA);
         }
         er.setCode(EntityResult.OPERATION_WRONG);
         return er;
@@ -139,39 +135,34 @@ public class BookingService implements IBookingService {
 
     @Override
     public EntityResult bookingCalificationsAndCommentUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
-        Map<String, Object> getFilter = (Map<String, Object>) keyMap.get("filter");
-        Map<String, Object> getData = (Map<String, Object>) keyMap.get("data");
-        int bookingId = Integer.parseInt(String.valueOf(getFilter.get("id")));
-        String customerIdNumber = String.valueOf(getFilter.get("idnumber"));
+        Map<?, ?> getFilter = (Map<?, ?>) keyMap.get(FILTER);
+        Map<String, Object> getData = (Map<String, Object>) keyMap.get(DATA);
+        int bookingId = Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
+        String customerIdNumber = String.valueOf(getFilter.get(CustomerDao.ATTR_IDNUMBER));
         Map<String, Object> bookingIdKeyMap = new HashMap<>();
         bookingIdKeyMap.put(BookingDao.ATTR_ID, bookingId);
         Map<String, Object> customerIdKeyMap = new HashMap<>();
         customerIdKeyMap.put(CustomerDao.ATTR_IDNUMBER, customerIdNumber);
         EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, List.of(BookingDao.ATTR_ID, BookingDao.ATTR_CUSTOMER_ID, BookingDao.ATTR_CHECK_OUT));
         EntityResult customerExists = this.daoHelper.query(this.customerDao, customerIdKeyMap, List.of(CustomerDao.ATTR_ID));
-        int bookingCustomerId = Integer.parseInt(String.valueOf(((List<String>) bookingExists.get("customer_id")).get(0)));
-        int customerExistsId = Integer.parseInt(String.valueOf(((List<String>)customerExists.get("id")).get(0)));
+        int bookingCustomerId = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_CUSTOMER_ID)).get(0)));
+        int customerExistsId = Integer.parseInt(String.valueOf(((List<?>) customerExists.get(CustomerDao.ATTR_ID)).get(0)));
         EntityResult er = new EntityResultMapImpl();
-        if (((List<String>) bookingExists.get("id")).get(0) != null && ((List<String>) bookingExists.get("check_out")).get(0) != null && bookingCustomerId == customerExistsId) {
-            int cleaning = Integer.parseInt(String.valueOf(getData.get("cleaning")));
-            int facilities = Integer.parseInt(String.valueOf(getData.get("facilities")));
-            int pricequality = Integer.parseInt(String.valueOf(getData.get("pricequality")));
+        if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) != null && bookingCustomerId == customerExistsId) {
+            int cleaning = Integer.parseInt(String.valueOf(getData.get(BookingDao.ATTR_CLEANING)));
+            int facilities = Integer.parseInt(String.valueOf(getData.get(BookingDao.ATTR_FACILITIES)));
+            int pricequality = Integer.parseInt(String.valueOf(getData.get(BookingDao.ATTR_PRICE_QUALITY)));
             Map<String, Object> filter = new HashMap<>();
-            filter.put("id", bookingId);
-            List<String> bookingUpdatedReturn = new ArrayList<>();
-            bookingUpdatedReturn.add(BookingDao.ATTR_ID);
-            bookingUpdatedReturn.add(BookingDao.ATTR_COMMENTS);
-            bookingUpdatedReturn.add(BookingDao.ATTR_MEAN);
-            getData.put("mean", (cleaning+facilities+pricequality)/3.0);
-            if (BookingUtils.calificationCheck(cleaning) && BookingUtils.calificationCheck(facilities) && BookingUtils.calificationCheck(pricequality)) {
-                if (this.daoHelper.update(this.bookingDao, getData, filter).getCode() == EntityResult.OPERATION_SUCCESSFUL) {
-                    return this.daoHelper.query(this.bookingDao, bookingIdKeyMap, bookingUpdatedReturn);
-                }
+            filter.put(BookingDao.ATTR_ID, bookingId);
+            getData.put(BookingDao.ATTR_MEAN, (cleaning + facilities + pricequality) / 3.0);
+            if (BookingUtils.calificationCheck(cleaning) &&
+                    BookingUtils.calificationCheck(facilities) && BookingUtils.calificationCheck(pricequality) &&
+                    this.daoHelper.update(this.bookingDao, getData, filter).getCode() == EntityResult.OPERATION_SUCCESSFUL) {
+                return this.daoHelper.query(this.bookingDao, bookingIdKeyMap, List.of(BookingDao.ATTR_ID, BookingDao.ATTR_COMMENTS, BookingDao.ATTR_MEAN));
             }
         }
-        er.setMessage("Invalid data");
+        er.setMessage(INVALID_DATA);
         er.setCode(EntityResult.OPERATION_WRONG);
         return er;
     }
-
 }
