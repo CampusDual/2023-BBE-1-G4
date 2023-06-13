@@ -122,7 +122,10 @@ public class BookingServiceTest {
             er.put(BookingDao.ATTR_ID, List.of(1));
             er.put(BookingDao.ATTR_ROOM_ID, List.of(1));
             er.put(BookingDao.ATTR_CHECK_IN, List.of(LocalDate.now().plusDays(10)));
-            er.put(BookingDao.ATTR_CHECK_OUT, List.of(LocalDate.now().plusDays(15)));
+            List<String> nullList = new ArrayList<>();
+            nullList.add(null);
+            er.put(BookingDao.ATTR_CHECK_OUT, nullList);
+            EntityResult er2 = new EntityResultMapImpl();
             Map<String, Object> bookingToInsert = new HashMap<>();
             Map<String, Object> filter = new HashMap<>();
             Map<String, Object> sqltypes = new HashMap<>();
@@ -136,7 +139,7 @@ public class BookingServiceTest {
             roomUpdate.setCode(EntityResult.OPERATION_SUCCESSFUL);
             when(daoHelper.query(any(BookingDao.class), anyMap(), anyList())).thenReturn(er);
             when(daoHelper.query(any(RoomDao.class), anyMap(), anyList())).thenReturn(roomUpdate);
-            when(roomService.roomUpdate(anyMap(), anyMap())).thenReturn(er);
+            when(roomService.roomUpdate(anyMap(), anyMap())).thenReturn(er2);
             EntityResult result = bookingService.bookingCheckOutUpdate(bookingToInsert);
             Assertions.assertEquals(0, result.getCode());
             verify(daoHelper, times(2)).query(any(BookingDao.class), anyMap(), anyList());

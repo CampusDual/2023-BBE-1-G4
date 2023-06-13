@@ -66,7 +66,7 @@ public class CustomerServiceTest {
             customerToInsert.put(CustomerDao.ATTR_NAME, "Prueba");
             customerToInsert.put(CustomerDao.ATTR_LASTNAME1, "PruebaLastName");
             customerToInsert.put(CustomerDao.ATTR_EMAIL, "prueba@gmail.com");
-            customerToInsert.put(CustomerDao.ATTR_IDNUMBER, "47407434H");
+            customerToInsert.put(CustomerDao.ATTR_IDNUMBER, "34305361X");
             customerToInsert.put(CustomerDao.ATTR_IDTYPE_ID, 2);
             customerToInsert.put(CustomerDao.ATTR_PHONE, 644257396);
             when(daoHelper.query(any(IdDocumentTypesDao.class), anyMap(), anyList())).thenReturn(er);
