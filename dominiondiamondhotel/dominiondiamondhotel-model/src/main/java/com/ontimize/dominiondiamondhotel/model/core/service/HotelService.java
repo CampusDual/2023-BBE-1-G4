@@ -1,6 +1,7 @@
 package com.ontimize.dominiondiamondhotel.model.core.service;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IHotelService;
+import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.PostalCodeDao;
 import com.ontimize.jee.common.dto.EntityResult;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.FILTER;
+
 @Lazy
 @Service("HotelService")
 public class HotelService implements IHotelService {
@@ -24,6 +27,9 @@ public class HotelService implements IHotelService {
 
     @Autowired
     PostalCodeDao postalCodeDao;
+
+    @Autowired
+    private BookingDao bookingDao;
 
     @Override
     public EntityResult hotelQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
@@ -44,4 +50,5 @@ public class HotelService implements IHotelService {
     public EntityResult hotelDelete(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
         return this.daoHelper.delete(this.hotelDao, keyMap);
     }
+
 }
