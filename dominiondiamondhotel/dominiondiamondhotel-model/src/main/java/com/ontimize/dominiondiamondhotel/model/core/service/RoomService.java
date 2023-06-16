@@ -1,7 +1,9 @@
 package com.ontimize.dominiondiamondhotel.model.core.service;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IRoomService;
+import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
+import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
@@ -30,6 +32,9 @@ public class RoomService implements IRoomService {
     @Autowired
     private RoomDao roomDao;
 
+    @Autowired
+    private HotelService hotelService;
+
     @Override
     public EntityResult roomQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
         return this.daoHelper.query(this.roomDao, keyMap, attrList);
@@ -43,10 +48,26 @@ public class RoomService implements IRoomService {
         EntityResult roomNumberAlreadyExists = this.daoHelper.query(this.roomDao, roomKeyMap, List.of(RoomDao.ATTR_ID));
         EntityResult er = new EntityResultMapImpl();
         if (roomNumberAlreadyExists.get("id") == null) {
-            return this.daoHelper.insert(this.roomDao, attrMap);
-        } else {
-            er.setMessage(INVALID_DATA);
+            int hotelId = Integer.parseInt(String.valueOf(attrMap.get(RoomDao.ATTR_HOTEL_ID)));
+            Map<String, Object> key = new HashMap<>();
+            SQLStatementBuilder.BasicExpression be = HotelUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, HotelDao.ATTR_ID, String.valueOf(hotelId));
+            if (be != null) {
+                key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
+            }
+            EntityResult hotelExists = this.hotelService.hotelQuery(key, HotelDao.getColumns());
+            if (hotelExists.get(HotelDao.ATTR_ID) != null) {
+                Map<String, Object> hotelAddRoomData = new HashMap<>();
+                Map<String, Object> hotelAddRoomKey = new HashMap<>();
+                int hotelRooms = Integer.parseInt(String.valueOf(((List<?>) hotelExists.get(HotelDao.ATTR_TOTALROOMS)).get(0)));
+                hotelAddRoomData.put(HotelDao.ATTR_TOTALROOMS, hotelRooms + 1);
+                hotelAddRoomKey.put(HotelDao.ATTR_ID, hotelId);
+                EntityResult hotelAddRoom = this.hotelService.hotelUpdate(hotelAddRoomData, hotelAddRoomKey);
+                if (hotelAddRoom != null) {
+                    return this.daoHelper.insert(this.roomDao, attrMap);
+                }
+            }
         }
+        er.setMessage(INVALID_DATA);
         er.setCode(EntityResult.OPERATION_WRONG);
         return er;
     }
@@ -58,7 +79,24 @@ public class RoomService implements IRoomService {
 
     @Override
     public EntityResult roomDelete(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
-        return this.daoHelper.delete(this.roomDao, keyMap);
+        EntityResult roomInfo = this.daoHelper.query(this.roomDao, keyMap, RoomDao.getColumns());
+        int hotelId = Integer.parseInt(String.valueOf(((List<?>) (roomInfo.get(RoomDao.ATTR_HOTEL_ID))).get(0)));
+        Map<String, Object> hotelKeyQuery = new HashMap<>();
+        hotelKeyQuery.put(HotelDao.ATTR_ID, hotelId);
+        EntityResult hotelInfo = this.hotelService.hotelQuery(hotelKeyQuery, HotelDao.getColumns());
+        int hotelRooms = Integer.parseInt(String.valueOf(((List<?>) hotelInfo.get(HotelDao.ATTR_TOTALROOMS)).get(0)));
+        Map<String, Object> hotelRoomData = new HashMap<>();
+        Map<String, Object> hotelRoomKey = new HashMap<>();
+        hotelRoomData.put(HotelDao.ATTR_TOTALROOMS, hotelRooms - 1);
+        hotelRoomKey.put(HotelDao.ATTR_ID, hotelId);
+        EntityResult hotelAddRoom = this.hotelService.hotelUpdate(hotelRoomData, hotelRoomKey);
+        if (hotelAddRoom != null) {
+            return this.daoHelper.delete(this.roomDao, keyMap);
+        }
+        EntityResult er = new EntityResultMapImpl();
+        er.setMessage(INVALID_DATA);
+        er.setCode(EntityResult.OPERATION_WRONG);
+        return er;
     }
 
     @Override

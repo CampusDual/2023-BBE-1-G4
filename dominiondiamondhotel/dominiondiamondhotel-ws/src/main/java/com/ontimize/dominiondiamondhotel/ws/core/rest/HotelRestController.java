@@ -11,13 +11,8 @@ import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.rest.ORestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +55,7 @@ public class HotelRestController extends ORestController<IHotelService> {
             if (be != null) {
                 key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
             }
-            return hotelService.hotelQuery(key, this.hotelDao.getColumns());
+            return hotelService.hotelQuery(key, HotelDao.getColumns());
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
@@ -77,6 +72,17 @@ public class HotelRestController extends ORestController<IHotelService> {
                 key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
             }
             return hotelService.hotelQuery(key, List.of(HotelDao.ATTR_NAME));
+        } catch (Exception e) {
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
+    }
+
+    @PostMapping(value = "generateOccupationalReport", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult hotelGenerateReport(@RequestBody Map<String, Object> req) {
+        try {
+            return this.hotelService.hotelOccupationQuery(req);
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
