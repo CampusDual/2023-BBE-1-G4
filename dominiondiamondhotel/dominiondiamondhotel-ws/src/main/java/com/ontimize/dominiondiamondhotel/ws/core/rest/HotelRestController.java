@@ -79,7 +79,7 @@ public class HotelRestController extends ORestController<IHotelService> {
         }
     }
 
-    @GetMapping(value = "generateOccupationalReport", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "generateOccupationalReport", produces = MediaType.APPLICATION_JSON_VALUE)
     public EntityResult hotelGenerateReport(@RequestBody Map<String, Object> req) {
         try {
             return this.hotelService.hotelOccupationQuery(req);
