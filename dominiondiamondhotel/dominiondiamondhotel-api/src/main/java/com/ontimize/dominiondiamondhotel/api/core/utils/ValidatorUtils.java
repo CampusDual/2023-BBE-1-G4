@@ -2,6 +2,7 @@ package com.ontimize.dominiondiamondhotel.api.core.utils;
 
 
 import java.time.LocalDate;
+import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +17,7 @@ public class ValidatorUtils {
                 int dni = 0;
                 try {
                     dni = Integer.parseInt(id.substring(0, 8));
-                } catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     return false;
                 }
                 String letter = id.substring(8);
@@ -32,7 +33,7 @@ public class ValidatorUtils {
         return Pattern.matches(emailRegex, email);
     }
 
-    public static boolean phoneValidator(String phone){
+    public static boolean phoneValidator(String phone) {
         String phonePatterns
                 = "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"
                 + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?){2}\\d{3}$"
@@ -42,23 +43,14 @@ public class ValidatorUtils {
         return matcher.matches();
     }
 
-    public static boolean dateValidator(String entry_date, String exit_date){
-
-        try{
-
+    public static boolean dateValidator(String entry_date, String exit_date) {
+        try {
             LocalDate nowDate = LocalDate.now();
             LocalDate entryDate = LocalDate.parse(entry_date);
             LocalDate exitDate = LocalDate.parse(exit_date);
-
-            if((entryDate.isBefore(exitDate) || entryDate.isEqual(exitDate)) && (entryDate.isAfter(nowDate) || entryDate.isEqual(nowDate))){
-                return true;
-            }else{
-                return false;
-            }
-
-        }catch (Exception e){
+            return (entryDate.isBefore(exitDate) || entryDate.isEqual(exitDate)) && (entryDate.isAfter(nowDate) || entryDate.isEqual(nowDate));
+        } catch (Exception e) {
             return false;
         }
-
     }
 }

@@ -1,11 +1,9 @@
 package com.ontimize.dominiondiamondhotel.model.core.service;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IBookingService;
-import com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils;
 import com.ontimize.dominiondiamondhotel.api.core.utils.ValidatorUtils;
 import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.CustomerDao;
-import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
 import com.ontimize.dominiondiamondhotel.model.core.utils.BookingUtils;
 import com.ontimize.jee.common.dto.EntityResult;
