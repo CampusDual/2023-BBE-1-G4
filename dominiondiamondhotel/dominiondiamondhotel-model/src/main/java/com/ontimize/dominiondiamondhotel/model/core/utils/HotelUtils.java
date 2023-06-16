@@ -18,4 +18,26 @@ public class HotelUtils {
         }
         return null;
     }
+
+    public static SQLStatementBuilder.BasicExpression notLess(Double min){
+
+        SQLStatementBuilder.BasicField attr = new SQLStatementBuilder.BasicField(String.valueOf(min));
+        return new SQLStatementBuilder.BasicExpression(attr, SQLStatementBuilder.BasicOperator.MORE_OP, 0);
+
+    }
+
+    public static SQLStatementBuilder.BasicExpression notMore(Double max){
+
+        SQLStatementBuilder.BasicField attr = new SQLStatementBuilder.BasicField(String.valueOf(max));
+        return new SQLStatementBuilder.BasicExpression(attr, SQLStatementBuilder.BasicOperator.LESS_OP, 10);
+
+    }
+
+    public static SQLStatementBuilder.BasicExpression betweenQualifies(Double min, Double max){
+
+        SQLStatementBuilder.BasicField attr = new SQLStatementBuilder.BasicField(String.valueOf(min));
+        SQLStatementBuilder.BasicField attr2 = new SQLStatementBuilder.BasicField(String.valueOf(max));
+        return new SQLStatementBuilder.BasicExpression(attr, SQLStatementBuilder.BasicOperator.LESS_OP, 10);
+
+    }
 }

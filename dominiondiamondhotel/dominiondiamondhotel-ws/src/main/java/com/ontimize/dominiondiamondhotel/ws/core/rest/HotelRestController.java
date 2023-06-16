@@ -8,13 +8,11 @@ import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.server.rest.AdvancedQueryParameter;
 import com.ontimize.jee.server.rest.ORestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -77,6 +75,19 @@ public class HotelRestController extends ORestController<IHotelService> {
                 key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
             }
             return hotelService.hotelQuery(key, List.of(HotelDao.ATTR_NAME));
+        } catch (Exception e) {
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
+    }
+
+    @GetMapping(value = "filteredGet", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult filteredGet(@RequestBody AdvancedQueryParameter queryParameter) {
+        try {
+            Map<?,?> filter = queryParameter.getFilter();
+            List<SQLStatementBuilder.SQLOrder> orderBy = queryParameter.getOrderBy();
+            return this.hotelService.filteredGet(filter, orderBy);
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
