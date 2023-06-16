@@ -42,6 +42,7 @@ public class HotelService implements IHotelService {
 
     private static final String MONTH = "month";
     private static final String YEAR = "year";
+
     @Override
     public EntityResult hotelQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
         return this.daoHelper.query(this.hotelDao, keyMap, attrList);
@@ -137,5 +138,4 @@ public class HotelService implements IHotelService {
         BasicExpression beBookings2 = new BasicExpression(initialDateBe2, BasicOperator.AND_OP, finalDateBe2);
         return new BasicExpression(beBookings1, BasicOperator.OR_OP, beBookings2);
     }
-    
 }

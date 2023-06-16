@@ -136,3 +136,8 @@ ADD CONSTRAINT states_state_check CHECK (state IN ('free', 'busy', 'maintenance'
 INSERT INTO states (state) VALUES ('cleaning');
 
 
+----
+ALTER TABLE hotels
+ADD rating DECIMAL(10, 2);
+
+
