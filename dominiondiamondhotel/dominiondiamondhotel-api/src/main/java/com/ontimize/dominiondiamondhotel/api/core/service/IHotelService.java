@@ -13,4 +13,5 @@ public interface IHotelService {
     public EntityResult hotelUpdate(Map<?, ?> attrMap, Map<?, ?> keyMap) throws OntimizeJEERuntimeException;
     public EntityResult hotelDelete(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
     public EntityResult hotelPaginationQuery(Map<?, ?> keyMap) throws OntimizeJEERuntimeException;
+    public EntityResult hotelOccupationQuery(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
 }

@@ -1,5 +1,6 @@
 package com.campusdual.dominiondiamondhotel.model.core;
 
+import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.PostalCodeDao;
 import com.ontimize.dominiondiamondhotel.model.core.service.HotelService;
@@ -36,6 +37,8 @@ class HotelServiceTest {
     HotelDao hotelDao;
     @Mock
     PostalCodeDao postalCodeDao;
+    @Mock
+    BookingDao bookingDao;
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -76,6 +79,28 @@ class HotelServiceTest {
             EntityResult result = hotelService.hotelQuery(hotelbyId, List.of(HotelDao.ATTR_ID));
             Assertions.assertEquals(0, result.getCode());
             verify(daoHelper, times(1)).query(any(HotelDao.class), anyMap(), anyList());
+        }
+
+        @Test
+        void hotelOccupation() {
+            EntityResult hotelExists = new EntityResultMapImpl();
+            hotelExists.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            hotelExists.put(HotelDao.ATTR_ID, List.of(1));
+            hotelExists.put(HotelDao.ATTR_TOTALROOMS, List.of(10));
+            EntityResult bookings = new EntityResultMapImpl();
+            bookings.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            bookings.put("entry_date", List.of("2023-06-13", "2023-06-30", "2023-07-30", "2023-07-30"));
+            bookings.put("exit_date", List.of("2023-06-22", "2023-07-03", "2023-09-03", "2023-09-03"));
+            Map<String, Object> filter = new HashMap<>();
+            filter.put(BookingDao.ATTR_HOTEL_ID, 10);
+            filter.put("year", 2023);
+            Map<String, Object> keyMap = new HashMap<>();
+            keyMap.put("filter", filter);
+            when(daoHelper.query(any(HotelDao.class), anyMap(), anyList())).thenReturn(hotelExists);
+            when(daoHelper.query(any(BookingDao.class), anyMap(), anyList())).thenReturn(bookings);
+            EntityResult callResult = hotelService.hotelOccupationQuery(keyMap);
+            Assertions.assertEquals(EntityResult.OPERATION_SUCCESSFUL, callResult.getCode());
+            Assertions.assertEquals(1.095890410958904, ((Map<?, ?>)(callResult.get("data"))).get("occupation"));
         }
     }
 
@@ -181,4 +206,5 @@ class HotelServiceTest {
         }
 
     }
+
 }
