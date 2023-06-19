@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +56,7 @@ public class HotelRestController extends ORestController<IHotelService> {
             if (be != null) {
                 key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
             }
-            return hotelService.hotelQuery(key, this.hotelDao.getColumns());
+            return hotelService.hotelQuery(key, HotelDao.getColumns());
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
@@ -81,13 +79,17 @@ public class HotelRestController extends ORestController<IHotelService> {
             return res;
         }
     }
-
     @PostMapping(value = "hotelPagination", produces = MediaType.APPLICATION_JSON_VALUE)
     public EntityResult hotelPaginationQuery(@RequestBody Map<String, Object> filter) {
         try {
             return this.hotelService.hotelPaginationQuery(filter);
         } catch (Exception e) {
             e.printStackTrace();
+    @PostMapping(value = "generateOccupationalReport", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult hotelGenerateReport(@RequestBody Map<String, Object> req) {
+        try {
+            return this.hotelService.hotelOccupationQuery(req);
+        } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
             return res;

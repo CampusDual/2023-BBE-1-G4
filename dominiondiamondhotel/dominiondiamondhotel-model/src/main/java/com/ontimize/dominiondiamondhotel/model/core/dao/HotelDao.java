@@ -20,11 +20,11 @@ public class HotelDao extends OntimizeJdbcDaoSupport {
     public static final String ATTR_ID = "id";
     public static final String ATTR_NAME = "name";
     public static final String ATTR_ZIP_ID = "zip_id";
-
+    public static final String ATTR_TOTALROOMS = "totalrooms";
     public static final String ATTR_RATING = "rating";
     public static final String ATTR_POPULARITY = "popularity";
 
-    public List<String> getColumns(){
+    public static List<String> getColumns(){
         List<String> columns = new ArrayList<>();
         for (Field f : HotelDao.class.getDeclaredFields()) {
             String field = f.toString().substring(f.toString().indexOf("_") + 1).toLowerCase();
