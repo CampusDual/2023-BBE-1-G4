@@ -62,6 +62,7 @@ public class HotelService implements IHotelService {
     public EntityResult hotelPaginationQuery(Map<?, ?> keyMap) throws OntimizeJEERuntimeException {
 
         Map<?, ?> filter = (Map<?, ?>) keyMap.get(FILTER);
+        Map<?, ?> orderBy = (Map<?, ?>) keyMap.get("orderBy");
         Map<String, Object> filterMap = new HashMap<>();
         List<SQLStatementBuilder.SQLOrder> orderByList = new ArrayList<>();
         List<String> columns = new ArrayList<>();
@@ -89,9 +90,9 @@ public class HotelService implements IHotelService {
 
         }
 
-        if(filter.get("popularity") != null){
+        if(orderBy.get("popularity") != null){
 
-            orderByList.add(new SQLStatementBuilder.SQLOrder("popularity", (boolean) filter.get("popularity")));
+            orderByList.add(new SQLStatementBuilder.SQLOrder("popularity", (boolean) orderBy.get("popularity")));
 
         }
 

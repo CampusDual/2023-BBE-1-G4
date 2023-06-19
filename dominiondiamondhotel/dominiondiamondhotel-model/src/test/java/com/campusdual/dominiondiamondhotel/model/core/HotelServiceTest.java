@@ -160,9 +160,11 @@ class HotelServiceTest {
 
             Map<String, Object> data = new HashMap<>();
             data.put("zip", 2);
-            data.put("popularity", true);
+            Map<String, Object> orderBy = new HashMap<>();
+            orderBy.put("popularity", true);
             Map<String, Object> filter = new HashMap<>();
             filter.put(FILTER, data);
+            filter.put("orderBy", orderBy);
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
             er.put(HotelDao.ATTR_NAME, "prueba1Ontimize");
