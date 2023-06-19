@@ -12,5 +12,5 @@ public interface IHotelService {
     public EntityResult hotelInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException;
     public EntityResult hotelUpdate(Map<?, ?> attrMap, Map<?, ?> keyMap) throws OntimizeJEERuntimeException;
     public EntityResult hotelDelete(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
-    public EntityResult filteredGet(Map<?, ?> keyMap, List<SQLStatementBuilder.SQLOrder> orderByList) throws OntimizeJEERuntimeException;
+    public EntityResult hotelPaginationQuery(Map<?, ?> keyMap) throws OntimizeJEERuntimeException;
 }

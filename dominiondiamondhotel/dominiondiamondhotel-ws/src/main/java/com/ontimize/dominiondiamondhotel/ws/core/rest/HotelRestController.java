@@ -82,13 +82,12 @@ public class HotelRestController extends ORestController<IHotelService> {
         }
     }
 
-    @GetMapping(value = "filteredGet", produces = MediaType.APPLICATION_JSON_VALUE)
-    public EntityResult filteredGet(@RequestBody AdvancedQueryParameter queryParameter) {
+    @PostMapping(value = "hotelPagination", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult hotelPaginationQuery(@RequestBody Map<String, Object> filter) {
         try {
-            Map<?,?> filter = queryParameter.getFilter();
-            List<SQLStatementBuilder.SQLOrder> orderBy = queryParameter.getOrderBy();
-            return this.hotelService.filteredGet(filter, orderBy);
+            return this.hotelService.hotelPaginationQuery(filter);
         } catch (Exception e) {
+            e.printStackTrace();
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
             return res;

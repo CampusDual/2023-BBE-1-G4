@@ -126,6 +126,7 @@ public class BookingService implements IBookingService {
                 Map<String, Object> roomUpdateData = new HashMap<>();
                 roomUpdateFilter.put(RoomDao.ATTR_ID, roomIdFromBooking);
                 roomUpdateData.put(RoomDao.ATTR_STATE_ID, 4);
+                updatePopularity(Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_HOTEL_ID)).get(0))));
                 this.roomService.roomUpdate(roomUpdateData, roomUpdateFilter);
                 EntityResult room = this.daoHelper.query(this.roomDao, roomUpdateFilter, List.of(RoomDao.ATTR_ID, RoomDao.ATTR_STATE_ID));
                 String roomStatus = String.valueOf(((List<?>) room.get(RoomDao.ATTR_STATE_ID)).get(0));
@@ -185,6 +186,21 @@ public class BookingService implements IBookingService {
         hotelIdForUpdateKeyMap.put(HotelDao.ATTR_ID, hotelId);
         Map<String, Object> getData = new HashMap<>();
         getData.put(HotelDao.ATTR_RATING, mean);
+        return this.daoHelper.update(this.hotelDao, getData,hotelIdForUpdateKeyMap);
+
+    }
+
+    private EntityResult updatePopularity(int hotelId){
+
+        Map<String, Object> hotelIdKeyMap = new HashMap<>();
+        hotelIdKeyMap.put(BookingDao.ATTR_HOTEL_ID, hotelId);
+        EntityResult hotelPopularity = this.daoHelper.query(this.bookingDao, hotelIdKeyMap, List.of("counting"), "countPopularity");
+        int count = Integer.parseInt(String.valueOf(((List<?>) hotelPopularity.get("counting")).get(0)));
+
+        Map<String, Object> hotelIdForUpdateKeyMap = new HashMap<>();
+        hotelIdForUpdateKeyMap.put(HotelDao.ATTR_ID, hotelId);
+        Map<String, Object> getData = new HashMap<>();
+        getData.put(HotelDao.ATTR_POPULARITY, count);
         return this.daoHelper.update(this.hotelDao, getData,hotelIdForUpdateKeyMap);
 
     }

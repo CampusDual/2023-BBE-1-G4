@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.Keymap;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,19 +59,29 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public EntityResult filteredGet(Map<?, ?> keyMap, List<SQLStatementBuilder.SQLOrder> orderByList) throws OntimizeJEERuntimeException {
+    public EntityResult hotelPaginationQuery(Map<?, ?> keyMap) throws OntimizeJEERuntimeException {
 
         Map<?, ?> filter = (Map<?, ?>) keyMap.get(FILTER);
         Map<String, Object> filterMap = new HashMap<>();
+        List<SQLStatementBuilder.SQLOrder> orderByList = new ArrayList<>();
+        List<String> columns = new ArrayList<>();
+        columns.add(HotelDao.ATTR_NAME);
+        columns.add(HotelDao.ATTR_ID);
+        columns.add(HotelDao.ATTR_RATING);
+        columns.add(HotelDao.ATTR_POPULARITY);
+        columns.add(HotelDao.ATTR_ZIP_ID);
 
         if(filter.get("zip") == null){
 
             Double min = Double.parseDouble(String.valueOf(filter.get("qualitymin")));
             Double max = Double.parseDouble(String.valueOf(filter.get("qualitymax")));
-            filterMap.put("min", min);
-            filterMap.put("max", max);
-            filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, HotelUtils.notLess(min));
-            filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, HotelUtils.notMore(max));
+            if(min > 0 && max <= 10) {
+                filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, HotelUtils.andExpression(HotelUtils.moreThan(min), HotelUtils.lessThan(max)));
+            }else{
+                EntityResult res = new EntityResultMapImpl();
+                res.setCode(EntityResult.OPERATION_WRONG);
+                return res;
+            }
 
         }else{
 
@@ -78,7 +89,13 @@ public class HotelService implements IHotelService {
 
         }
 
-        return this.daoHelper.query(this.hotelDao, filterMap, List.of("*"), orderByList, "filteredget");
+        if(filter.get("popularity") != null){
+
+            orderByList.add(new SQLStatementBuilder.SQLOrder("popularity", (boolean) filter.get("popularity")));
+
+        }
+
+        return this.daoHelper.query(this.hotelDao, filterMap, columns, orderByList, "filteredget");
 
     }
 
