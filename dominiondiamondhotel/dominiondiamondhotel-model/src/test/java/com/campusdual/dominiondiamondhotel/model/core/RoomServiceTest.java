@@ -1,7 +1,9 @@
 package com.campusdual.dominiondiamondhotel.model.core;
 
+import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.IdDocumentTypesDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
+import com.ontimize.dominiondiamondhotel.model.core.service.HotelService;
 import com.ontimize.dominiondiamondhotel.model.core.service.RoomService;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
@@ -34,6 +36,8 @@ public class RoomServiceTest {
     RoomDao roomDao;
     @Mock
     IdDocumentTypesDao idDocumentTypesDao;
+    @Mock
+    HotelService hotelService;
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -101,7 +105,13 @@ public class RoomServiceTest {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
             EntityResult roomAlreadyExists = new EntityResultMapImpl();
-            er.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            roomAlreadyExists.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            EntityResult entityResultHotel = new EntityResultMapImpl();
+            entityResultHotel.put(HotelDao.ATTR_ID,List.of(1));
+            entityResultHotel.put(HotelDao.ATTR_NAME,"Casa Blanca");
+            entityResultHotel.put(HotelDao.ATTR_TOTALROOMS,List.of(1));
+            entityResultHotel.put(HotelDao.ATTR_ZIP_ID,List.of(1));
+            entityResultHotel.put(HotelDao.ATTR_RATING,List.of(5));
             List<String> nullList = new ArrayList<>();
             nullList.add(null);
             er.put(RoomDao.ATTR_ID, nullList);
@@ -112,6 +122,8 @@ public class RoomServiceTest {
             roomToInsert.put(RoomDao.ATTR_STATE_ID, 1);
             when(daoHelper.insert(any(RoomDao.class), anyMap())).thenReturn(er);
             when(daoHelper.query(any(RoomDao.class), anyMap(), anyList())).thenReturn(roomAlreadyExists);
+            when(hotelService.hotelQuery(anyMap(),anyList())).thenReturn(entityResultHotel);
+            when(hotelService.hotelUpdate(anyMap(),anyMap())).thenReturn(entityResultHotel);
             EntityResult result = roomService.roomInsert(roomToInsert);
             Assertions.assertEquals(0, result.getCode());
             verify(daoHelper, times(1)).insert(any(RoomDao.class), anyMap());
@@ -175,9 +187,18 @@ public class RoomServiceTest {
         void testRoomDelete() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            EntityResult er2 = new EntityResultMapImpl();
+            er2.put(RoomDao.ATTR_HOTEL_ID,List.of(1));
+            EntityResult er3 = new EntityResultMapImpl();
+            er3.put(HotelDao.ATTR_TOTALROOMS,List.of(1));
             Map<String, Object> filter = new HashMap<>();
-            filter.put(RoomDao.ATTR_ID, List.of(1));
+            filter.put(RoomDao.ATTR_ID, 1);
+            Map<String,Object> filterService = new HashMap<>();
+            filterService.put(HotelDao.ATTR_ID,1);
             when(daoHelper.delete(any(RoomDao.class), anyMap())).thenReturn(er);
+            when(daoHelper.query(any(RoomDao.class),anyMap(),anyList())).thenReturn(er2);
+            when(hotelService.hotelQuery(filterService,HotelDao.getColumns())).thenReturn(er3);
+            when(hotelService.hotelUpdate(anyMap(),anyMap())).thenReturn(er);
             EntityResult result = roomService.roomDelete(filter);
             Assertions.assertEquals(0, result.getCode());
             verify(daoHelper, times(1)).delete(any(RoomDao.class), anyMap());

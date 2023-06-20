@@ -7,6 +7,7 @@ import com.ontimize.dominiondiamondhotel.model.core.service.HotelService;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -156,6 +157,21 @@ class HotelServiceTest {
             when(daoHelper.update(any(HotelDao.class), anyMap(), anyMap())).thenReturn(er);
             EntityResult result = hotelService.hotelUpdate(filter, data);
             Assertions.assertEquals(0, result.getCode());
+            verify(daoHelper, times(1)).update(any(HotelDao.class), anyMap(), anyMap());
+        }
+
+        @Test
+        void testHotelCalificate(){
+            EntityResult er = new EntityResultMapImpl();
+            er.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            er.put(HotelDao.ATTR_RATING, 10);
+            Map<String, Object> filter = new HashMap<>();
+            Map<String, Object> data = new HashMap<>();
+            filter.put(HotelDao.ATTR_ID, List.of(1));
+            data.put(HotelDao.ATTR_RATING, 10);
+            when(daoHelper.update(any(HotelDao.class), anyMap(), anyMap())).thenReturn(er);
+            EntityResult callCalificationUpdate = hotelService.hotelUpdate(filter, data);
+            Assertions.assertEquals(0, callCalificationUpdate.getCode());
             verify(daoHelper, times(1)).update(any(HotelDao.class), anyMap(), anyMap());
         }
     }
