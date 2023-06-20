@@ -193,12 +193,11 @@ public class BookingService implements IBookingService {
         hotelIdKeyMap.put(BookingDao.ATTR_HOTEL_ID, hotelId);
         EntityResult hotelPopularity = this.daoHelper.query(this.bookingDao, hotelIdKeyMap, List.of("counting"), "countPopularity");
         int count = Integer.parseInt(String.valueOf(((List<?>) hotelPopularity.get("counting")).get(0)));
-
         Map<String, Object> hotelIdForUpdateKeyMap = new HashMap<>();
         hotelIdForUpdateKeyMap.put(HotelDao.ATTR_ID, hotelId);
         Map<String, Object> getData = new HashMap<>();
         getData.put(HotelDao.ATTR_POPULARITY, count);
-        return this.daoHelper.update(this.hotelDao, getData,hotelIdForUpdateKeyMap);
+        return this.hotelService.hotelUpdate(getData,hotelIdForUpdateKeyMap);
 
     }
 

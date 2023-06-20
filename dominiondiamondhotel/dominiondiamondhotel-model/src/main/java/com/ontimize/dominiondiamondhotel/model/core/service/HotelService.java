@@ -6,6 +6,8 @@ import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.PostalCodeDao;
 import com.ontimize.dominiondiamondhotel.model.core.utils.BookingUtils;
 import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.db.AdvancedEntityResultMapImpl;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
@@ -69,44 +71,29 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public EntityResult hotelPaginationQuery(Map<?, ?> keyMap) throws OntimizeJEERuntimeException {
+    public AdvancedEntityResult hotelPaginationQuery(Map<?,?> keysValues, List<?> attributesValues, int pagesize, int offset, List<SQLStatementBuilder.SQLOrder> orderby) throws OntimizeJEERuntimeException {
 
-        Map<?, ?> filter = (Map<?, ?>) keyMap.get(FILTER);
-        Map<?, ?> orderBy = (Map<?, ?>) keyMap.get("orderBy");
         Map<String, Object> filterMap = new HashMap<>();
-        List<SQLStatementBuilder.SQLOrder> orderByList = new ArrayList<>();
-        List<String> columns = new ArrayList<>();
-        columns.add(HotelDao.ATTR_NAME);
-        columns.add(HotelDao.ATTR_ID);
-        columns.add(HotelDao.ATTR_RATING);
-        columns.add(HotelDao.ATTR_POPULARITY);
-        columns.add(HotelDao.ATTR_ZIP_ID);
 
-        if(filter.get("zip") == null){
+        if(keysValues.get("zip") == null){
 
-            Double min = Double.parseDouble(String.valueOf(filter.get("qualitymin")));
-            Double max = Double.parseDouble(String.valueOf(filter.get("qualitymax")));
+            Double min = Double.parseDouble(String.valueOf(keysValues.get("qualitymin")));
+            Double max = Double.parseDouble(String.valueOf(keysValues.get("qualitymax")));
             if(min > 0 && max <= 10) {
                 filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, HotelUtils.andExpression(HotelUtils.moreThan(min), HotelUtils.lessThan(max)));
             }else{
-                EntityResult res = new EntityResultMapImpl();
-                res.setCode(EntityResult.OPERATION_WRONG);
-                return res;
+                return new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG,EntityResult.type);
+
             }
 
         }else{
 
-            filterMap.put(HotelDao.ATTR_ZIP_ID, Integer.parseInt(String.valueOf(filter.get("zip"))));
+            filterMap.put(HotelDao.ATTR_ZIP_ID, Integer.parseInt(String.valueOf(keysValues.get("zip"))));
 
         }
 
-        if(orderBy.get("popularity") != null){
 
-            orderByList.add(new SQLStatementBuilder.SQLOrder("popularity", (boolean) orderBy.get("popularity")));
-
-        }
-
-        return this.daoHelper.query(this.hotelDao, filterMap, columns, orderByList, "filteredget");
+        return this.daoHelper.paginationQuery(this.hotelDao, filterMap, attributesValues, pagesize, offset, orderby, "filteredget");
 
     }
 

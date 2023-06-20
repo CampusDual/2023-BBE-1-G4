@@ -79,17 +79,17 @@ public class HotelRestController extends ORestController<IHotelService> {
             return res;
         }
     }
-    @PostMapping(value = "hotelPagination", produces = MediaType.APPLICATION_JSON_VALUE)
-    public EntityResult hotelPaginationQuery(@RequestBody Map<String, Object> filter) {
-        try {
-            return this.hotelService.hotelPaginationQuery(filter);
-        } catch (Exception e) {
-            e.printStackTrace();
-            EntityResult res = new EntityResultMapImpl();
-            res.setCode(EntityResult.OPERATION_WRONG);
-            return res;
-        }
-    }
+//    @PostMapping(value = "hotelPagination", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public EntityResult hotelPaginationQuery(@RequestBody Map<String, Object> filter) {
+//        try {
+//            return this.hotelService.hotelPaginationQuery(filter);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            EntityResult res = new EntityResultMapImpl();
+//            res.setCode(EntityResult.OPERATION_WRONG);
+//            return res;
+//        }
+//    }
     @PostMapping(value = "generateOccupationalReport", produces = MediaType.APPLICATION_JSON_VALUE)
     public EntityResult hotelGenerateReport(@RequestBody Map<String, Object> req) {
         try {
