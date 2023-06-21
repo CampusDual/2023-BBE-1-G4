@@ -4,6 +4,9 @@ import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.PostalCodeDao;
 import com.ontimize.dominiondiamondhotel.model.core.service.HotelService;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.db.AdvancedEntityResultMapImpl;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
@@ -15,6 +18,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -22,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.FILTER;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -32,12 +37,7 @@ class HotelServiceTest {
     HotelService hotelService;
     @Mock
     DefaultOntimizeDaoHelper daoHelper;
-    @Mock
-    HotelDao hotelDao;
-    @Mock
-    PostalCodeDao postalCodeDao;
-    @Mock
-    BookingDao bookingDao;
+
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -190,5 +190,37 @@ class HotelServiceTest {
         }
     }
 
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class HotelPaginationQuery{
+
+        @Test
+        void testHotelPaginationQuery(){
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("zip", 2);
+            List<String> columnsList= new ArrayList<>();
+            columnsList.add("id");
+            columnsList.add("rating");
+            columnsList.add("name");
+            columnsList.add("popularity");
+            columnsList.add("zip_id");
+            List<SQLStatementBuilder.SQLOrder> orderby = new ArrayList<>();
+            orderby.add(new SQLStatementBuilder.SQLOrder("popularity", true));
+            AdvancedEntityResult er = new AdvancedEntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL,EntityResult.type);
+            er.put(HotelDao.ATTR_NAME, "prueba1Ontimize");
+            er.put(HotelDao.ATTR_ID, List.of(1));
+            er.put(HotelDao.ATTR_RATING,  List.of(1));
+            er.put(HotelDao.ATTR_POPULARITY,  List.of(1));
+            er.put(HotelDao.ATTR_ZIP_ID,  List.of(1));
+            when(daoHelper.paginationQuery(any(HotelDao.class),anyMap(),anyList(), anyInt(), anyInt(), anyList(), anyString()))
+                    .thenReturn(er);
+            EntityResult result = hotelService.hotelPaginationQuery(data, columnsList, -1,-1, orderby);
+            Assertions.assertEquals(0, result.getCode());
+            verify(daoHelper, times(1)).paginationQuery(any(HotelDao.class), anyMap(),anyList(), anyInt(), anyInt(), anyList(), anyString());
+
+        }
+
+    }
 
 }

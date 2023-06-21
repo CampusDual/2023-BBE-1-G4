@@ -4,6 +4,11 @@ import com.ontimize.dominiondiamondhotel.api.core.service.IHotelService;
 import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.PostalCodeDao;
+import com.ontimize.dominiondiamondhotel.model.core.utils.BookingUtils;
+import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.db.AdvancedEntityResultMapImpl;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
@@ -17,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.Keymap;
+import java.util.ArrayList;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -64,6 +71,32 @@ public class HotelService implements IHotelService {
     }
 
     @Override
+    public AdvancedEntityResult hotelPaginationQuery(Map<?,?> keysValues, List<?> attributesValues, int pagesize, int offset, List<SQLStatementBuilder.SQLOrder> orderby) throws OntimizeJEERuntimeException {
+
+        Map<String, Object> filterMap = new HashMap<>();
+
+        if(keysValues.get("zip") == null){
+
+            Double min = Double.parseDouble(String.valueOf(keysValues.get("qualitymin")));
+            Double max = Double.parseDouble(String.valueOf(keysValues.get("qualitymax")));
+            if(min > 0 && max <= 10) {
+                filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, HotelUtils.andExpression(HotelUtils.moreThan(min), HotelUtils.lessThan(max)));
+            }else{
+                return new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG,EntityResult.type);
+
+            }
+
+        }else{
+
+            filterMap.put(HotelDao.ATTR_ZIP_ID, Integer.parseInt(String.valueOf(keysValues.get("zip"))));
+
+        }
+
+
+        return this.daoHelper.paginationQuery(this.hotelDao, filterMap, attributesValues, pagesize, offset, orderby, "filteredget");
+
+    }
+
     public EntityResult hotelOccupationQuery(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
         Map<?, ?> getFilter = (Map<?, ?>) keyMap.get(FILTER);
         int hotelId = Integer.parseInt(String.valueOf(getFilter.get("hotel_id")));

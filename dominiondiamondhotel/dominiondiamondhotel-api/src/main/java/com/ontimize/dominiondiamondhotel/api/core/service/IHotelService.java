@@ -1,5 +1,6 @@
 package com.ontimize.dominiondiamondhotel.api.core.service;
 
+import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 
@@ -11,5 +12,6 @@ public interface IHotelService {
     public EntityResult hotelInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException;
     public EntityResult hotelUpdate(Map<?, ?> attrMap, Map<?, ?> keyMap) throws OntimizeJEERuntimeException;
     public EntityResult hotelDelete(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
+    public EntityResult hotelPaginationQuery(Map<?,?> keysValues, List<?> attributesValues, int pagesize, int offset, List<SQLStatementBuilder.SQLOrder> orderby) throws OntimizeJEERuntimeException;
     public EntityResult hotelOccupationQuery(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
 }

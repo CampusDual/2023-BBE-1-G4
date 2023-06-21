@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.ontimize.boot</groupId>
         <artifactId>ontimize-boot-parent</artifactId>
-        <version>3.8.1</version>
+        <version>3.10.1</version>
     </parent>
     <groupId>com.ontimize</groupId>
     <artifactId>dominiondiamondhotel</artifactId>

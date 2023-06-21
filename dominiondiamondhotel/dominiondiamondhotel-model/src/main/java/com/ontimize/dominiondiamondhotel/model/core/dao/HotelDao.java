@@ -22,6 +22,7 @@ public class HotelDao extends OntimizeJdbcDaoSupport {
     public static final String ATTR_ZIP_ID = "zip_id";
     public static final String ATTR_TOTALROOMS = "totalrooms";
     public static final String ATTR_RATING = "rating";
+    public static final String ATTR_POPULARITY = "popularity";
 
     public static List<String> getColumns(){
         List<String> columns = new ArrayList<>();

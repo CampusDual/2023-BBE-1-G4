@@ -8,6 +8,7 @@ import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
+import com.ontimize.jee.server.rest.AdvancedQueryParameter;
 import com.ontimize.jee.server.rest.ORestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
