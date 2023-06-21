@@ -43,10 +43,6 @@ public class BookingServiceTest {
     HotelService hotelService;
     @Mock
     CustomerService customerService;
-    @Mock
-    BookingDao bookingDao;
-    @Mock
-    RoomDao roomDao;
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
