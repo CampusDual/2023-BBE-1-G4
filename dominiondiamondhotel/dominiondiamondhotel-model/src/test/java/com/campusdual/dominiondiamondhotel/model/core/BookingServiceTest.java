@@ -43,6 +43,11 @@ public class BookingServiceTest {
     HotelService hotelService;
     @Mock
     CustomerService customerService;
+    @Mock
+    BookingDao bookingDao;
+    @Mock
+    RoomDao roomDao;
+
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
@@ -122,6 +127,9 @@ public class BookingServiceTest {
             er.put(BookingDao.ATTR_ID, List.of(1));
             er.put(BookingDao.ATTR_ROOM_ID, List.of(1));
             er.put(BookingDao.ATTR_CHECK_IN, List.of(LocalDate.now().plusDays(10)));
+            er.put(BookingDao.ATTR_HOTEL_ID, List.of(1));
+            EntityResult hotelEr = new EntityResultMapImpl();
+            hotelEr.put("counting", List.of(1));
             List<String> nullList = new ArrayList<>();
             nullList.add(null);
             er.put(BookingDao.ATTR_CHECK_OUT, nullList);
@@ -135,10 +143,12 @@ public class BookingServiceTest {
             bookingToInsert.put("filter", filter);
             bookingToInsert.put("sqltypes", sqltypes);
             EntityResult roomUpdate = new EntityResultMapImpl();
+            roomUpdate.put(RoomDao.ATTR_ID, List.of(1));
             roomUpdate.put(RoomDao.ATTR_STATE_ID, List.of(1));
             roomUpdate.setCode(EntityResult.OPERATION_SUCCESSFUL);
             when(daoHelper.query(any(BookingDao.class), anyMap(), anyList())).thenReturn(er);
             when(daoHelper.query(any(RoomDao.class), anyMap(), anyList())).thenReturn(roomUpdate);
+            when(daoHelper.query(any(BookingDao.class),anyMap(),anyList(),anyString())).thenReturn(hotelEr);
             when(roomService.roomUpdate(anyMap(), anyMap())).thenReturn(er2);
             EntityResult result = bookingService.bookingCheckOutUpdate(bookingToInsert);
             Assertions.assertEquals(0, result.getCode());

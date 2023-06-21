@@ -129,7 +129,7 @@ public class HotelService implements IHotelService {
                 BasicField finalDateToCompare = new BasicField("'"+endDate+"'");
                 bookingKeyMap.put(ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, basicExpressionBetween(entryDate, entryDateToCompare, finalDate, finalDateToCompare));
                 bookingKeyMap.put(BookingDao.ATTR_HOTEL_ID, hotelId);
-                EntityResult bookings = daoHelper.query(this.bookingDao, bookingKeyMap, bookingDao.getColumns());
+                EntityResult bookings = daoHelper.query(this.bookingDao, bookingKeyMap, BookingDao.getColumns());
                 if (bookings != null) {
                     double occupation = 0.0;
                     LocalDate initDate = initialDate;

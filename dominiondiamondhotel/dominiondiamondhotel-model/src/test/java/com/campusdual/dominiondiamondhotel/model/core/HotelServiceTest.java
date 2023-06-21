@@ -37,6 +37,10 @@ class HotelServiceTest {
     HotelService hotelService;
     @Mock
     DefaultOntimizeDaoHelper daoHelper;
+    @Mock
+    HotelDao hotelDao;
+    @Mock
+    BookingDao bookingDao;
 
 
     @Nested

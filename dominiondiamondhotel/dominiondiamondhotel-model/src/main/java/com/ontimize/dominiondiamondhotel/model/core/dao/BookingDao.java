@@ -30,7 +30,7 @@ public class BookingDao extends OntimizeJdbcDaoSupport {
     public static final String ATTR_COMM = "comm";
     public static final String ATTR_MEAN = "mean";
 
-    public List<String> getColumns(){
+    public static List<String> getColumns(){
         List<String> columns = new ArrayList<>();
         for (Field f : BookingDao.class.getDeclaredFields()) {
             String field = f.toString().substring(f.toString().indexOf("_") + 1).toLowerCase();
