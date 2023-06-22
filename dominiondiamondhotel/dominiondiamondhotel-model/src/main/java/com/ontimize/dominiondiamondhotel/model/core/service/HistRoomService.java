@@ -38,19 +38,13 @@ public class HistRoomService implements IHistRoomService {
     private IdDocumentTypesDao idDocumentTypesDao;
 
     @Override
-    public EntityResult getHistRoom(Map<String, Object> filter) throws OntimizeJEERuntimeException {
-        Map<?, ?> filterMap = (Map<?, ?>) filter.get(FILTER);
-        int roomId = (int) filterMap.get(RoomDao.ATTR_ID);
-        Map<String, Object> roomIdKeyMap = new HashMap<>();
-        roomIdKeyMap.put(RoomDao.ATTR_ID, roomId);
-        EntityResult roomExists = this.daoHelper.query(this.roomDao, roomIdKeyMap, List.of(RoomDao.ATTR_ID));
+    public EntityResult histroomQuery(Map<String, Object> filter, List<String> columns) throws OntimizeJEERuntimeException {
+        EntityResult roomExists = this.daoHelper.query(this.roomDao, filter, List.of(RoomDao.ATTR_ID));
         EntityResult er = new EntityResultMapImpl();
         if (((List<?>) roomExists.get(RoomDao.ATTR_ID)).get(0) != null){
             Map<String, Object> roomFilter = new HashMap<>();
-            roomFilter.put(HistRoomDao.ATTR_ROOM_ID, roomId);
-            List<SQLStatementBuilder.SQLOrder> orderBy = new ArrayList<>();
-            orderBy.add(new SQLStatementBuilder.SQLOrder("change_date", false));
-            return this.daoHelper.query(this.histRoomDao, roomFilter, List.of(HistRoomDao.ATTR_ROOM_ID, HistRoomDao.ATTR_CHANGE_DATE, HistRoomDao.ATTR_STATE_ID, HistRoomDao.ATTR_ID), orderBy, "gethistroom");
+            roomFilter.put(HistRoomDao.ATTR_ROOM_ID, filter.get(RoomDao.ATTR_ID));
+            return this.daoHelper.query(this.histRoomDao, roomFilter,columns, "gethistroom");
 
 
         }

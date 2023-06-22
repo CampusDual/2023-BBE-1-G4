@@ -22,15 +22,4 @@ public class HistRoomRestController extends ORestController<IHistRoomService> {
         return this.histRoomService;
     }
 
-    @GetMapping(value = "gethistroom", produces = MediaType.APPLICATION_JSON_VALUE)
-    public EntityResult getHistRoom(@RequestBody Map<String, Object> req) {
-        try {
-            return this.histRoomService.getHistRoom(req);
-        } catch (Exception e) {
-            e.printStackTrace();
-            EntityResult res = new EntityResultMapImpl();
-            res.setCode(EntityResult.OPERATION_WRONG);
-            return res;
-        }
-    }
 }
