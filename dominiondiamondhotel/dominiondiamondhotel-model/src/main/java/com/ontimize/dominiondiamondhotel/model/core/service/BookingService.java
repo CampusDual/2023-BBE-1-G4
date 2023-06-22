@@ -165,7 +165,7 @@ public class BookingService implements IBookingService {
                     BookingUtils.calificationCheck(facilities) && BookingUtils.calificationCheck(pricequality) &&
                     this.daoHelper.update(this.bookingDao, getData, filter).getCode() == EntityResult.OPERATION_SUCCESSFUL &&
                     (hotelRating(Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_HOTEL_ID)).get(0)))).getCode() == EntityResult.OPERATION_SUCCESSFUL)) {
-                    return this.daoHelper.query(this.bookingDao, bookingIdKeyMap, List.of(BookingDao.ATTR_ID, BookingDao.ATTR_COMM, BookingDao.ATTR_MEAN));
+                return this.daoHelper.query(this.bookingDao, bookingIdKeyMap, List.of(BookingDao.ATTR_ID, BookingDao.ATTR_COMM, BookingDao.ATTR_MEAN));
             }
         }
         er.setMessage(INVALID_DATA);
@@ -187,8 +187,7 @@ public class BookingService implements IBookingService {
     }
 
 
-    private EntityResult updatePopularity(int hotelId){
-
+    private EntityResult updatePopularity(int hotelId) {
         Map<String, Object> hotelIdKeyMap = new HashMap<>();
         hotelIdKeyMap.put(BookingDao.ATTR_HOTEL_ID, hotelId);
         EntityResult hotelPopularity = this.daoHelper.query(this.bookingDao, hotelIdKeyMap, List.of("counting"), "countPopularity");
@@ -197,8 +196,7 @@ public class BookingService implements IBookingService {
         hotelIdForUpdateKeyMap.put(HotelDao.ATTR_ID, hotelId);
         Map<String, Object> getData = new HashMap<>();
         getData.put(HotelDao.ATTR_POPULARITY, count);
-        return this.hotelService.hotelUpdate(getData,hotelIdForUpdateKeyMap);
-
+        return this.hotelService.hotelUpdate(getData, hotelIdForUpdateKeyMap);
     }
 
 }
