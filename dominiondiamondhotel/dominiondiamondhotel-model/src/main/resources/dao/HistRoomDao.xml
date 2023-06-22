@@ -33,7 +33,7 @@
                     FROM
                         ${mainschema}.hist_rooms
                         #WHERE#
-                        order by change_date
+                        order by change_date DESC
                 ]]>
             </Sentence>
         </Query>
