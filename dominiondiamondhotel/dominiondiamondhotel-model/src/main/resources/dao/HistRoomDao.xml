@@ -21,6 +21,7 @@
                     FROM
                         ${mainschema}.view_histroom_hotelid
                         #WHERE#
+                        ORDER BY change_date DESC
                 ]]>
             </Sentence>
         </Query>
@@ -32,7 +33,7 @@
                     FROM
                         ${mainschema}.hist_rooms
                         #WHERE#
-                        order by change_date
+                        order by change_date DESC
                 ]]>
             </Sentence>
         </Query>

@@ -8,4 +8,5 @@ import java.util.Map;
 
 public interface IHistRoomService {
     public EntityResult histroomQuery(Map<String, Object> attrMap, List<String> columns) throws OntimizeJEERuntimeException;
+    public EntityResult histRoomByHotelIdQuery(Map<String, Object> attrMap, List<String> columns) throws OntimizeJEERuntimeException;
 }
