@@ -1,5 +1,6 @@
 package com.campusdual.dominiondiamondhotel.model.core;
 
+import com.ontimize.dominiondiamondhotel.model.core.dao.HistRoomDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.IdDocumentTypesDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
@@ -38,6 +39,8 @@ public class RoomServiceTest {
     IdDocumentTypesDao idDocumentTypesDao;
     @Mock
     HotelService hotelService;
+    @Mock
+    HistRoomDao histRoomDao;
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -134,9 +137,11 @@ public class RoomServiceTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class RoomServiceUpdate {
         @Test
-        void testRoomUpdate() {
+        void testRoomUpdateWithState() {
             EntityResult er = new EntityResultMapImpl();
             er.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            EntityResult viewUpdate = new EntityResultMapImpl();
+            viewUpdate.setCode(EntityResult.OPERATION_SUCCESSFUL);
             Map<String, Object> filter = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
             data.put(RoomDao.ATTR_ID, List.of(1));
@@ -145,9 +150,28 @@ public class RoomServiceTest {
             filter.put(RoomDao.ATTR_HOTEL_ID, 1);
             filter.put(RoomDao.ATTR_STATE_ID, 1);
             when(daoHelper.update(any(RoomDao.class), anyMap(), anyMap())).thenReturn(er);
+            when(daoHelper.insert(any(HistRoomDao.class), anyMap())).thenReturn(viewUpdate);
             EntityResult result = roomService.roomUpdate(filter, data);
-            Assertions.assertEquals(0, result.getCode());
+            Assertions.assertEquals(EntityResult.OPERATION_SUCCESSFUL, result.getCode());
             verify(daoHelper, times(1)).update(any(RoomDao.class), anyMap(), anyMap());
+            verify(daoHelper, times(1)).insert(any(HistRoomDao.class), anyMap());
+        }
+
+        @Test
+        void testRoomUpdateNoState() {
+            EntityResult er = new EntityResultMapImpl();
+            er.setCode(EntityResult.OPERATION_SUCCESSFUL);
+            Map<String, Object> filter = new HashMap<>();
+            Map<String, Object> data = new HashMap<>();
+            data.put(RoomDao.ATTR_ID, List.of(1));
+            filter.put(RoomDao.ATTR_ID, 1);
+            filter.put(RoomDao.ATTR_NUMBER, 1);
+            filter.put(RoomDao.ATTR_HOTEL_ID, 1);
+            when(daoHelper.update(any(RoomDao.class), anyMap(), anyMap())).thenReturn(er);
+            EntityResult result = roomService.roomUpdate(filter, data);
+            Assertions.assertEquals(EntityResult.OPERATION_SUCCESSFUL, result.getCode());
+            verify(daoHelper, times(1)).update(any(RoomDao.class), anyMap(), anyMap());
+            verify(daoHelper, times(0)).insert(any(HistRoomDao.class), anyMap());
         }
 
         @Test
