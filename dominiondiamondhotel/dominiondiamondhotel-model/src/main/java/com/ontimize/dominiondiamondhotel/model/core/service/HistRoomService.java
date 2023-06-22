@@ -33,13 +33,15 @@ public class HistRoomService implements IHistRoomService {
 
     @Autowired
     private RoomDao roomDao;
+    @Autowired
+    private RoomService roomService;
 
     @Autowired
     private IdDocumentTypesDao idDocumentTypesDao;
 
     @Override
     public EntityResult histroomQuery(Map<String, Object> filter, List<String> columns) throws OntimizeJEERuntimeException {
-        EntityResult roomExists = this.daoHelper.query(this.roomDao, filter, List.of(RoomDao.ATTR_ID));
+        EntityResult roomExists = this.roomService.roomQuery(filter, List.of(RoomDao.ATTR_ID));
         EntityResult er = new EntityResultMapImpl();
         if (((List<?>) roomExists.get(RoomDao.ATTR_ID)).get(0) != null){
             Map<String, Object> roomFilter = new HashMap<>();

@@ -6,6 +6,7 @@ import com.ontimize.dominiondiamondhotel.model.core.dao.IdDocumentTypesDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
 import com.ontimize.dominiondiamondhotel.model.core.service.CustomerService;
 import com.ontimize.dominiondiamondhotel.model.core.service.HistRoomService;
+import com.ontimize.dominiondiamondhotel.model.core.service.RoomService;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
@@ -40,6 +41,8 @@ public class HistRoomServiceTest {
     IdDocumentTypesDao idDocumentTypesDao;
     @Mock
     RoomDao roomDao;
+    @Mock
+    RoomService roomService;
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -61,11 +64,11 @@ public class HistRoomServiceTest {
             histEntityResult.put(HistRoomDao.ATTR_CHANGE_DATE, List.of(1));
             histEntityResult.put(HistRoomDao.ATTR_ROOM_ID, List.of(1));
             histEntityResult.put(HistRoomDao.ATTR_STATE_ID, List.of(1));
-            when(daoHelper.query(any(RoomDao.class), anyMap(), anyList())).thenReturn(entityResult);
+            when(roomService.roomQuery(anyMap(), anyList())).thenReturn(entityResult);
             when(daoHelper.query(any(HistRoomDao.class), anyMap(), anyList(),anyString())).thenReturn(histEntityResult);
             EntityResult result = histRoomService.histroomQuery(data, columns);
             Assertions.assertEquals(0, result.getCode());
-            verify(daoHelper, times(1)).query(any(RoomDao.class), anyMap(), anyList());
+            verify(roomService, times(1)).roomQuery(anyMap(), anyList());
             verify(daoHelper, times(1)).query(any(HistRoomDao.class), anyMap(), anyList(),anyString());
 
         }
