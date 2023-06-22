@@ -38,10 +38,6 @@ public class HistRoomServiceTest {
     @Mock
     HistRoomDao histRoomDao;
     @Mock
-    IdDocumentTypesDao idDocumentTypesDao;
-    @Mock
-    RoomDao roomDao;
-    @Mock
     RoomService roomService;
 
     @Nested
