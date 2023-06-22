@@ -24,5 +24,18 @@
                 ]]>
             </Sentence>
         </Query>
+        <Query id="gethistroom">
+            <Sentence>
+                <![CDATA[
+                    SELECT
+                        #COLUMNS#
+                    FROM
+                        ${mainschema}.hist_rooms
+                        #WHERE#
+                        order by change_date
+                ]]>
+            </Sentence>
+        </Query>
+
     </Queries>
 </JdbcEntitySetup>
