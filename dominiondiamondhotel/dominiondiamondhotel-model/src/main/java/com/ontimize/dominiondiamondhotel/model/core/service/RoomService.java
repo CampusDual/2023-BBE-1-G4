@@ -1,6 +1,7 @@
 package com.ontimize.dominiondiamondhotel.model.core.service;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IRoomService;
+import com.ontimize.dominiondiamondhotel.model.core.dao.HistRoomDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
 import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,9 @@ public class RoomService implements IRoomService {
 
     @Autowired
     private HotelService hotelService;
+
+    @Autowired
+    HistRoomDao histRoomDao;
 
     @Override
     public EntityResult roomQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
@@ -74,7 +79,18 @@ public class RoomService implements IRoomService {
 
     @Override
     public EntityResult roomUpdate(Map<?, ?> attrMap, Map<?, ?> keyMap) throws OntimizeJEERuntimeException {
-        return this.daoHelper.update(this.roomDao, attrMap, keyMap);
+        EntityResult roomUpdated = this.daoHelper.update(this.roomDao, attrMap, keyMap);
+        if (roomUpdated.getCode() == EntityResult.OPERATION_SUCCESSFUL){
+        boolean stateIdChange = attrMap.get(RoomDao.ATTR_STATE_ID) != null;
+            if (stateIdChange) {
+                Map<String, Object> histKeyMap = new HashMap<>();
+                histKeyMap.put(HistRoomDao.ATTR_CHANGE_DATE, LocalDate.now());
+                histKeyMap.put(HistRoomDao.ATTR_STATE_ID, attrMap.get(RoomDao.ATTR_STATE_ID));
+                histKeyMap.put(HistRoomDao.ATTR_ROOM_ID, keyMap.get(RoomDao.ATTR_ID));
+                this.daoHelper.insert(this.histRoomDao, histKeyMap);
+            }
+        }
+        return roomUpdated;
     }
 
     @Override

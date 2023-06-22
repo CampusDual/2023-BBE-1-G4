@@ -139,5 +139,18 @@ INSERT INTO states (state) VALUES ('cleaning');
 ----
 ALTER TABLE hotels
 ADD rating DECIMAL(10, 2);
+---
 
+create table hist_rooms(
+    id serial primary key,
+    change_date date not null,
+    room_id integer REFERENCES rooms (id),
+    state_id integer REFERENCES states (id)
+)
+
+create or replace view view_histroom_hotelid as
+  select hr.id as hr_id, change_date, room_id, hr.state_id as state_id, r.hotel_id as hotel_id
+   from hist_rooms hr
+   inner join rooms r
+   on hr.room_id=r.id;
 
