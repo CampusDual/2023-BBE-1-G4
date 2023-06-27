@@ -153,4 +153,81 @@ create or replace view view_histroom_hotelid as
    from hist_rooms hr
    inner join rooms r
    on hr.room_id=r.id;
+ -----
+
+ create table allergens (
+
+     id serial primary key,
+
+     name varchar(255) not null
+
+ )
+
+create table product_types (
+
+    id serial primary key,
+
+    name varchar(255) not null
+
+)
+
+ create table products (
+
+     id serial primary key,
+
+     name varchar(255) not null,
+
+     description varchar(255),
+
+     producttype_id integer references product_types (id),
+
+     allergens_id integer references allergens (id)
+
+ )
+
+ ALTER TABLE products ADD price integer not null;
+
+ INSERT INTO allergens (name) values ('Celery');
+
+ INSERT INTO allergens (name) values ('Gluten');
+
+ INSERT INTO allergens (name) values ('Crustaceans');
+
+ INSERT INTO allergens (name) values ('Eggs');
+
+ INSERT INTO allergens (name) values ('Fish');
+
+ INSERT INTO allergens (name) values ('Lupin');
+
+ INSERT INTO allergens (name) values ('Milk');
+
+ INSERT INTO allergens (name) values ('Mollusc');
+
+ INSERT INTO allergens (name) values ('Mustard');
+
+ INSERT INTO allergens (name) values ('Nuts');
+
+ INSERT INTO allergens (name) values ('Peanuts');
+
+ INSERT INTO allergens (name) values ('Sesame seeds');
+
+ INSERT INTO allergens (name) values ('Soya');
+
+ INSERT INTO allergens (name) values ('Sulphites');
+
+ ALTER TABLE products DROP COLUMN price;
+
+ ALTER TABLE products ADD price decimal not null;
+
+ INSERT INTO product_types (name) values ('Drink');
+
+ INSERT INTO product_types (name) values ('Snack');
+
+ INSERT INTO product_types (name) values ('Starter dish');
+
+ INSERT INTO product_types (name) values ('First dish');
+
+ INSERT INTO product_types (name) values ('Second dish');
+
+ INSERT INTO product_types (name) values ('Dessert');
 
