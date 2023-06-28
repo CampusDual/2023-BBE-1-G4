@@ -67,14 +67,13 @@ public class ProductService implements IProductService {
     @Override
     public EntityResult getMenuQuery() throws OntimizeJEERuntimeException {
         try {
-            EntityResult menu = new EntityResultMapImpl();
-            List<?> firstDishesMenu = getRandomDishes(getDishes("First dish"));
-            List<?> secondDishesMenu = getRandomDishes(getDishes("Second dish"));
-            List<?> dessertDishesMenu = getRandomDishes(getDishes("Dessert"));
-            menu.put("First dishes", firstDishesMenu);
-            menu.put("Second dishes", secondDishesMenu);
-            menu.put("Desserts", dessertDishesMenu);
-            return menu;
+            EntityResult finalMenu = new EntityResultMapImpl();
+            LinkedHashMap<String, Object> menu = new LinkedHashMap<>();
+            menu.put("First dishes", getRandomDishes(getDishes("First dish")));
+            menu.put("Second dishes", getRandomDishes(getDishes("Second dish")));
+            menu.put("Desserts", getRandomDishes(getDishes("Dessert")));
+            finalMenu.put("Menu", menu);
+            return finalMenu;
         } catch (Exception e) {
             e.printStackTrace();
             EntityResult res = new EntityResultMapImpl();
