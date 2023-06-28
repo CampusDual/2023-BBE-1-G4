@@ -4,7 +4,7 @@ import com.ontimize.dominiondiamondhotel.api.core.service.IRoomService;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HistRoomDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
-import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
+import com.ontimize.dominiondiamondhotel.model.core.utils.BasicExpressionUtils;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
@@ -55,7 +55,7 @@ public class RoomService implements IRoomService {
         if (roomNumberAlreadyExists.get("id") == null) {
             int hotelId = Integer.parseInt(String.valueOf(attrMap.get(RoomDao.ATTR_HOTEL_ID)));
             Map<String, Object> key = new HashMap<>();
-            SQLStatementBuilder.BasicExpression be = HotelUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, HotelDao.ATTR_ID, String.valueOf(hotelId));
+            SQLStatementBuilder.BasicExpression be = BasicExpressionUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, HotelDao.ATTR_ID, String.valueOf(hotelId));
             if (be != null) {
                 key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
             }

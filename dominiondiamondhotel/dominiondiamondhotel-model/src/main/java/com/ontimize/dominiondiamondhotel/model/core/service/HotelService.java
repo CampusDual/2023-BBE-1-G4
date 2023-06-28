@@ -4,12 +4,11 @@ import com.ontimize.dominiondiamondhotel.api.core.service.IHotelService;
 import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.PostalCodeDao;
-import com.ontimize.dominiondiamondhotel.model.core.utils.BookingUtils;
+import com.ontimize.dominiondiamondhotel.model.core.utils.BasicExpressionUtils;
 import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
 import com.ontimize.jee.common.db.AdvancedEntityResult;
 import com.ontimize.jee.common.db.AdvancedEntityResultMapImpl;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
-import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicField;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
@@ -22,8 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.Keymap;
-import java.util.ArrayList;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -101,7 +98,7 @@ public class HotelService implements IHotelService {
         Map<?, ?> getFilter = (Map<?, ?>) keyMap.get(FILTER);
         int hotelId = Integer.parseInt(String.valueOf(getFilter.get("hotel_id")));
         Map<String, Object> hotelExistKeyMap = new HashMap<>();
-        BasicExpression be = HotelUtils.searchBy(BasicOperator.EQUAL_OP, HotelDao.ATTR_ID, String.valueOf(hotelId));
+        BasicExpression be = BasicExpressionUtils.searchBy(BasicOperator.EQUAL_OP, HotelDao.ATTR_ID, String.valueOf(hotelId));
         if (be != null) {
             hotelExistKeyMap.put(ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
         }

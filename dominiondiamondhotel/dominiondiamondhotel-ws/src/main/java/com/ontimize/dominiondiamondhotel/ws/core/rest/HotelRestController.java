@@ -2,13 +2,12 @@ package com.ontimize.dominiondiamondhotel.ws.core.rest;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IHotelService;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
-import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
+import com.ontimize.dominiondiamondhotel.model.core.utils.BasicExpressionUtils;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicExpression;
 import com.ontimize.jee.common.db.SQLStatementBuilder.BasicOperator;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
-import com.ontimize.jee.server.rest.AdvancedQueryParameter;
 import com.ontimize.jee.server.rest.ORestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -29,14 +28,11 @@ public class HotelRestController extends ORestController<IHotelService> {
         return this.hotelService;
     }
 
-    @Autowired
-    private HotelDao hotelDao;
-
     @GetMapping(value = "hotelByName/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     public EntityResult hotelSearchByName(@PathVariable String name) {
         try {
             Map<String, Object> key = new HashMap<>();
-            BasicExpression be = HotelUtils.searchBy(BasicOperator.LIKE_OP, HotelDao.ATTR_NAME, name);
+            BasicExpression be = BasicExpressionUtils.searchBy(BasicOperator.LIKE_OP, HotelDao.ATTR_NAME, name);
             if (be != null) {
                 key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
             }
@@ -52,7 +48,7 @@ public class HotelRestController extends ORestController<IHotelService> {
     public EntityResult hotelSearchById(@PathVariable int id) {
         try {
             Map<String, Object> key = new HashMap<>();
-            BasicExpression be = HotelUtils.searchBy(BasicOperator.EQUAL_OP, HotelDao.ATTR_ID, String.valueOf(id));
+            BasicExpression be = BasicExpressionUtils.searchBy(BasicOperator.EQUAL_OP, HotelDao.ATTR_ID, String.valueOf(id));
             if (be != null) {
                 key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
             }
@@ -68,7 +64,7 @@ public class HotelRestController extends ORestController<IHotelService> {
     public EntityResult hotelSearchByZip(@PathVariable int zip) {
         try {
             Map<String, Object> key = new HashMap<>();
-            BasicExpression be = HotelUtils.searchBy(BasicOperator.EQUAL_OP, HotelDao.ATTR_ZIP_ID, String.valueOf(zip));
+            BasicExpression be = BasicExpressionUtils.searchBy(BasicOperator.EQUAL_OP, HotelDao.ATTR_ZIP_ID, String.valueOf(zip));
             if (be != null) {
                 key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
             }

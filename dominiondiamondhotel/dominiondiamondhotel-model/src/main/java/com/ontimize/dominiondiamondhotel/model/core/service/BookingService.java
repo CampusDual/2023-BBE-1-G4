@@ -66,7 +66,7 @@ public class BookingService implements IBookingService {
         int bookingId = Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
         Map<String, Object> bookingIdKeyMap = new HashMap<>();
         bookingIdKeyMap.put(BookingDao.ATTR_ID, bookingId);
-        EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumns());
+        EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
         int hotelIdFromBooking = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_HOTEL_ID)).get(0)));
         int customerId = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_CUSTOMER_ID)).get(0)));
         String customerIdNumber = String.valueOf(getFilter.get(CustomerDao.ATTR_IDNUMBER));
@@ -87,7 +87,7 @@ public class BookingService implements IBookingService {
             EntityResult erRoomId = this.roomService.getRoomByHotelIdAndStatusQuery(req);
             data.put(BookingDao.ATTR_ROOM_ID, ((List<?>) erRoomId.get(RoomDao.ATTR_ID)).get(0));
             this.daoHelper.update(this.bookingDao, data, filter);
-            EntityResult result = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumns());
+            EntityResult result = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
             if (result.getCode() == EntityResult.OPERATION_SUCCESSFUL) {
                 Map<String, Object> roomUpdateFilter = new HashMap<>();
                 Map<String, Object> roomUpdateData = new HashMap<>();
@@ -109,7 +109,7 @@ public class BookingService implements IBookingService {
         int bookingId = Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
         Map<String, Object> bookingIdKeyMap = new HashMap<>();
         bookingIdKeyMap.put(BookingDao.ATTR_ID, bookingId);
-        EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumns());
+        EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
         EntityResult er = new EntityResultMapImpl();
         if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) == null) {
             int roomIdFromBooking = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_ROOM_ID)).get(0)));
@@ -119,7 +119,7 @@ public class BookingService implements IBookingService {
             LocalDateTime now = LocalDateTime.now();
             data.put(BookingDao.ATTR_CHECK_OUT, now);
             this.daoHelper.update(this.bookingDao, data, filter);
-            EntityResult result = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumns());
+            EntityResult result = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
             if (result.getCode() == EntityResult.OPERATION_SUCCESSFUL) {
                 Map<String, Object> roomUpdateFilter = new HashMap<>();
                 Map<String, Object> roomUpdateData = new HashMap<>();
