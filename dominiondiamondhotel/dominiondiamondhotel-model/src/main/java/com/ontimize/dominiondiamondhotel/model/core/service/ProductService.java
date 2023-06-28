@@ -5,6 +5,11 @@ import com.ontimize.dominiondiamondhotel.model.core.dao.AllergensDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.ProductDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.ProductTypeDao;
+import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
+import com.ontimize.dominiondiamondhotel.model.core.utils.ProductUtils;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.db.AdvancedEntityResultMapImpl;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
@@ -60,5 +65,26 @@ public class ProductService implements IProductService {
             return er;
         }
     }
+    @Override
+    public AdvancedEntityResult productPaginationQuery(Map<?,?> keysValues, List<?> attributesValues, int pagesize, int offset, List<SQLStatementBuilder.SQLOrder> orderby) throws OntimizeJEERuntimeException {
+        Map<String,Object>filterMap= new HashMap<>();
+
+        if(keysValues.get("allergens_id")==null && keysValues.get("producttype_id")== null){
+            Double min = Double.parseDouble(String.valueOf(keysValues.get("pricemin")));
+            Double max = Double.parseDouble(String.valueOf(keysValues.get("pricemax")));
+            if(min>0 && max>min){
+                filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, ProductUtils.andExpression(ProductUtils.moreThan(min), ProductUtils.lessThan(max)));
+            }else{
+                return new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG,EntityResult.type);
+            }
+        }
+        if(keysValues.get("allergens_id")==null && (keysValues.get("pricemin")== null || keysValues.get("pricemax")==null)){
+            filterMap.put(ProductDao.ATTR_PRODUCTTYPE_ID,Integer.parseInt(String.valueOf(keysValues.get("producttype_id"))));
+        }else{
+            filterMap.put(ProductDao.ATTR_ALLERGENS_ID,Integer.parseInt(String.valueOf(keysValues.get("allergens_id"))));
+        }
+        return this.daoHelper.paginationQuery(this.productDao,filterMap,attributesValues,pagesize,offset,orderby,"filteredgetproduct");
+    }
+
 
 }

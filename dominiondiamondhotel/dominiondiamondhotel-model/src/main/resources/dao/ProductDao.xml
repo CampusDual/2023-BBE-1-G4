@@ -13,5 +13,17 @@
     </UpdateKeys>
     <GeneratedKey>id</GeneratedKey>
     <Queries>
+        <Query id="filteredgetproduct">
+            <Sentence>
+                <![CDATA[
+                    SELECT
+                        #COLUMNS#
+                    FROM
+                        ${mainschema}.products
+                    #WHERE#
+                    #ORDER#
+                ]]>
+            </Sentence>
+        </Query>
     </Queries>
 </JdbcEntitySetup>
