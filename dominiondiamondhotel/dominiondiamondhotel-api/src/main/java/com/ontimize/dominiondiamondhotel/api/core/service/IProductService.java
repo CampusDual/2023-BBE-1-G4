@@ -13,4 +13,7 @@ public interface IProductService {
 
     public EntityResult productPaginationQuery(Map<?,?> keysValues, List<?> attributesValues, int pagesize, int offset, List<SQLStatementBuilder.SQLOrder> orderby) throws OntimizeJEERuntimeException;
 
+    public EntityResult productQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException;
+    public EntityResult getMenuQuery() throws OntimizeJEERuntimeException;
+
 }

@@ -1,8 +1,7 @@
 package com.ontimize.dominiondiamondhotel.ws.core.rest;
 
-import com.ontimize.dominiondiamondhotel.api.core.service.IBookingService;
 import com.ontimize.dominiondiamondhotel.api.core.service.IProductService;
-import com.ontimize.dominiondiamondhotel.api.core.service.IRoomService;
+import com.ontimize.dominiondiamondhotel.api.core.service.IProductTypeService;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.rest.ORestController;
@@ -28,6 +27,18 @@ public class ProductRestController extends ORestController<IProductService> {
     public EntityResult addProduct(@RequestBody Map<String, Object> req) {
         try {
             return this.productService.productInsert(req);
+        } catch (Exception e) {
+            e.printStackTrace();
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
+    }
+
+    @GetMapping(value = "getMenu", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult getMenu() {
+        try {
+            return this.productService.getMenuQuery();
         } catch (Exception e) {
             e.printStackTrace();
             EntityResult res = new EntityResultMapImpl();
