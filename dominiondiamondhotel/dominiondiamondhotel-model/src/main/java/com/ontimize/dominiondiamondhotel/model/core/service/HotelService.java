@@ -5,7 +5,7 @@ import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.PostalCodeDao;
 import com.ontimize.dominiondiamondhotel.model.core.utils.BasicExpressionUtils;
-import com.ontimize.dominiondiamondhotel.model.core.utils.HotelUtils;
+import com.ontimize.dominiondiamondhotel.model.core.utils.CommonUtils;
 import com.ontimize.jee.common.db.AdvancedEntityResult;
 import com.ontimize.jee.common.db.AdvancedEntityResultMapImpl;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
@@ -77,7 +77,7 @@ public class HotelService implements IHotelService {
             Double min = Double.parseDouble(String.valueOf(keysValues.get("qualitymin")));
             Double max = Double.parseDouble(String.valueOf(keysValues.get("qualitymax")));
             if(min > 0 && max <= 10) {
-                filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, HotelUtils.andExpression(HotelUtils.moreThan(min), HotelUtils.lessThan(max)));
+                filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, CommonUtils.andExpression(max, min, 1));
             }else{
                 return new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG,EntityResult.type);
 

@@ -1,9 +1,11 @@
 package com.ontimize.dominiondiamondhotel.model.core.service;
-
 import com.ontimize.dominiondiamondhotel.api.core.service.IProductService;
 import com.ontimize.dominiondiamondhotel.model.core.dao.AllergensDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.ProductDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.ProductTypeDao;
+import com.ontimize.dominiondiamondhotel.model.core.utils.CommonUtils;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.db.AdvancedEntityResultMapImpl;
 import com.ontimize.dominiondiamondhotel.model.core.utils.BasicExpressionUtils;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.dto.EntityResult;
@@ -13,9 +15,7 @@ import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
-
 import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.FILTER;
 import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.INVALID_DATA;
 
@@ -58,6 +58,28 @@ public class ProductService implements IProductService {
             return er;
         }
     }
+    @Override
+    public AdvancedEntityResult productPaginationQuery(Map<?,?> keysValues, List<?> attributesValues, int pagesize, int offset, List<SQLStatementBuilder.SQLOrder> orderby) throws OntimizeJEERuntimeException {
+        Map<String,Object>filterMap= new HashMap<>();
+
+        if(keysValues.get("pricemin")!=null && keysValues.get("pricemax")!= null){
+            Double min = Double.parseDouble(String.valueOf(keysValues.get("pricemin")));
+            Double max = Double.parseDouble(String.valueOf(keysValues.get("pricemax")));
+            if(min>0 && max>min){
+                filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, CommonUtils.andExpression(max, min , 2));
+            }else{
+                return new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG,EntityResult.type);
+            }
+        }
+        if(keysValues.get("producttype_id")!=null){
+            filterMap.put(ProductDao.ATTR_PRODUCTTYPE_ID,Integer.parseInt(String.valueOf(keysValues.get("producttype_id"))));
+        }
+        if(keysValues.get("allergens_id")!=null ){
+            filterMap.put(ProductDao.ATTR_ALLERGENS_ID,Integer.parseInt(String.valueOf(keysValues.get("allergens_id"))));
+        }
+        return this.daoHelper.paginationQuery(this.productDao,filterMap,attributesValues,pagesize,offset,orderby,"filteredgetproduct");
+    }
+
 
     @Override
     public EntityResult productQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {

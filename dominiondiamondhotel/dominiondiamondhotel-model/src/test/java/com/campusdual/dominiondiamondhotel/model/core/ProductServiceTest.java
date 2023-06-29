@@ -3,6 +3,9 @@ package com.campusdual.dominiondiamondhotel.model.core;
 import com.ontimize.dominiondiamondhotel.model.core.dao.*;
 import com.ontimize.dominiondiamondhotel.model.core.service.HotelService;
 import com.ontimize.dominiondiamondhotel.model.core.service.ProductService;
+import com.ontimize.jee.common.db.AdvancedEntityResult;
+import com.ontimize.jee.common.db.AdvancedEntityResultMapImpl;
+import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.dominiondiamondhotel.model.core.service.ProductTypeService;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
@@ -13,11 +16,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.parameters.P;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.*;
@@ -67,6 +69,43 @@ class ProductServiceTest {
             verify(daoHelper, times(1)).insert(any(ProductDao.class),anyMap());
         }
     }
+
+        @Nested
+        @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+        class ProductPaginationQuery{
+
+            @Test
+            void testProductPaginationQuery(){
+
+                Map<String, Object> data = new HashMap<>();
+                data.put("producttype_id", 1);
+                List<String> columnsList= new ArrayList<>();
+                columnsList.add("id");
+                columnsList.add("name");
+                columnsList.add("description");
+                columnsList.add("producttype_id");
+                columnsList.add("allergens_id");
+                columnsList.add("price");
+                List<SQLStatementBuilder.SQLOrder> orderby = new ArrayList<>();
+                orderby.add(new SQLStatementBuilder.SQLOrder("price", true));
+                AdvancedEntityResult er = new AdvancedEntityResultMapImpl(EntityResult.OPERATION_SUCCESSFUL,EntityResult.type);
+                er.put(ProductDao.ATTR_ID, List.of(1));
+                er.put(ProductDao.ATTR_NAME, "Coca-Cola 1L");
+                er.put(ProductDao.ATTR_DESCRIPTION,  "A bottle of Coca-Cola 1L");
+                er.put(ProductDao.ATTR_PRODUCTTYPE_ID,  List.of(1));
+                er.put(ProductDao.ATTR_ALLERGENS_ID,  List.of(1));
+                er.put(ProductDao.ATTR_PRICE,List.of(3.5));
+                when(daoHelper.paginationQuery(any(ProductDao.class),anyMap(),anyList(), anyInt(), anyInt(), anyList(), anyString()))
+                        .thenReturn(er);
+                EntityResult result = productService.productPaginationQuery(data, columnsList, -1,-1, orderby);
+                Assertions.assertEquals(0, result.getCode());
+                verify(daoHelper, times(1)).paginationQuery(any(ProductDao.class), anyMap(),anyList(), anyInt(), anyInt(), anyList(), anyString());
+
+            }
+        }
+
+    
+
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
