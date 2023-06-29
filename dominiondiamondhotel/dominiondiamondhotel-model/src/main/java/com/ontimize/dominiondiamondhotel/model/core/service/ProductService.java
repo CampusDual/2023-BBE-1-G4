@@ -80,7 +80,8 @@ public class ProductService implements IProductService {
         }
         if(keysValues.get("allergens_id")==null && (keysValues.get("pricemin")== null || keysValues.get("pricemax")==null)){
             filterMap.put(ProductDao.ATTR_PRODUCTTYPE_ID,Integer.parseInt(String.valueOf(keysValues.get("producttype_id"))));
-        }else{
+        }
+        if(keysValues.get("producttype_id")==null && (keysValues.get("pricemin")== null || keysValues.get("pricemax")==null)){
             filterMap.put(ProductDao.ATTR_ALLERGENS_ID,Integer.parseInt(String.valueOf(keysValues.get("allergens_id"))));
         }
         return this.daoHelper.paginationQuery(this.productDao,filterMap,attributesValues,pagesize,offset,orderby,"filteredgetproduct");

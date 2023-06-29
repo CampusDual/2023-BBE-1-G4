@@ -21,7 +21,7 @@ public class ProductRestController extends ORestController<IProductService> {
 
     @Override
     public IProductService getService() {
-        return null;
+        return this.productService;
     }
 
     @PostMapping(value = "addProduct", produces = MediaType.APPLICATION_JSON_VALUE)
