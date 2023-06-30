@@ -11,6 +11,9 @@ public class BasicExpressionUtils {
         } else if (op == SQLStatementBuilder.BasicOperator.EQUAL_OP) {
             SQLStatementBuilder.BasicField attr = new SQLStatementBuilder.BasicField(searchBy);
             return new SQLStatementBuilder.BasicExpression(attr, SQLStatementBuilder.BasicOperator.EQUAL_OP, Integer.parseInt(data));
+        } else  if(op == SQLStatementBuilder.BasicOperator.NOT_EQUAL_OP){
+            SQLStatementBuilder.BasicField attr = new SQLStatementBuilder.BasicField(searchBy);
+            return new SQLStatementBuilder.BasicExpression(attr, SQLStatementBuilder.BasicOperator.NOT_EQUAL_OP, Integer.parseInt(data));
         }
         return null;
     }

@@ -123,5 +123,21 @@ class ProductServiceTest {
             verify(productTypeService, times(3)).productTypeQuery(anyMap(),anyList());
             verify(daoHelper, times(3)).query(any(ProductDao.class),anyMap(), anyList());
         }
+
+        @Test
+        void varietyMenuTest(){
+
+            EntityResult productTypeER = new EntityResultMapImpl();
+            productTypeER.put(ProductTypeDao.ATTR_ID, List.of(1));
+            when(productTypeService.productTypeQuery(anyMap(), anyList())).thenReturn(productTypeER);
+            EntityResult er = new EntityResultMapImpl();
+            er.put(ProductDao.ATTR_NAME, List.of("1", "2", "3", "4", "5"));
+            when(daoHelper.query(any(ProductDao.class), anyMap(), anyList())).thenReturn(er);
+            EntityResult result = productService.getVarietyMenusQuery();
+            Assertions.assertEquals(EntityResult.OPERATION_SUCCESSFUL, result.getCode());
+            verify(productTypeService, times(11)).productTypeQuery(anyMap(),anyList());
+            verify(daoHelper, times(11)).query(any(ProductDao.class),anyMap(),anyList());
+
+        }
     }
 }

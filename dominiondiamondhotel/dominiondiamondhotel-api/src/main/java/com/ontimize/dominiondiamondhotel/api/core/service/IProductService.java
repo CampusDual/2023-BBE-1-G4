@@ -15,5 +15,6 @@ public interface IProductService {
 
     public EntityResult productQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException;
     public EntityResult getMenuQuery() throws OntimizeJEERuntimeException;
+    public EntityResult getVarietyMenusQuery() throws OntimizeJEERuntimeException;
 
 }

@@ -46,4 +46,15 @@ public class ProductRestController extends ORestController<IProductService> {
             return res;
         }
     }
+    @GetMapping(value = "getVarietyMenu", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult getVarietyMenu() {
+        try {
+            return this.productService.getVarietyMenusQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
+    }
 }
