@@ -1,28 +1,36 @@
 package com.ontimize.dominiondiamondhotel.model.core.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
 import com.ontimize.dominiondiamondhotel.api.core.service.IBookingService;
 import com.ontimize.dominiondiamondhotel.api.core.utils.ValidatorUtils;
-import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
-import com.ontimize.dominiondiamondhotel.model.core.dao.CustomerDao;
-import com.ontimize.dominiondiamondhotel.model.core.dao.HotelDao;
-import com.ontimize.dominiondiamondhotel.model.core.dao.RoomDao;
+import com.ontimize.dominiondiamondhotel.model.core.dao.*;
+import com.ontimize.dominiondiamondhotel.model.core.entity.Forecast;
+import com.ontimize.dominiondiamondhotel.model.core.utils.BasicExpressionUtils;
 import com.ontimize.dominiondiamondhotel.model.core.utils.BookingUtils;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.*;
-import static com.ontimize.dominiondiamondhotel.model.core.utils.RoomUtils.searchByHotelId;
 
 @Lazy
 @Service("BookingService")
@@ -45,6 +53,15 @@ public class BookingService implements IBookingService {
 
     @Autowired
     private HotelService hotelService;
+
+    @Autowired
+    private PostalCodeDao postalCodeDao;
+
+    @Autowired
+    private PostalCodeService postalCodeService;
+
+    @Autowired
+    HttpClient httpClient;
 
     @Override
     public EntityResult bookingInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException {
@@ -173,6 +190,87 @@ public class BookingService implements IBookingService {
         return er;
     }
 
+    @Override
+    public EntityResult getForecastQuery(Map<String, Object> keyMap, List<String> attrList) {
+        Gson gson;
+        String apiKey = "luaDerURMSfvcG8HrlwSyYD037JwDGCT";
+        String generalUri = "http://dataservice.accuweather.com/";
+        String searchByLocationUri = "locations/v1/postalcodes/es/search?";
+        String dailyForecastUri = "forecasts/v1/daily/5day/";
+        String apiKeyUri = "apikey=" + apiKey;
+        String languagueUri = "&language=en-us";
+        String detailsUri = "&details=true";
+        String qToSearch = "&q=";
+
+        int hotelId = Integer.parseInt(String.valueOf(((List<?>) this.daoHelper.query(this.bookingDao, keyMap, attrList).get(BookingDao.ATTR_HOTEL_ID)).get(0)));
+        Map<String, Object> hotelKey = new HashMap<>();
+        SQLStatementBuilder.BasicExpression be = BasicExpressionUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, HotelDao.ATTR_ID, String.valueOf(hotelId));
+        if (be != null) {
+            hotelKey.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
+        }
+        int hotelZipCode = Integer.parseInt(String.valueOf(((List<?>) hotelService.hotelQuery(hotelKey, List.of(HotelDao.ATTR_ZIP_ID)).get(HotelDao.ATTR_ZIP_ID)).get(0)));
+        Map<String, Object> zipKey = new HashMap<>();
+        be = BasicExpressionUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, PostalCodeDao.ATTR_ID, String.valueOf(hotelZipCode));
+        if (be != null) {
+            zipKey.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
+        }
+        int zipToSearch = Integer.parseInt(String.valueOf(((List<?>) postalCodeService.postalCodeQuery(zipKey, List.of(PostalCodeDao.ATTR_ZIP)).get(PostalCodeDao.ATTR_ZIP)).get(0)));
+
+        String key;
+
+        try {
+            HttpGet getRequest = new HttpGet(generalUri + searchByLocationUri + apiKeyUri + qToSearch + zipToSearch + languagueUri + detailsUri);
+            getRequest.addHeader("accept", "application/json");
+
+            HttpResponse response = httpClient.execute(getRequest);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != 200) {
+                throw new IOException("Failed with HTTP error code : " + statusCode);
+            }
+            HttpEntity httpEntity = response.getEntity();
+            String retSrc;
+            if (httpEntity != null) {
+                retSrc = EntityUtils.toString(httpEntity);
+                // parsing JSON
+                JSONArray resultGetKey = new Gson().fromJson(retSrc, JSONArray.class); //Convert String to JSON Array
+                key = String.valueOf(((LinkedTreeMap<?, ?>) resultGetKey.get(0)).get("Key"));
+            } else {
+                throw new IOException("HttpEntity null");
+            }
+        } catch (IOException e) {
+            throw new OntimizeJEERuntimeException();
+        }
+
+        Forecast forecast;
+
+        try {
+            gson = new GsonBuilder().create();
+            HttpGet getRequest = new HttpGet(generalUri + dailyForecastUri + key + "?" + apiKeyUri + languagueUri);
+            getRequest.addHeader("accept", "application/json");
+            HttpResponse response = httpClient.execute(getRequest);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != 200) {
+                throw new IOException("Failed with HTTP error code : " + statusCode);
+            }
+            HttpEntity httpEntity = response.getEntity();
+
+            if (httpEntity != null) {
+                // parsing JSON
+                String content = EntityUtils.toString(httpEntity);
+                forecast = gson.fromJson(content, Forecast.class);
+            } else {
+                throw new IOException("HttpEntity null");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new OntimizeJEERuntimeException(e.getLocalizedMessage());
+        }
+        EntityResult erForecast = new EntityResultMapImpl();
+        erForecast.setCode(EntityResult.OPERATION_SUCCESSFUL);
+        erForecast.put("Forecast", forecast);
+        return erForecast;
+    }
+
     private EntityResult hotelRating(int hotelId) {
         Map<String, Object> hotelIdKeyMap = new HashMap<>();
         hotelIdKeyMap.put(BookingDao.ATTR_HOTEL_ID, hotelId);
@@ -198,5 +296,4 @@ public class BookingService implements IBookingService {
         getData.put(HotelDao.ATTR_POPULARITY, count);
         return this.hotelService.hotelUpdate(getData, hotelIdForUpdateKeyMap);
     }
-
 }
