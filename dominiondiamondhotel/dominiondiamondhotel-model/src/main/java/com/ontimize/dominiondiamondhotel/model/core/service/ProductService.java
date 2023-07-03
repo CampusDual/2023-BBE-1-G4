@@ -12,6 +12,7 @@ import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
+import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -96,6 +97,13 @@ public class ProductService implements IProductService {
             menu.put("Second dishes", getRandomDishes(getDishes("Second dish", 0)));
             menu.put("Desserts", getRandomDishes(getDishes("Dessert", 0)));
             finalMenu.put("Menu", menu);
+            Map<String, Object> filter = new HashMap<>();
+            filter.put(ProductDao.ATTR_ID, 46);
+            String description = getMenuAsString(finalMenu);
+            System.out.println(description);
+            Map<String, Object> data = new HashMap<>();
+            data.put(ProductDao.ATTR_DESCRIPTION, description);
+            this.daoHelper.update(this.productDao, data, filter);
             return finalMenu;
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,6 +136,28 @@ public class ProductService implements IProductService {
             finalMenu.put("Vegan Menu", veganMap);
             finalMenu.put("Vegetarian Menu", vegetarianMap);
             finalMenu.put("Kids Menu", kidsMap);
+            List<String> strings = getVarietyMenusAsString(finalMenu);
+            String seafood = strings.get(0), vegan = strings.get(1), vegetarian = strings.get(2), kids = strings.get(3);
+            Map<String, Object> seafoodFilter = new HashMap<>();
+            seafoodFilter.put(ProductDao.ATTR_ID, 51);
+            Map<String, Object> veganFilter = new HashMap<>();
+            veganFilter.put(ProductDao.ATTR_ID, 50);
+            Map<String, Object> vegetarianFilter = new HashMap<>();
+            vegetarianFilter.put(ProductDao.ATTR_ID, 49);
+            Map<String, Object> kidsFilter = new HashMap<>();
+            kidsFilter.put(ProductDao.ATTR_ID, 52);
+            Map<String, Object> seafoodData = new HashMap<>();
+            seafoodData.put(ProductDao.ATTR_DESCRIPTION, seafood);
+            Map<String, Object> veganData = new HashMap<>();
+            veganData.put(ProductDao.ATTR_DESCRIPTION, vegan);
+            Map<String, Object> vegetarianData = new HashMap<>();
+            vegetarianData.put(ProductDao.ATTR_DESCRIPTION, vegetarian);
+            Map<String, Object> kidsData = new HashMap<>();
+            kidsData.put(ProductDao.ATTR_DESCRIPTION, kids);
+            this.daoHelper.update(this.productDao, seafoodData, seafoodFilter);
+            this.daoHelper.update(this.productDao, veganData, veganFilter);
+            this.daoHelper.update(this.productDao, vegetarianData, vegetarianFilter);
+            this.daoHelper.update(this.productDao, kidsData, kidsFilter);
             return finalMenu;
         } catch (Exception e) {
             e.printStackTrace();
@@ -189,6 +219,70 @@ public class ProductService implements IProductService {
             dishesReturn.add(dishToAdd);
         }
         return dishesReturn;
+    }
+
+    public String getMenuAsString(EntityResult finalMenu) {
+        LinkedHashMap<String, Object> menuMap = (LinkedHashMap<String, Object>) finalMenu.get("Menu");
+
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Object> entry : menuMap.entrySet()) {
+            String category = entry.getKey();
+            List<String> dishes = (List<String>) entry.getValue();
+
+            sb.append(category).append(": ");
+            for (String dish : dishes) {
+                sb.append(dish).append(", ");
+            }
+            sb.setLength(sb.length() - 2);
+            sb.append("; ");
+        }
+
+        return sb.toString();
+    }
+
+    public List<String> getVarietyMenusAsString(EntityResult finalMenu) {
+        LinkedHashMap<String, Object> seafoodMenu = (LinkedHashMap<String, Object>) finalMenu.get("Seafood Menu");
+        LinkedHashMap<String, Object> veganMenu = (LinkedHashMap<String, Object>) finalMenu.get("Vegan Menu");
+        LinkedHashMap<String, Object> vegetarianMenu = (LinkedHashMap<String, Object>) finalMenu.get("Vegetarian Menu");
+        LinkedHashMap<String, Object> kidsMenu = (LinkedHashMap<String, Object>) finalMenu.get("Kids Menu");
+
+        LinkedHashMap<String, Object> menu = new LinkedHashMap<>();
+        List<String> strings = new ArrayList<>();
+        for(int i=0; i<4;i++) {
+            switch (i){
+                case 0:
+                    menu =  (LinkedHashMap<String, Object>) finalMenu.get("Seafood Menu");
+                    break;
+                case 1:
+                    menu =  (LinkedHashMap<String, Object>) finalMenu.get("Vegan Menu");
+                    break;
+                case 2:
+                    menu =  (LinkedHashMap<String, Object>) finalMenu.get("Vegetarian Menu");
+                    break;
+                case 3:
+                    menu =  (LinkedHashMap<String, Object>) finalMenu.get("Kids Menu");
+                    break;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (Map.Entry<String, Object> entry : menu.entrySet()) {
+                String category = entry.getKey();
+                List<String> dishes = (List<String>) entry.getValue();
+
+                sb.append(category).append(": ");
+                for (String dish : dishes) {
+                    sb.append(dish).append(", ");
+                }
+                sb.setLength(sb.length() - 2);
+                sb.append("; ");
+            }
+
+            strings.add(sb.toString());
+            sb.setLength(0);
+
+        }
+
+        return strings;
     }
 
 }
