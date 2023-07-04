@@ -63,14 +63,14 @@ public class BookingService implements IBookingService {
     @Autowired
     HttpClient httpClient;
 
-    private final String apiKey = "luaDerURMSfvcG8HrlwSyYD037JwDGCT";
-    private final String generalUri = "http://dataservice.accuweather.com/";
-    private final String searchByLocationUri = "locations/v1/postalcodes/es/search?";
-    private final String dailyForecastUri = "forecasts/v1/daily/5day/";
-    private final String apiKeyUri = "apikey=" + apiKey;
-    private final String languagueUri = "&language=en-us";
-    private final String detailsUri = "&details=true";
-    private final String qToSearch = "&q=";
+    private static final String APIKEY = "luaDerURMSfvcG8HrlwSyYD037JwDGCT";
+    private static final String GENERAL_URI = "http://dataservice.accuweather.com/";
+    private static final String POSTALCODES_ES_SEARCH = "locations/v1/postalcodes/es/search?";
+    private static final  String DAILY_FORECAST_URI = "forecasts/v1/daily/5day/";
+    private static final String API_KEY_URI = "apikey=" + APIKEY;
+    private static final String LANGUAGUE_URI = "&language=en-us";
+    private static final String DETAILS_URI = "&details=true";
+    private static final String Q_TO_SEARCH = "&q=";
 
     @Override
     public EntityResult bookingInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException {
@@ -201,7 +201,7 @@ public class BookingService implements IBookingService {
 
     @Override
     public EntityResult getForecastQuery(Map<String, Object> keyMap, List<String> attrList) {
-        Gson gson;
+        Gson gson = new Gson();
 
         int hotelId = Integer.parseInt(String.valueOf(((List<?>) this.daoHelper.query(this.bookingDao, keyMap, attrList).get(BookingDao.ATTR_HOTEL_ID)).get(0)));
         Map<String, Object> hotelKey = new HashMap<>();
@@ -220,7 +220,7 @@ public class BookingService implements IBookingService {
         String key;
 
         try {
-            HttpGet getRequest = new HttpGet(generalUri + searchByLocationUri + apiKeyUri + qToSearch + zipToSearch + languagueUri + detailsUri);
+            HttpGet getRequest = new HttpGet(GENERAL_URI + POSTALCODES_ES_SEARCH + API_KEY_URI + Q_TO_SEARCH + zipToSearch + LANGUAGUE_URI + DETAILS_URI);
             getRequest.addHeader("accept", "application/json");
 
             HttpResponse response = httpClient.execute(getRequest);
@@ -233,7 +233,7 @@ public class BookingService implements IBookingService {
             if (httpEntity != null) {
                 retSrc = EntityUtils.toString(httpEntity);
                 // parsing JSON
-                JSONArray resultGetKey = new Gson().fromJson(retSrc, JSONArray.class); //Convert String to JSON Array
+                JSONArray resultGetKey = gson.fromJson(retSrc, JSONArray.class); //Convert String to JSON Array
                 key = String.valueOf(((LinkedTreeMap<?, ?>) resultGetKey.get(0)).get("Key"));
             } else {
                 throw new IOException("HttpEntity null");
@@ -246,7 +246,7 @@ public class BookingService implements IBookingService {
 
         try {
             gson = new GsonBuilder().create();
-            HttpGet getRequest = new HttpGet(generalUri + dailyForecastUri + key + "?" + apiKeyUri + languagueUri);
+            HttpGet getRequest = new HttpGet(GENERAL_URI + DAILY_FORECAST_URI + key + "?" + API_KEY_URI + LANGUAGUE_URI);
             getRequest.addHeader("accept", "application/json");
             HttpResponse response = httpClient.execute(getRequest);
             int statusCode = response.getStatusLine().getStatusCode();
