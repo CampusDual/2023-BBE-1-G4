@@ -38,7 +38,12 @@
 			<groupId>com.ontimize.boot</groupId>
 			<artifactId>ontimize-boot-starter-rest</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+    </dependencies>
 	<build>
 		<finalName>${project.artifactId}</finalName>
 	</build>

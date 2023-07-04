@@ -10,4 +10,11 @@
     <description>${project.artifactId}</description>
     <artifactId>dominiondiamondhotel-api</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+    </dependencies>
 </project>

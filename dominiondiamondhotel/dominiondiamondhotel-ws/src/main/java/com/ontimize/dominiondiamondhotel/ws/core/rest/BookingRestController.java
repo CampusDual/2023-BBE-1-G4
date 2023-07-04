@@ -1,16 +1,15 @@
 package com.ontimize.dominiondiamondhotel.ws.core.rest;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IBookingService;
+import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.rest.ORestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -50,6 +49,17 @@ public class BookingRestController extends ORestController<IBookingService> {
     public EntityResult addCalificationsAndComments(@RequestBody Map<String, Object> req) {
         try {
             return this.bookingService.bookingCalificationsAndCommentUpdate(req);
+        } catch (Exception e) {
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
+    }
+
+    @GetMapping(value = "forecast", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult getForecast(@RequestBody Map<String, Object> req) {
+        try {
+            return this.bookingService.getForecastQuery((Map<String, Object>) req.get("filter"), (List<String>) req.get("columns"));
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
