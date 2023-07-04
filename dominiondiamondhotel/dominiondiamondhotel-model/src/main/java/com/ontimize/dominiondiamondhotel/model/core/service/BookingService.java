@@ -63,6 +63,15 @@ public class BookingService implements IBookingService {
     @Autowired
     HttpClient httpClient;
 
+    private final String apiKey = "luaDerURMSfvcG8HrlwSyYD037JwDGCT";
+    private final String generalUri = "http://dataservice.accuweather.com/";
+    private final String searchByLocationUri = "locations/v1/postalcodes/es/search?";
+    private final String dailyForecastUri = "forecasts/v1/daily/5day/";
+    private final String apiKeyUri = "apikey=" + apiKey;
+    private final String languagueUri = "&language=en-us";
+    private final String detailsUri = "&details=true";
+    private final String qToSearch = "&q=";
+
     @Override
     public EntityResult bookingInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException {
         String entryDate = String.valueOf(attrMap.get(BookingDao.ATTR_ENTRY_DATE));
@@ -193,14 +202,6 @@ public class BookingService implements IBookingService {
     @Override
     public EntityResult getForecastQuery(Map<String, Object> keyMap, List<String> attrList) {
         Gson gson;
-        String apiKey = "luaDerURMSfvcG8HrlwSyYD037JwDGCT";
-        String generalUri = "http://dataservice.accuweather.com/";
-        String searchByLocationUri = "locations/v1/postalcodes/es/search?";
-        String dailyForecastUri = "forecasts/v1/daily/5day/";
-        String apiKeyUri = "apikey=" + apiKey;
-        String languagueUri = "&language=en-us";
-        String detailsUri = "&details=true";
-        String qToSearch = "&q=";
 
         int hotelId = Integer.parseInt(String.valueOf(((List<?>) this.daoHelper.query(this.bookingDao, keyMap, attrList).get(BookingDao.ATTR_HOTEL_ID)).get(0)));
         Map<String, Object> hotelKey = new HashMap<>();
