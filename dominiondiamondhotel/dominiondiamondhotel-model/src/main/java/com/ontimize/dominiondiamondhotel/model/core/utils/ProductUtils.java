@@ -1,24 +1,25 @@
 package com.ontimize.dominiondiamondhotel.model.core.utils;
 
 import com.ontimize.dominiondiamondhotel.model.core.dao.ProductDao;
+import com.ontimize.dominiondiamondhotel.model.core.dao.ProductsAllergensDao;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 
 public class ProductUtils {
 
     public static SQLStatementBuilder.BasicExpression notMeat() {
-        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ALLERGENS_ID);
+        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductsAllergensDao.ATTR_ALLERGEN_ID);
         return new SQLStatementBuilder.BasicExpression(allergensId, SQLStatementBuilder.BasicOperator.NOT_EQUAL_OP, 15);
     }
     public static SQLStatementBuilder.BasicExpression notCrustace() {
-        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ALLERGENS_ID);
+        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductsAllergensDao.ATTR_ALLERGEN_ID);
         return new SQLStatementBuilder.BasicExpression(allergensId, SQLStatementBuilder.BasicOperator.NOT_EQUAL_OP, 3);
     }
     public static SQLStatementBuilder.BasicExpression notFish() {
-        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ALLERGENS_ID);
+        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductsAllergensDao.ATTR_ALLERGEN_ID);
         return new SQLStatementBuilder.BasicExpression(allergensId, SQLStatementBuilder.BasicOperator.NOT_EQUAL_OP, 5);
     }
     public static SQLStatementBuilder.BasicExpression notMolusc() {
-        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ALLERGENS_ID);
+        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductsAllergensDao.ATTR_ALLERGEN_ID);
         return new SQLStatementBuilder.BasicExpression(allergensId, SQLStatementBuilder.BasicOperator.NOT_EQUAL_OP, 8);
     }
 
@@ -46,14 +47,14 @@ public class ProductUtils {
 
     public static SQLStatementBuilder.BasicExpression definitelyCrustace(){
 
-        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ALLERGENS_ID);
+        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductsAllergensDao.ATTR_ALLERGEN_ID);
         return new SQLStatementBuilder.BasicExpression(allergensId, SQLStatementBuilder.BasicOperator.EQUAL_OP, 3);
 
     }
 
     public static SQLStatementBuilder.BasicExpression definitelyMolusc(){
 
-        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ALLERGENS_ID);
+        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductsAllergensDao.ATTR_ALLERGEN_ID);
         return new SQLStatementBuilder.BasicExpression(allergensId, SQLStatementBuilder.BasicOperator.EQUAL_OP, 8);
 
     }
@@ -65,12 +66,12 @@ public class ProductUtils {
     }
 
     public static SQLStatementBuilder.BasicExpression notMilk() {
-        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ALLERGENS_ID);
+        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductsAllergensDao.ATTR_ALLERGEN_ID);
         return new SQLStatementBuilder.BasicExpression(allergensId, SQLStatementBuilder.BasicOperator.NOT_EQUAL_OP, 7);
     }
 
     public static SQLStatementBuilder.BasicExpression notEggs() {
-        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ALLERGENS_ID);
+        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductsAllergensDao.ATTR_ALLERGEN_ID);
         return new SQLStatementBuilder.BasicExpression(allergensId, SQLStatementBuilder.BasicOperator.NOT_EQUAL_OP, 4);
     }
 
@@ -92,7 +93,7 @@ public class ProductUtils {
     }
 
     public static SQLStatementBuilder.BasicExpression allergensCanBeNull() {
-        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ALLERGENS_ID);
+        SQLStatementBuilder.BasicField allergensId = new SQLStatementBuilder.BasicField(ProductsAllergensDao.ATTR_ALLERGEN_ID);
         return new SQLStatementBuilder.BasicExpression(allergensId, SQLStatementBuilder.BasicOperator.NULL_OP, null);
     }
 

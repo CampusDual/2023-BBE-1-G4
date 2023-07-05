@@ -21,7 +21,6 @@ public class ProductDao extends OntimizeJdbcDaoSupport {
     public static final String ATTR_NAME = "name";
     public static final String ATTR_DESCRIPTION = "description";
     public static final String ATTR_PRODUCTTYPE_ID = "producttype_id";
-    public static final String ATTR_ALLERGENS_ID = "allergens_id";
     public static final String ATTR_PRICE = "price";
 
     public static List<String> getColumns(){

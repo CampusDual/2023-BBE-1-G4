@@ -25,5 +25,15 @@
                 ]]>
             </Sentence>
         </Query>
+        <Query id="getlastidfromproducts">
+            <Sentence>
+                <![CDATA[
+                    SELECT
+                        max(id) as maxid
+                    FROM
+                        ${mainschema}.products
+                ]]>
+            </Sentence>
+        </Query>
     </Queries>
 </JdbcEntitySetup>
