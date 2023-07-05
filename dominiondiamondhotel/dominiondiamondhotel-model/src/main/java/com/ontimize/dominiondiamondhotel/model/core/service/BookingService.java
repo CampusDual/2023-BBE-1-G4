@@ -37,30 +37,44 @@ import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.*;
 @Lazy
 @Service("BookingService")
 public class BookingService implements IBookingService {
-
-    @Autowired
     private DefaultOntimizeDaoHelper daoHelper;
-
-    @Autowired
     private BookingDao bookingDao;
-
-    @Autowired
     private RoomDao roomDao;
-
-    @Autowired
     private CustomerService customerService;
-
-    @Autowired
     private RoomService roomService;
-
-    @Autowired
     private HotelService hotelService;
-
-    @Autowired
     private PostalCodeDao postalCodeDao;
+    private PostalCodeService postalCodeService;
+    private HttpClient httpClient;
 
     @Autowired
-    private PostalCodeService postalCodeService;
+    public BookingService(DefaultOntimizeDaoHelper daoHelper,
+                          BookingDao bookingDao, RoomDao roomDao,
+                          CustomerService customerService, RoomService roomService,
+                          HotelService hotelService, PostalCodeDao postalCodeDao,
+                          PostalCodeService postalCodeService) {
+        this(daoHelper, bookingDao,
+                roomDao,
+                customerService, roomService,
+                hotelService, postalCodeDao,
+                postalCodeService, HttpClientBuilder.create().build());
+    }
+
+    public BookingService(DefaultOntimizeDaoHelper daoHelper,
+                          BookingDao bookingDao, RoomDao roomDao,
+                          CustomerService customerService, RoomService roomService,
+                          HotelService hotelService, PostalCodeDao postalCodeDao,
+                          PostalCodeService postalCodeService, HttpClient httpClient) {
+        this.daoHelper = daoHelper;
+        this.bookingDao = bookingDao;
+        this.roomDao = roomDao;
+        this.customerService = customerService;
+        this.roomService = roomService;
+        this.hotelService = hotelService;
+        this.postalCodeDao = postalCodeDao;
+        this.postalCodeService = postalCodeService;
+        this.httpClient = httpClient;
+    }
 
     private static final String APIKEY = "luaDerURMSfvcG8HrlwSyYD037JwDGCT";
     private static final String GENERAL_URI = "http://dataservice.accuweather.com/";
@@ -218,7 +232,7 @@ public class BookingService implements IBookingService {
 
         String key;
 
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+        try {
             HttpGet getRequest = new HttpGet(GENERAL_URI + POSTALCODES_ES_SEARCH + API_KEY_URI + Q_TO_SEARCH + zipToSearch + LANGUAGUE_URI + DETAILS_URI);
             getRequest.addHeader("accept", "application/json");
 
@@ -243,7 +257,7 @@ public class BookingService implements IBookingService {
 
         Forecast forecast;
 
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+        try {
             gson = new GsonBuilder().create();
             HttpGet getRequest = new HttpGet(GENERAL_URI + DAILY_FORECAST_URI + key + "?" + API_KEY_URI + LANGUAGUE_URI);
             getRequest.addHeader("accept", "application/json");
