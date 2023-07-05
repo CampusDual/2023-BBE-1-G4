@@ -103,9 +103,17 @@ public class ProductService implements IProductService {
         if(keysValues.get("producttype_id")!=null){
             filterMap.put(ProductDao.ATTR_PRODUCTTYPE_ID,Integer.parseInt(String.valueOf(keysValues.get("producttype_id"))));
         }
-//        if(keysValues.get("allergens_id")!=null ){
-//            filterMap.put(ProductDao.ATTR_ALLERGENS_ID,Integer.parseInt(String.valueOf(keysValues.get("allergens_id"))));
-//        }
+        if(keysValues.get("allergens_id")!=null ){
+
+            List<Integer> listOfAllergens = (List<Integer>) keysValues.get("allergens_id");
+            Map<String, Object> allergensMap = new HashMap<>();
+            for(int i=0; i<listOfAllergens.size();i++){
+                allergensMap.put(ProductsAllergensDao.ATTR_ALLERGEN_ID, listOfAllergens.get(i));
+            }
+            EntityResult productsId = this.daoHelper.query(this.productsAllergensDao, allergensMap, List.of(ProductsAllergensDao.ATTR_PRODUCT_ID));
+            ArrayList productsArrayList = (ArrayList) productsId.get("product_id");
+            filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, ProductUtils.productsWithoutTheseAllergens(productsArrayList));
+        }
         return this.daoHelper.paginationQuery(this.productDao,filterMap,attributesValues,pagesize,offset,orderby,"filteredgetproduct");
     }
 
