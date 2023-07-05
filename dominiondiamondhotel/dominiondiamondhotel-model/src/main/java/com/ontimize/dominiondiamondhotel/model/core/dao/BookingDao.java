@@ -29,6 +29,7 @@ public class BookingDao extends OntimizeJdbcDaoSupport {
     public static final String ATTR_PRICEQUALITY = "pricequality";
     public static final String ATTR_COMM = "comm";
     public static final String ATTR_MEAN = "mean";
+    public static final String ATTR_EXPENSES = "expenses";
 
     public static List<String> getColumns(){
         List<String> columns = new ArrayList<>();
