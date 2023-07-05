@@ -1,6 +1,8 @@
 package com.campusdual.dominiondiamondhotel.model.core;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ontimize.dominiondiamondhotel.model.core.dao.*;
 import com.ontimize.dominiondiamondhotel.model.core.entity.Forecast;
 import com.ontimize.dominiondiamondhotel.model.core.service.*;
@@ -261,7 +263,7 @@ public class BookingServiceTest {
             bookingKeyMap.put(BookingDao.ATTR_ID, List.of(1));
             EntityResult er = bookingService.getForecastQuery(bookingKeyMap, BookingDao.getColumns());
             Assertions.assertEquals(OPERATION_SUCCESSFUL, er.getCode());
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
             Forecast forecastFromEr = (Forecast) er.get("forecast");
             Forecast forecastFromString = gson.fromJson(forecastValue, Forecast.class);
             Assertions.assertEquals(forecastFromString.getHeadline().getEffectiveDate(), forecastFromEr.getHeadline().getEffectiveDate());

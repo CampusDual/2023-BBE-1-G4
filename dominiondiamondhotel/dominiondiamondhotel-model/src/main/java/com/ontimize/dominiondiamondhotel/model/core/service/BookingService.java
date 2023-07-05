@@ -1,5 +1,6 @@
 package com.ontimize.dominiondiamondhotel.model.core.service;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
@@ -258,7 +259,7 @@ public class BookingService implements IBookingService {
         Forecast forecast;
 
         try {
-            gson = new GsonBuilder().create();
+            gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
             HttpGet getRequest = new HttpGet(GENERAL_URI + DAILY_FORECAST_URI + key + "?" + API_KEY_URI + LANGUAGUE_URI);
             getRequest.addHeader("accept", "application/json");
             HttpResponse response = httpClient.execute(getRequest);
