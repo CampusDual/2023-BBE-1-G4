@@ -18,6 +18,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,13 +62,10 @@ public class BookingService implements IBookingService {
     @Autowired
     private PostalCodeService postalCodeService;
 
-    @Autowired
-    HttpClient httpClient;
-
     private static final String APIKEY = "luaDerURMSfvcG8HrlwSyYD037JwDGCT";
     private static final String GENERAL_URI = "http://dataservice.accuweather.com/";
     private static final String POSTALCODES_ES_SEARCH = "locations/v1/postalcodes/es/search?";
-    private static final  String DAILY_FORECAST_URI = "forecasts/v1/daily/5day/";
+    private static final String DAILY_FORECAST_URI = "forecasts/v1/daily/5day/";
     private static final String API_KEY_URI = "apikey=" + APIKEY;
     private static final String LANGUAGUE_URI = "&language=en-us";
     private static final String DETAILS_URI = "&details=true";
@@ -219,7 +218,7 @@ public class BookingService implements IBookingService {
 
         String key;
 
-        try {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpGet getRequest = new HttpGet(GENERAL_URI + POSTALCODES_ES_SEARCH + API_KEY_URI + Q_TO_SEARCH + zipToSearch + LANGUAGUE_URI + DETAILS_URI);
             getRequest.addHeader("accept", "application/json");
 
@@ -244,7 +243,7 @@ public class BookingService implements IBookingService {
 
         Forecast forecast;
 
-        try {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             gson = new GsonBuilder().create();
             HttpGet getRequest = new HttpGet(GENERAL_URI + DAILY_FORECAST_URI + key + "?" + API_KEY_URI + LANGUAGUE_URI);
             getRequest.addHeader("accept", "application/json");
@@ -268,8 +267,34 @@ public class BookingService implements IBookingService {
         }
         EntityResult erForecast = new EntityResultMapImpl();
         erForecast.setCode(EntityResult.OPERATION_SUCCESSFUL);
-        erForecast.put("Forecast", forecast);
+        erForecast.put("forecast", forecast);
         return erForecast;
+    }
+
+    @Override
+    public EntityResult bookingExpenseUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
+        Map<?, ?> getFilter = (Map<?, ?>) keyMap.get(FILTER);
+        Map<?, ?> getData = (Map<?, ?>) keyMap.get(DATA);
+        int bookingId = Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
+        Map<String, Object> bookingIdKeyMap = new HashMap<>();
+        SQLStatementBuilder.BasicExpression be = BasicExpressionUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, BookingDao.ATTR_ID, String.valueOf(bookingId));
+        if (be != null) {
+            bookingIdKeyMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
+        }
+        EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
+        if (!bookingExists.isEmpty()) {
+            double savedExpense = Double.parseDouble(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_EXPENSES)).get(0)));
+            double totalExpenses = savedExpense + Double.parseDouble(String.valueOf(getData.get(BookingDao.ATTR_EXPENSES)));
+            Map<String, Object> bookingUpdateKeyMap = new HashMap<>();
+            bookingUpdateKeyMap.put(BookingDao.ATTR_ID, bookingId);
+            Map<String, Object> bookingAttrKeyMap = new HashMap<>();
+            bookingAttrKeyMap.put(BookingDao.ATTR_EXPENSES, totalExpenses);
+            return this.daoHelper.update(this.bookingDao, bookingAttrKeyMap, bookingUpdateKeyMap);
+        }
+        EntityResult errorEr = new EntityResultMapImpl();
+        errorEr.setMessage(INVALID_DATA);
+        errorEr.setCode(EntityResult.OPERATION_WRONG);
+        return errorEr;
     }
 
     private EntityResult hotelRating(int hotelId) {

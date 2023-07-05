@@ -66,4 +66,15 @@ public class BookingRestController extends ORestController<IBookingService> {
             return res;
         }
     }
+
+    @PutMapping(value = "expenses", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult updateExpenses(@RequestBody Map<String, Object> req) {
+        try {
+            return this.bookingService.bookingExpenseUpdate(req);
+        } catch (Exception e) {
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
+    }
 }

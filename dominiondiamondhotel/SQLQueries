@@ -231,3 +231,6 @@ create table product_types (
 
  INSERT INTO product_types (name) values ('Dessert');
 
+----
+
+ALTER TABLE bookings ADD COLUMN expenses DECIMAL DEFAULT 0 NOT NULL;
