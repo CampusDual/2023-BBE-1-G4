@@ -38,6 +38,8 @@ class ProductServiceTest {
     @Mock
     ProductDao productDao;
     @Mock
+    ProductsAllergensDao productsAllergensDao;
+    @Mock
     ProductTypeService productTypeService;
 
     @Nested
@@ -48,7 +50,6 @@ class ProductServiceTest {
             Map<String, Object> filter = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
             data.put(ProductDao.ATTR_NAME, "potato");
-            data.put(ProductDao.ATTR_ALLERGENS_ID, 1);
             data.put(ProductDao.ATTR_DESCRIPTION, "a real potato");
             data.put(ProductDao.ATTR_PRODUCTTYPE_ID, 4);
             data.put(ProductDao.ATTR_PRICE, 1);
@@ -58,14 +59,14 @@ class ProductServiceTest {
             EntityResult allergenTypeER = new EntityResultMapImpl();
             allergenTypeER.put(AllergensDao.ATTR_ID, List.of(1));
             EntityResult productER = new EntityResultMapImpl();
-            productER.put(ProductDao.ATTR_ID, List.of(1));
+            productER.put(ProductDao.ATTR_ID,1);
+            EntityResult productAllergensER = new EntityResultMapImpl();
+            productAllergensER.put(ProductsAllergensDao.ATTR_ID, List.of(1));
             when(productTypeService.productTypeQuery(anyMap(), anyList())).thenReturn(productTypeER);
-            when(daoHelper.query(any(AllergensDao.class), anyMap(), anyList())).thenReturn(allergenTypeER);
             when(daoHelper.insert(any(ProductDao.class), anyMap())).thenReturn(productER);
             EntityResult result = productService.productInsert(filter);
             Assertions.assertEquals(EntityResult.OPERATION_SUCCESSFUL, result.getCode());
             verify(productTypeService, times(1)).productTypeQuery(anyMap(),anyList());
-            verify(daoHelper, times(1)).query(any(AllergensDao.class),anyMap(),anyList());
             verify(daoHelper, times(1)).insert(any(ProductDao.class),anyMap());
         }
     }
@@ -84,7 +85,6 @@ class ProductServiceTest {
                 columnsList.add("name");
                 columnsList.add("description");
                 columnsList.add("producttype_id");
-                columnsList.add("allergens_id");
                 columnsList.add("price");
                 List<SQLStatementBuilder.SQLOrder> orderby = new ArrayList<>();
                 orderby.add(new SQLStatementBuilder.SQLOrder("price", true));
@@ -93,7 +93,6 @@ class ProductServiceTest {
                 er.put(ProductDao.ATTR_NAME, "Coca-Cola 1L");
                 er.put(ProductDao.ATTR_DESCRIPTION,  "A bottle of Coca-Cola 1L");
                 er.put(ProductDao.ATTR_PRODUCTTYPE_ID,  List.of(1));
-                er.put(ProductDao.ATTR_ALLERGENS_ID,  List.of(1));
                 er.put(ProductDao.ATTR_PRICE,List.of(3.5));
                 when(daoHelper.paginationQuery(any(ProductDao.class),anyMap(),anyList(), anyInt(), anyInt(), anyList(), anyString()))
                         .thenReturn(er);
@@ -133,6 +132,8 @@ class ProductServiceTest {
 
             EntityResult productTypeER = new EntityResultMapImpl();
             productTypeER.put(ProductTypeDao.ATTR_ID, List.of(1));
+            EntityResult productsId = new EntityResultMapImpl();
+            productTypeER.put(ProductTypeDao.ATTR_ID, List.of(1));
             when(productTypeService.productTypeQuery(anyMap(), anyList())).thenReturn(productTypeER);
             EntityResult er = new EntityResultMapImpl();
             er.put(ProductDao.ATTR_NAME, List.of("1", "2", "3", "4", "5"));
@@ -140,11 +141,13 @@ class ProductServiceTest {
             productTypeER.put(ProductDao.ATTR_ID, List.of(1));
             when(daoHelper.query(any(ProductDao.class), anyMap(), anyList())).thenReturn(er);
             when(daoHelper.update(any(ProductDao.class), anyMap(), anyMap())).thenReturn(productUpdateER);
+            when(daoHelper.query(any(ProductsAllergensDao.class), anyMap(), anyList())).thenReturn(productsId);
             EntityResult result = productService.getVarietyMenusQuery();
             Assertions.assertEquals(EntityResult.OPERATION_SUCCESSFUL, result.getCode());
             verify(productTypeService, times(11)).productTypeQuery(anyMap(),anyList());
             verify(daoHelper, times(11)).query(any(ProductDao.class),anyMap(),anyList());
             verify(daoHelper, times(4)).update(any(ProductDao.class),anyMap(),anyMap());
+            verify(daoHelper, times(16)).query(any(ProductsAllergensDao.class),anyMap(),anyList());
 
 
         }
