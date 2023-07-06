@@ -56,4 +56,14 @@ public class CommonUtils {
 
     }
 
+    public static SQLStatementBuilder.BasicExpression normalOr(SQLStatementBuilder.BasicExpression be, SQLStatementBuilder.BasicExpression be2){
+
+
+
+        return  new SQLStatementBuilder.BasicExpression(be, SQLStatementBuilder.BasicOperator.OR_OP, be2);
+
+
+
+    }
+
 }

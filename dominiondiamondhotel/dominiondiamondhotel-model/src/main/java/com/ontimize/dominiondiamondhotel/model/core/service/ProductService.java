@@ -214,7 +214,8 @@ public class ProductService implements IProductService {
 
     private EntityResult getDishes(String dishName, int option) {
         String dishId = getIdOfProductType(dishName);
-        SQLStatementBuilder.BasicExpression be2 = null;
+        SQLStatementBuilder.BasicExpression be2 = null, be3 = null, be4 = null;
+        ArrayList productsArrayList, allProductsArrayList;
         Map<String, Object> key = new HashMap<>();
         switch (option){
 
@@ -223,6 +224,7 @@ public class ProductService implements IProductService {
                 break;
             case 2:
                 be2 = ProductUtils.opForVegans();
+
                 break;
             case 3:
                 be2 = ProductUtils.opForVegetarians();
@@ -231,11 +233,18 @@ public class ProductService implements IProductService {
         }
         SQLStatementBuilder.BasicExpression be = BasicExpressionUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, ProductDao.ATTR_PRODUCTTYPE_ID, dishId);
         if(be != null && be2 != null){
-            key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY,CommonUtils.normalAnd(be,be2));
+            Map<String, Object> filter = new HashMap<>();
+            filter.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY,be2);
+            EntityResult productIds = this.daoHelper.query(this.productsAllergensDao, filter, List.of(ProductsAllergensDao.ATTR_PRODUCT_ID));
+            productsArrayList = (ArrayList) productIds.get(ProductsAllergensDao.ATTR_PRODUCT_ID);
+            Map<String, Object> emptyFilter = new HashMap<>();
+            EntityResult allProducts = this.daoHelper.query(this.productsAllergensDao, emptyFilter, List.of(ProductsAllergensDao.ATTR_PRODUCT_ID));
+            allProductsArrayList = (ArrayList) allProducts.get(ProductsAllergensDao.ATTR_PRODUCT_ID);
+            be3 = ProductUtils.productsWithTheseAllergens(productsArrayList);
+            be4 = ProductUtils.productsWithoutTheseAllergens(allProductsArrayList);
+            key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY,CommonUtils.normalAnd(be, CommonUtils.normalOr(be3,be4)));
         }else if (be != null) {
             key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
-        }else if(be2 != null){
-            key.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be2);
         }
         return this.productQuery(key, List.of(ProductDao.ATTR_NAME));
     }
@@ -276,10 +285,6 @@ public class ProductService implements IProductService {
     }
 
     public List<String> getVarietyMenusAsString(EntityResult finalMenu) {
-        LinkedHashMap<String, Object> seafoodMenu = (LinkedHashMap<String, Object>) finalMenu.get("Seafood Menu");
-        LinkedHashMap<String, Object> veganMenu = (LinkedHashMap<String, Object>) finalMenu.get("Vegan Menu");
-        LinkedHashMap<String, Object> vegetarianMenu = (LinkedHashMap<String, Object>) finalMenu.get("Vegetarian Menu");
-        LinkedHashMap<String, Object> kidsMenu = (LinkedHashMap<String, Object>) finalMenu.get("Kids Menu");
 
         LinkedHashMap<String, Object> menu = new LinkedHashMap<>();
         List<String> strings = new ArrayList<>();
