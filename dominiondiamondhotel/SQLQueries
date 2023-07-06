@@ -234,3 +234,55 @@ create table product_types (
 ----
 
 ALTER TABLE bookings ADD COLUMN expenses DECIMAL DEFAULT 0 NOT NULL;
+
+----
+create table country_iso (
+    id serial primary key,
+    iso VARCHAR(2) not null,
+    name VARCHAR(255) not null
+);
+
+INSERT INTO country_iso (iso, name) VALUES ('ES', 'Spain');
+INSERT INTO country_iso (iso, name) VALUES ('DK', 'Denmark');
+INSERT INTO country_iso (iso, name) VALUES ('BE', 'Belgium');
+INSERT INTO country_iso (iso, name) VALUES ('BG', 'Bulgaria');
+INSERT INTO country_iso (iso, name) VALUES ('BR', 'Brasil');
+INSERT INTO country_iso (iso, name) VALUES ('BY', 'Belarus');
+INSERT INTO country_iso (iso, name) VALUES ('BZ', 'Belice');
+INSERT INTO country_iso (iso, name) VALUES ('BJ', 'Benin');
+INSERT INTO country_iso (iso, name) VALUES ('BT', 'Bhutan');
+INSERT INTO country_iso (iso, name) VALUES ('BW', 'Botwana');
+INSERT INTO country_iso (iso, name) VALUES ('CF', 'Central African Republic');
+INSERT INTO country_iso (iso, name) VALUES ('CO', 'Colombia');
+INSERT INTO country_iso (iso, name) VALUES ('CR', 'Costa Rica');
+INSERT INTO country_iso (iso, name) VALUES ('CU', 'Cuba');
+INSERT INTO country_iso (iso, name) VALUES ('CV', 'Cabo Verde');
+INSERT INTO country_iso (iso, name) VALUES ('CY', 'Cyprus');
+INSERT INTO country_iso (iso, name) VALUES ('CZ', 'Czech');
+INSERT INTO country_iso (iso, name) VALUES ('ET', 'Ethiopia');
+INSERT INTO country_iso (iso, name) VALUES ('FI', 'Finland');
+INSERT INTO country_iso (iso, name) VALUES ('FJ', 'Fiji');
+INSERT INTO country_iso (iso, name) VALUES ('FR', 'France');
+INSERT INTO country_iso (iso, name) VALUES ('GA', 'Gabon');
+INSERT INTO country_iso (iso, name) VALUES ('GE', 'Georgia');
+INSERT INTO country_iso (iso, name) VALUES ('GR', 'Greece');
+INSERT INTO country_iso (iso, name) VALUES ('GT', 'Guatemala');
+INSERT INTO country_iso (iso, name) VALUES ('HN', 'Honduras');
+INSERT INTO country_iso (iso, name) VALUES ('HR', 'Croatia');
+INSERT INTO country_iso (iso, name) VALUES ('HT', 'Haiti');
+INSERT INTO country_iso (iso, name) VALUES ('HU', 'Hungary');
+INSERT INTO country_iso (iso, name) VALUES ('ID', 'Indonesia');
+INSERT INTO country_iso (iso, name) VALUES ('IN', 'India');
+INSERT INTO country_iso (iso, name) VALUES ('IQ', 'Iraq');
+INSERT INTO country_iso (iso, name) VALUES ('IR', 'Iran');
+INSERT INTO country_iso (iso, name) VALUES ('IS', 'Iceland');
+
+ALTER TABLE postalcodes ADD COLUMN iso_id INTEGER REFERENCES country_iso (id);
+
+UPDATE postalcodes SET iso_id=1 WHERE id=1
+
+UPDATE postalcodes SET iso_id=1 WHERE id=2
+
+ALTER TABLE postalcodes ALTER COLUMN iso_id SET NOT NULL;
+
+
