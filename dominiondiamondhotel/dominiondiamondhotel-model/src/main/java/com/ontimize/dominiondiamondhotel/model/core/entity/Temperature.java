@@ -1,53 +1,53 @@
 package com.ontimize.dominiondiamondhotel.model.core.entity;
 
 public class Temperature {
-    private MaxOrMinTemperature Minimum;
-    private MaxOrMinTemperature Maximum;
+    private MaxOrMinTemperature minimum;
+    private MaxOrMinTemperature maximum;
 
     public Temperature(MaxOrMinTemperature minimum, MaxOrMinTemperature maximum) {
-        this.Minimum = minimum;
-        this.Maximum = maximum;
+        this.minimum = minimum;
+        this.maximum = maximum;
     }
 
     public MaxOrMinTemperature getMinimum() {
-        return Minimum;
+        return minimum;
     }
 
     public void setMinimum(MaxOrMinTemperature minimum) {
-        this.Minimum = minimum;
+        this.minimum = minimum;
     }
 
     public MaxOrMinTemperature getMaximum() {
-        return Maximum;
+        return maximum;
     }
 
     public void setMaximum(MaxOrMinTemperature maximum) {
-        this.Maximum = maximum;
+        this.maximum = maximum;
     }
 
     private static class MaxOrMinTemperature {
-        private int Value;
-        private String Unit;
+        private int value;
+        private String unit;
 
         public MaxOrMinTemperature(int value, String unit) {
-            this.Value = value;
-            this.Unit = unit;
+            this.value = value;
+            this.unit = unit;
         }
 
         public int getValue() {
-            return Value;
+            return value;
         }
 
         public void setValue(int value) {
-            this.Value = value;
+            this.value = value;
         }
 
         public String getUnit() {
-            return Unit;
+            return unit;
         }
 
         public void setUnit(String unit) {
-            this.Unit = unit;
+            this.unit = unit;
         }
     }
 }

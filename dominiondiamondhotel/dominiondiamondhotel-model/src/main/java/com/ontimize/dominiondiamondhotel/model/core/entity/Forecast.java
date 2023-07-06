@@ -1,28 +1,28 @@
 package com.ontimize.dominiondiamondhotel.model.core.entity;
 
 public class Forecast {
-    private Headline Headline;
-    private Day[] DailyForecasts;
+    private Headline headline;
+    private Day[] dailyForecasts;
 
     public Forecast(Headline headline, Day[] dailyForecasts) {
-        this.Headline = headline;
-        this.DailyForecasts = dailyForecasts;
+        this.headline = headline;
+        this.dailyForecasts = dailyForecasts;
     }
 
     public Headline getHeadline() {
-        return Headline;
+        return headline;
     }
 
     public void setHeadline(Headline headline) {
-        this.Headline = headline;
+        this.headline = headline;
     }
 
     public Day[] getDays() {
-        return DailyForecasts;
+        return dailyForecasts;
     }
 
     public void setDays(Day[] days) {
-        this.DailyForecasts = days;
+        this.dailyForecasts = days;
     }
 
 }
