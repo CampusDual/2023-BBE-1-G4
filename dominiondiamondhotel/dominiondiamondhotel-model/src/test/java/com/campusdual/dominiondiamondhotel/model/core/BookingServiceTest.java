@@ -253,13 +253,10 @@ public class BookingServiceTest {
             filter.put(CustomerDao.ATTR_IDNUMBER, "55555555X");
             Map<String, Object> data = new HashMap<>();
             data.put("paying", 100.50);
-            Map<String, Object> req = new HashMap<>();
-            req.put(FILTER, filter);
-            req.put(DATA, data);
             when(daoHelper.query(any(BookingDao.class), anyMap(), anyList())).thenReturn(bookingExistsER);
             when(daoHelper.query(any(CustomerDao.class), anyMap(), anyList())).thenReturn(customerER);
             when(daoHelper.update(any(BookingDao.class), anyMap(), anyMap())).thenReturn(updateER);
-            EntityResult result = bookingService.payExpenses(req);
+            EntityResult result = bookingService.payExpenses(filter, data);
             Assertions.assertEquals(0, result.getCode());
             verify(daoHelper, times(1)).query(any(BookingDao.class),anyMap(),anyList());
             verify(daoHelper, times(1)).query(any(CustomerDao.class),anyMap(),anyList());

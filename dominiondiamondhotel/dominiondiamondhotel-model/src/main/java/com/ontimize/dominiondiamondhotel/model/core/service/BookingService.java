@@ -314,10 +314,8 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public EntityResult payExpenses(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
+    public EntityResult payExpenses(Map<String, Object> getFilter, Map<String, Object> getData) throws OntimizeJEERuntimeException {
 
-        Map<?, ?> getFilter = (Map<?, ?>) keyMap.get(FILTER);
-        Map<?, ?> getData = (Map<?, ?>) keyMap.get(DATA);
         int bookingId =  Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
         String documentId = (String) getFilter.get(CustomerDao.ATTR_IDNUMBER);
         double money = Double.parseDouble(String.valueOf((getData.get("paying"))));
@@ -338,6 +336,7 @@ public class BookingService implements IBookingService {
 
             }else{
 
+                er.setCode(EntityResult.OPERATION_SUCCESSFUL);
                 double savedExpense = Double.parseDouble(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_EXPENSES)).get(0)));
                 double updatedExpense = savedExpense - money;
                 if (updatedExpense > 0) {
