@@ -13,4 +13,5 @@ public interface IBookingService {
     public EntityResult bookingCalificationsAndCommentUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
     public EntityResult getForecastQuery(Map<String, Object> keyMap, List<String> attrList);
     public EntityResult bookingExpenseUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
+    public EntityResult payExpenses(Map<String, Object> filter, Map<String, Object> data) throws  OntimizeJEERuntimeException;
 }
