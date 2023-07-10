@@ -57,6 +57,8 @@ public class BookingServiceTest {
     @Mock
     RoomDao roomDao;
     @Mock
+    CustomerDao customerDao;
+    @Mock
     PostalCodeService postalCodeService;
     @Mock
     HttpClient httpClient;
@@ -233,6 +235,35 @@ public class BookingServiceTest {
             Assertions.assertEquals(OPERATION_SUCCESSFUL, finalER.getCode());
             verify(daoHelper, times(1)).query(any(BookingDao.class), anyMap(), anyList());
             verify(daoHelper, times(1)).update(any(BookingDao.class), anyMap(), anyMap());
+        }
+
+        @Test
+        void testPayExpenses(){
+
+            EntityResult bookingExistsER = new EntityResultMapImpl();
+            bookingExistsER.put(BookingDao.ATTR_ID, List.of(1));
+            bookingExistsER.put(BookingDao.ATTR_EXPENSES, List.of(1));
+            bookingExistsER.put(BookingDao.ATTR_CUSTOMER_ID, List.of(1));
+            EntityResult customerER = new EntityResultMapImpl();
+            customerER.put(CustomerDao.ATTR_IDNUMBER, List.of("55555555X"));
+            EntityResult updateER = new EntityResultMapImpl();
+            updateER.put(BookingDao.ATTR_ID, List.of(1));
+            Map<String, Object> filter = new HashMap<>();
+            filter.put(BookingDao.ATTR_ID, 24);
+            filter.put(CustomerDao.ATTR_IDNUMBER, "55555555X");
+            Map<String, Object> data = new HashMap<>();
+            data.put("paying", 100.50);
+            Map<String, Object> req = new HashMap<>();
+            req.put(FILTER, filter);
+            req.put(DATA, data);
+            when(daoHelper.query(any(BookingDao.class), anyMap(), anyList())).thenReturn(bookingExistsER);
+            when(daoHelper.query(any(CustomerDao.class), anyMap(), anyList())).thenReturn(customerER);
+            when(daoHelper.update(any(BookingDao.class), anyMap(), anyMap())).thenReturn(updateER);
+            EntityResult result = bookingService.payExpenses(req);
+            Assertions.assertEquals(0, result.getCode());
+            verify(daoHelper, times(1)).query(any(BookingDao.class),anyMap(),anyList());
+            verify(daoHelper, times(1)).query(any(CustomerDao.class),anyMap(),anyList());
+            verify(daoHelper, times(1)).update(any(BookingDao.class),anyMap(),anyMap());
         }
     }
 
