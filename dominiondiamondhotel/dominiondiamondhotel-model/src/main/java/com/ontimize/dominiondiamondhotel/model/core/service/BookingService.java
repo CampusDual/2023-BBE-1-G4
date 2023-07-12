@@ -374,10 +374,10 @@ public class BookingService implements IBookingService {
         } catch (IOException e) {
             throw new OntimizeJEERuntimeException();
         }
-        EntityResult erForecast = new EntityResultMapImpl();
-        erForecast.setCode(EntityResult.OPERATION_SUCCESSFUL);
-        erForecast.put("events", List.of(events));
-        return erForecast;
+        EntityResult erEvents = new EntityResultMapImpl();
+        erEvents.setCode(EntityResult.OPERATION_SUCCESSFUL);
+        erEvents.put("events", List.of(events));
+        return erEvents;
     }
   
     public EntityResult payExpenses(Map<String, Object> getFilter, Map<String, Object> getData) throws OntimizeJEERuntimeException {
