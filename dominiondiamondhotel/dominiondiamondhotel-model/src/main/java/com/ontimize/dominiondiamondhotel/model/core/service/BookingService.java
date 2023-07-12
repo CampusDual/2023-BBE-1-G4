@@ -56,14 +56,14 @@ public class BookingService implements IBookingService {
     public BookingService(DefaultOntimizeDaoHelper daoHelper, BookingDao bookingDao,
                           CustomerService customerService, RoomService roomService,
                           HotelService hotelService, PostalCodeService postalCodeService,
-                         CountryCodeService countryCodeService) {
+                          CountryCodeService countryCodeService) {
         this(daoHelper, bookingDao, customerService, roomService,
-                hotelService, postalCodeService, HttpClientBuilder.create().build());
+                hotelService, postalCodeService, HttpClientBuilder.create().build(), countryCodeService);
     }
 
-    public BookingService(DefaultOntimizeDaoHelper daoHelper, BookingDao bookingDao, 
-                          CustomerService customerService, RoomService roomService, 
-                          HotelService hotelService, PostalCodeService postalCodeService, 
+    public BookingService(DefaultOntimizeDaoHelper daoHelper, BookingDao bookingDao,
+                          CustomerService customerService, RoomService roomService,
+                          HotelService hotelService, PostalCodeService postalCodeService,
                           HttpClient httpClient, CountryCodeService countryCodeService) {
         this.daoHelper = daoHelper;
         this.bookingDao = bookingDao;
@@ -371,7 +371,7 @@ public class BookingService implements IBookingService {
         erEvents.put("events", List.of(events));
         return erEvents;
     }
-  
+
     public EntityResult payExpenses(Map<String, Object> getFilter, Map<String, Object> getData) throws OntimizeJEERuntimeException {
         int bookingId = Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
         String documentId = (String) getFilter.get(CustomerDao.ATTR_IDNUMBER);
@@ -385,8 +385,6 @@ public class BookingService implements IBookingService {
             customersBooking.put(CustomerDao.ATTR_ID, Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_CUSTOMER_ID)).get(0))));
             EntityResult customersDocumentId = customerService.customerQuery(customersBooking, List.of(CustomerDao.ATTR_IDNUMBER));
             if (!String.valueOf(((List<?>) customersDocumentId.get(CustomerDao.ATTR_IDNUMBER)).get(0)).equalsIgnoreCase(documentId)) {
-            EntityResult customersDocumentId = this.daoHelper.query(this.customerDao, customersBooking, List.of(CustomerDao.ATTR_IDNUMBER));
-            if(!String.valueOf(((List<?>) customersDocumentId.get(CustomerDao.ATTR_IDNUMBER)).get(0)).equalsIgnoreCase(documentId)){
                 er.setMessage("Invalid document id");
                 er.setCode(EntityResult.OPERATION_WRONG);
             } else {
@@ -414,6 +412,7 @@ public class BookingService implements IBookingService {
         return er;
     }
 
+
     private EntityResult hotelRating(int hotelId) {
         Map<String, Object> hotelIdKeyMap = new HashMap<>();
         hotelIdKeyMap.put(BookingDao.ATTR_HOTEL_ID, hotelId);
@@ -440,7 +439,7 @@ public class BookingService implements IBookingService {
         return this.hotelService.hotelUpdate(getData, hotelIdForUpdateKeyMap);
     }
 
-    private HttpEntity getEntity (String uri) throws IOException {
+    private HttpEntity getEntity(String uri) throws IOException {
         HttpGet getRequest = new HttpGet(uri);
         getRequest.addHeader("accept", "application/json");
         HttpResponse response = httpClient.execute(getRequest);
@@ -451,3 +450,5 @@ public class BookingService implements IBookingService {
         return response.getEntity();
     }
 }
+
+
