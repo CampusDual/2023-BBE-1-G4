@@ -15,10 +15,7 @@ public class BookingUtils {
     }
 
     public static SQLStatementBuilder.BasicExpression meanNotNull(){
-
         SQLStatementBuilder.BasicField attr = new SQLStatementBuilder.BasicField(BookingDao.ATTR_MEAN);
         return new SQLStatementBuilder.BasicExpression(attr, SQLStatementBuilder.BasicOperator.NOT_NULL_OP, null);
-
-
     }
 }

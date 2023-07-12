@@ -5,14 +5,14 @@ import com.ontimize.jee.server.dao.jdbc.OntimizeJdbcDaoSupport;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
-@Repository(value = "PostalCodeDao")
+@Repository(value = "CountryCodeDao")
 @Lazy
 @ConfigurationFile(
-        configurationFile = "dao/PostalCodeDao.xml",
+        configurationFile = "dao/CountryCodeDao.xml",
         configurationFilePlaceholder = "dao/placeholders.properties"
 )
-public class PostalCodeDao extends OntimizeJdbcDaoSupport {
+public class CountryCodeDao extends OntimizeJdbcDaoSupport {
     public static final String ATTR_ID = "id";
-    public static final String ATTR_ZIP = "zip";
-    public static final String ATTR_ISO_ID = "iso_id";
+    public static final String ATTR_ISO = "iso";
+    public static final String ATTR_NAME = "name";
 }
