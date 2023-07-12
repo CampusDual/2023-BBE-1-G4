@@ -45,42 +45,34 @@ import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.*;
 public class BookingService implements IBookingService {
     private DefaultOntimizeDaoHelper daoHelper;
     private BookingDao bookingDao;
-    private RoomDao roomDao;
     private CustomerService customerService;
     private RoomService roomService;
     private HotelService hotelService;
     private PostalCodeService postalCodeService;
-    private CountryCodeService countryCodeService;
     private HttpClient httpClient;
-    private CustomerDao customerDao;
+    private CountryCodeService countryCodeService;
+
     @Autowired
-    public BookingService(DefaultOntimizeDaoHelper daoHelper,
-                          BookingDao bookingDao, RoomDao roomDao, CustomerDao customerDao,
+    public BookingService(DefaultOntimizeDaoHelper daoHelper, BookingDao bookingDao,
                           CustomerService customerService, RoomService roomService,
-                          HotelService hotelService,
-                          PostalCodeService postalCodeService, CountryCodeService countryCodeService) {
-        this(daoHelper, bookingDao,
-                roomDao,customerDao,
-                customerService, roomService,
-                hotelService,
-                postalCodeService, HttpClientBuilder.create().build(), countryCodeService);
+                          HotelService hotelService, PostalCodeService postalCodeService,
+                          CountryCodeService countryCodeService) {
+        this(daoHelper, bookingDao, customerService, roomService,
+                hotelService, postalCodeService, HttpClientBuilder.create().build(), countryCodeService);
     }
 
-    public BookingService(DefaultOntimizeDaoHelper daoHelper,
-                          BookingDao bookingDao, RoomDao roomDao, CustomerDao customerDao,
+    public BookingService(DefaultOntimizeDaoHelper daoHelper, BookingDao bookingDao,
                           CustomerService customerService, RoomService roomService,
-                          HotelService hotelService,
-                          PostalCodeService postalCodeService, HttpClient httpClient, CountryCodeService countryCodeService) {
+                          HotelService hotelService, PostalCodeService postalCodeService,
+                          HttpClient httpClient, CountryCodeService countryCodeService) {
         this.daoHelper = daoHelper;
         this.bookingDao = bookingDao;
-        this.roomDao = roomDao;
         this.customerService = customerService;
         this.roomService = roomService;
         this.hotelService = hotelService;
         this.postalCodeService = postalCodeService;
         this.httpClient = httpClient;
         this.countryCodeService = countryCodeService;
-        this.customerDao = customerDao;
     }
 
     private static final String ACCUW_APIKEY = "luaDerURMSfvcG8HrlwSyYD037JwDGCT";
@@ -163,7 +155,12 @@ public class BookingService implements IBookingService {
         bookingIdKeyMap.put(BookingDao.ATTR_ID, bookingId);
         EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
         EntityResult er = new EntityResultMapImpl();
-        if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) == null) {
+        if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null
+                && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) == null) {
+            if (Double.parseDouble(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_EXPENSES)).get(0))) != 0) {
+                er.setMessage("Expenses are not paid yet");
+                return er;
+            }
             int roomIdFromBooking = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_ROOM_ID)).get(0)));
             Map<String, Object> filter = new HashMap<>();
             filter.put("id", ((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0));
@@ -179,7 +176,7 @@ public class BookingService implements IBookingService {
                 roomUpdateData.put(RoomDao.ATTR_STATE_ID, 4);
                 updatePopularity(Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_HOTEL_ID)).get(0))));
                 this.roomService.roomUpdate(roomUpdateData, roomUpdateFilter);
-                EntityResult room = this.daoHelper.query(this.roomDao, roomUpdateFilter, List.of(RoomDao.ATTR_ID, RoomDao.ATTR_STATE_ID));
+                EntityResult room = roomService.roomQuery(roomUpdateFilter, List.of(RoomDao.ATTR_ID, RoomDao.ATTR_STATE_ID));
                 String roomStatus = String.valueOf(((List<?>) room.get(RoomDao.ATTR_STATE_ID)).get(0));
                 er.setMessage("Fecha de check_out: " + now + " Estado de la habitación: " + roomStatus);
                 return er;
@@ -228,7 +225,6 @@ public class BookingService implements IBookingService {
     @Override
     public EntityResult getForecastQuery(Map<String, Object> keyMap, List<String> attrList) {
         Gson gson = new Gson();
-
         int hotelId = Integer.parseInt(String.valueOf(((List<?>) this.daoHelper.query(this.bookingDao, keyMap, attrList).get(BookingDao.ATTR_HOTEL_ID)).get(0)));
         Map<String, Object> hotelKey = new HashMap<>();
         SQLStatementBuilder.BasicExpression be = BasicExpressionUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, HotelDao.ATTR_ID, String.valueOf(hotelId));
@@ -242,9 +238,7 @@ public class BookingService implements IBookingService {
             zipKey.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
         }
         int zipToSearch = Integer.parseInt(String.valueOf(((List<?>) postalCodeService.postalCodeQuery(zipKey, List.of(PostalCodeDao.ATTR_ZIP)).get(PostalCodeDao.ATTR_ZIP)).get(0)));
-
         String key;
-
         try {
             HttpEntity httpEntity = getEntity(ACCUW_GENERAL_URI + ACCUW_POSTALCODES_ES_SEARCH + ACCUW_API_KEY_URI + ACCUW_Q_TO_SEARCH + zipToSearch + ACCUW_LANGUAGUE_URI + ACCUW_DETAILS_URI);
             String retSrc;
@@ -258,9 +252,7 @@ public class BookingService implements IBookingService {
         } catch (IOException e) {
             throw new OntimizeJEERuntimeException();
         }
-
         Forecast forecast;
-
         try {
             gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
             HttpEntity httpEntity = getEntity(ACCUW_GENERAL_URI + ACCUW_DAILY_FORECAST_URI + key + "?" + ACCUW_API_KEY_URI + ACCUW_LANGUAGUE_URI);
@@ -379,20 +371,20 @@ public class BookingService implements IBookingService {
         erEvents.put("events", List.of(events));
         return erEvents;
     }
-  
+
     public EntityResult payExpenses(Map<String, Object> getFilter, Map<String, Object> getData) throws OntimizeJEERuntimeException {
-        int bookingId =  Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
+        int bookingId = Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
         String documentId = (String) getFilter.get(CustomerDao.ATTR_IDNUMBER);
         double money = Double.parseDouble(String.valueOf((getData.get("paying"))));
         Map<String, Object> bookingIdKeyMap = new HashMap<>();
         bookingIdKeyMap.put(BookingDao.ATTR_ID, bookingId);
-        EntityResult bookingExists =  this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
+        EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
         EntityResult er = new EntityResultMapImpl();
         if (!bookingExists.isEmpty() && money > 0 && Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_EXPENSES)).get(0))) > 0) {
             Map<String, Object> customersBooking = new HashMap<>();
             customersBooking.put(CustomerDao.ATTR_ID, Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_CUSTOMER_ID)).get(0))));
-            EntityResult customersDocumentId = this.daoHelper.query(this.customerDao, customersBooking, List.of(CustomerDao.ATTR_IDNUMBER));
-            if(!String.valueOf(((List<?>) customersDocumentId.get(CustomerDao.ATTR_IDNUMBER)).get(0)).equalsIgnoreCase(documentId)){
+            EntityResult customersDocumentId = customerService.customerQuery(customersBooking, List.of(CustomerDao.ATTR_IDNUMBER));
+            if (!String.valueOf(((List<?>) customersDocumentId.get(CustomerDao.ATTR_IDNUMBER)).get(0)).equalsIgnoreCase(documentId)) {
                 er.setMessage("Invalid document id");
                 er.setCode(EntityResult.OPERATION_WRONG);
             } else {
@@ -420,6 +412,7 @@ public class BookingService implements IBookingService {
         return er;
     }
 
+
     private EntityResult hotelRating(int hotelId) {
         Map<String, Object> hotelIdKeyMap = new HashMap<>();
         hotelIdKeyMap.put(BookingDao.ATTR_HOTEL_ID, hotelId);
@@ -446,7 +439,7 @@ public class BookingService implements IBookingService {
         return this.hotelService.hotelUpdate(getData, hotelIdForUpdateKeyMap);
     }
 
-    private HttpEntity getEntity (String uri) throws IOException {
+    private HttpEntity getEntity(String uri) throws IOException {
         HttpGet getRequest = new HttpGet(uri);
         getRequest.addHeader("accept", "application/json");
         HttpResponse response = httpClient.execute(getRequest);
@@ -457,3 +450,5 @@ public class BookingService implements IBookingService {
         return response.getEntity();
     }
 }
+
+
