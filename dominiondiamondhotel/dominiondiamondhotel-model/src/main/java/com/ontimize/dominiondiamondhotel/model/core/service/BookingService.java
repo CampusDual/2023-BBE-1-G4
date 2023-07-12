@@ -52,22 +52,22 @@ public class BookingService implements IBookingService {
     private PostalCodeService postalCodeService;
     private CountryCodeService countryCodeService;
     private HttpClient httpClient;
-
+    private CustomerDao customerDao;
     @Autowired
     public BookingService(DefaultOntimizeDaoHelper daoHelper,
-                          BookingDao bookingDao, RoomDao roomDao,
+                          BookingDao bookingDao, RoomDao roomDao, CustomerDao customerDao,
                           CustomerService customerService, RoomService roomService,
                           HotelService hotelService,
                           PostalCodeService postalCodeService, CountryCodeService countryCodeService) {
         this(daoHelper, bookingDao,
-                roomDao,
+                roomDao,customerDao,
                 customerService, roomService,
                 hotelService,
                 postalCodeService, HttpClientBuilder.create().build(), countryCodeService);
     }
 
     public BookingService(DefaultOntimizeDaoHelper daoHelper,
-                          BookingDao bookingDao, RoomDao roomDao,
+                          BookingDao bookingDao, RoomDao roomDao, CustomerDao customerDao,
                           CustomerService customerService, RoomService roomService,
                           HotelService hotelService,
                           PostalCodeService postalCodeService, HttpClient httpClient, CountryCodeService countryCodeService) {
@@ -80,6 +80,7 @@ public class BookingService implements IBookingService {
         this.postalCodeService = postalCodeService;
         this.httpClient = httpClient;
         this.countryCodeService = countryCodeService;
+        this.customerDao = customerDao;
     }
 
     private static final String ACCUW_APIKEY = "luaDerURMSfvcG8HrlwSyYD037JwDGCT";
@@ -378,6 +379,46 @@ public class BookingService implements IBookingService {
         erForecast.put("events", List.of(events));
         return erForecast;
     }
+  
+    public EntityResult payExpenses(Map<String, Object> getFilter, Map<String, Object> getData) throws OntimizeJEERuntimeException {
+        int bookingId =  Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
+        String documentId = (String) getFilter.get(CustomerDao.ATTR_IDNUMBER);
+        double money = Double.parseDouble(String.valueOf((getData.get("paying"))));
+        Map<String, Object> bookingIdKeyMap = new HashMap<>();
+        bookingIdKeyMap.put(BookingDao.ATTR_ID, bookingId);
+        EntityResult bookingExists =  this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
+        EntityResult er = new EntityResultMapImpl();
+        if (!bookingExists.isEmpty() && money > 0 && Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_EXPENSES)).get(0))) > 0) {
+            Map<String, Object> customersBooking = new HashMap<>();
+            customersBooking.put(CustomerDao.ATTR_ID, Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_CUSTOMER_ID)).get(0))));
+            EntityResult customersDocumentId = this.daoHelper.query(this.customerDao, customersBooking, List.of(CustomerDao.ATTR_IDNUMBER));
+            if(!String.valueOf(((List<?>) customersDocumentId.get(CustomerDao.ATTR_IDNUMBER)).get(0)).equalsIgnoreCase(documentId)){
+                er.setMessage("Invalid document id");
+                er.setCode(EntityResult.OPERATION_WRONG);
+            } else {
+                er.setCode(EntityResult.OPERATION_SUCCESSFUL);
+                double savedExpense = Double.parseDouble(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_EXPENSES)).get(0)));
+                double updatedExpense = savedExpense - money;
+                if (updatedExpense > 0) {
+                    er.setMessage("You need to pay " + updatedExpense + " more");
+                } else {
+                    if (updatedExpense < 0) {
+                        er.setMessage("Your change is : " + (money - savedExpense));
+                        updatedExpense = 0;
+                    } else {
+                        er.setMessage("Thank you, your operation has been completed successfully");
+                    }
+                }
+                Map<String, Object> updatedExpenseMap = new HashMap<>();
+                updatedExpenseMap.put(BookingDao.ATTR_EXPENSES, updatedExpense);
+                this.daoHelper.update(this.bookingDao, updatedExpenseMap, bookingIdKeyMap);
+            }
+        } else {
+            er.setCode(EntityResult.OPERATION_WRONG);
+            er.setMessage(INVALID_DATA);
+        }
+        return er;
+    }
 
     private EntityResult hotelRating(int hotelId) {
         Map<String, Object> hotelIdKeyMap = new HashMap<>();
@@ -408,7 +449,6 @@ public class BookingService implements IBookingService {
     private HttpEntity getEntity (String uri) throws IOException {
         HttpGet getRequest = new HttpGet(uri);
         getRequest.addHeader("accept", "application/json");
-
         HttpResponse response = httpClient.execute(getRequest);
         int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode != 200) {

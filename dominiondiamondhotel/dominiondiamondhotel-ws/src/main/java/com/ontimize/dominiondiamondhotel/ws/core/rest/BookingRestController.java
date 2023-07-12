@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.DATA;
+import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.FILTER;
+
 @RestController
 @RequestMapping("/bookings")
 public class BookingRestController extends ORestController<IBookingService> {
@@ -79,7 +82,21 @@ public class BookingRestController extends ORestController<IBookingService> {
         }
     }
 
-    @GetMapping(value = "events", produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @PutMapping(value = "payExpenses", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult payExpenses(@RequestBody Map<String, Object> req) {
+        try {
+            Map<String, Object> filter = (Map<String, Object>) req.get(FILTER);
+            Map<String, Object> data = (Map<String, Object>) req.get(DATA);
+            return this.bookingService.payExpenses(filter, data);
+        } catch (Exception e) {
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
+    }
+  
+   @GetMapping(value = "events", produces = MediaType.APPLICATION_JSON_VALUE)
     public EntityResult getEvents(@RequestBody Map<String, Object> req) {
         try {
             return this.bookingService.getEventsQuery((Map<String, Object>) req.get("filter"), BookingDao.getColumns());
