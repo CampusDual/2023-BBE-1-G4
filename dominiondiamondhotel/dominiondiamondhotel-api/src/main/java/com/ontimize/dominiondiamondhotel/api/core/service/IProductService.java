@@ -8,13 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface IProductService {
-
     public EntityResult productInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException;
-
     public EntityResult productPaginationQuery(Map<?,?> keysValues, List<?> attributesValues, int pagesize, int offset, List<SQLStatementBuilder.SQLOrder> orderby) throws OntimizeJEERuntimeException;
-
     public EntityResult productQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException;
     public EntityResult getMenuQuery() throws OntimizeJEERuntimeException;
     public EntityResult getVarietyMenusQuery() throws OntimizeJEERuntimeException;
-
 }

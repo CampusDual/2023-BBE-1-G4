@@ -1,12 +1,12 @@
 package com.ontimize.dominiondiamondhotel.model.core.service;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.ontimize.dominiondiamondhotel.api.core.service.IBookingService;
 import com.ontimize.dominiondiamondhotel.api.core.utils.ValidatorUtils;
 import com.ontimize.dominiondiamondhotel.model.core.dao.*;
+import com.ontimize.dominiondiamondhotel.model.core.entity.Artist;
+import com.ontimize.dominiondiamondhotel.model.core.entity.Event;
 import com.ontimize.dominiondiamondhotel.model.core.entity.Forecast;
 import com.ontimize.dominiondiamondhotel.model.core.utils.BasicExpressionUtils;
 import com.ontimize.dominiondiamondhotel.model.core.utils.BookingUtils;
@@ -19,7 +19,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
@@ -28,8 +27,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,48 +49,54 @@ public class BookingService implements IBookingService {
     private CustomerService customerService;
     private RoomService roomService;
     private HotelService hotelService;
-    private PostalCodeDao postalCodeDao;
     private PostalCodeService postalCodeService;
+    private CountryCodeService countryCodeService;
     private HttpClient httpClient;
     private CustomerDao customerDao;
     @Autowired
     public BookingService(DefaultOntimizeDaoHelper daoHelper,
                           BookingDao bookingDao, RoomDao roomDao, CustomerDao customerDao,
                           CustomerService customerService, RoomService roomService,
-                          HotelService hotelService, PostalCodeDao postalCodeDao,
-                          PostalCodeService postalCodeService) {
+                          HotelService hotelService,
+                          PostalCodeService postalCodeService, CountryCodeService countryCodeService) {
         this(daoHelper, bookingDao,
                 roomDao,customerDao,
                 customerService, roomService,
-                hotelService, postalCodeDao,
-                postalCodeService, HttpClientBuilder.create().build());
+                hotelService,
+                postalCodeService, HttpClientBuilder.create().build(), countryCodeService);
     }
 
     public BookingService(DefaultOntimizeDaoHelper daoHelper,
                           BookingDao bookingDao, RoomDao roomDao, CustomerDao customerDao,
                           CustomerService customerService, RoomService roomService,
-                          HotelService hotelService, PostalCodeDao postalCodeDao,
-                          PostalCodeService postalCodeService, HttpClient httpClient) {
+                          HotelService hotelService,
+                          PostalCodeService postalCodeService, HttpClient httpClient, CountryCodeService countryCodeService) {
         this.daoHelper = daoHelper;
         this.bookingDao = bookingDao;
         this.roomDao = roomDao;
         this.customerService = customerService;
         this.roomService = roomService;
         this.hotelService = hotelService;
-        this.postalCodeDao = postalCodeDao;
         this.postalCodeService = postalCodeService;
         this.httpClient = httpClient;
+        this.countryCodeService = countryCodeService;
         this.customerDao = customerDao;
     }
 
-    private static final String APIKEY = "luaDerURMSfvcG8HrlwSyYD037JwDGCT";
-    private static final String GENERAL_URI = "http://dataservice.accuweather.com/";
-    private static final String POSTALCODES_ES_SEARCH = "locations/v1/postalcodes/es/search?";
-    private static final String DAILY_FORECAST_URI = "forecasts/v1/daily/5day/";
-    private static final String API_KEY_URI = "apikey=" + APIKEY;
-    private static final String LANGUAGUE_URI = "&language=en-us";
-    private static final String DETAILS_URI = "&details=true";
-    private static final String Q_TO_SEARCH = "&q=";
+    private static final String ACCUW_APIKEY = "luaDerURMSfvcG8HrlwSyYD037JwDGCT";
+    private static final String ACCUW_GENERAL_URI = "http://dataservice.accuweather.com/";
+    private static final String ACCUW_POSTALCODES_ES_SEARCH = "locations/v1/postalcodes/es/search?";
+    private static final String ACCUW_DAILY_FORECAST_URI = "forecasts/v1/daily/5day/";
+    private static final String ACCUW_API_KEY_URI = "apikey=" + ACCUW_APIKEY;
+    private static final String ACCUW_LANGUAGUE_URI = "&language=en-us";
+    private static final String ACCUW_DETAILS_URI = "&details=true";
+    private static final String ACCUW_Q_TO_SEARCH = "&q=";
+    private static final String TM_APIKEY = "&apikey=j6RzdC0NB4bQuUfXeW05beAAlRJcgGm4";
+    private static final String TM_GENERAL_URI = "https://app.ticketmaster.com/discovery/v2/events.json?";
+    private static final String TM_COUNTRY_CODE = "countryCode=";
+    private static final String TM_POSTAL_CODE = "&postalCode=";
+    private static final String TM_DATETIME = "&startDateTime=";
+
 
     @Override
     public EntityResult bookingInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException {
@@ -136,7 +147,7 @@ public class BookingService implements IBookingService {
                 roomUpdateData.put(RoomDao.ATTR_STATE_ID, 2);
                 this.roomService.roomUpdate(roomUpdateData, roomUpdateFilter);
             }
-            return this.daoHelper.query(this.bookingDao, bookingIdKeyMap, this.bookingDao.getColumns());
+            return this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
         } else {
             er.setMessage(INVALID_DATA);
         }
@@ -235,23 +246,14 @@ public class BookingService implements IBookingService {
         String key;
 
         try {
-            HttpGet getRequest = new HttpGet(GENERAL_URI + POSTALCODES_ES_SEARCH + API_KEY_URI + Q_TO_SEARCH + zipToSearch + LANGUAGUE_URI + DETAILS_URI);
-            getRequest.addHeader("accept", "application/json");
-
-            HttpResponse response = httpClient.execute(getRequest);
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode != 200) {
-                throw new IOException("Failed with HTTP error code : " + statusCode);
-            }
-            HttpEntity httpEntity = response.getEntity();
+            HttpEntity httpEntity = getEntity(ACCUW_GENERAL_URI + ACCUW_POSTALCODES_ES_SEARCH + ACCUW_API_KEY_URI + ACCUW_Q_TO_SEARCH + zipToSearch + ACCUW_LANGUAGUE_URI + ACCUW_DETAILS_URI);
             String retSrc;
             if (httpEntity != null) {
                 retSrc = EntityUtils.toString(httpEntity);
-                // parsing JSON
-                JSONArray resultGetKey = gson.fromJson(retSrc, JSONArray.class); //Convert String to JSON Array
+                JSONArray resultGetKey = gson.fromJson(retSrc, JSONArray.class);
                 key = String.valueOf(((LinkedTreeMap<?, ?>) resultGetKey.get(0)).get("Key"));
             } else {
-                throw new IOException("HttpEntity null");
+                throw new IOException(HTTP_ENTITY_NULL);
             }
         } catch (IOException e) {
             throw new OntimizeJEERuntimeException();
@@ -261,21 +263,12 @@ public class BookingService implements IBookingService {
 
         try {
             gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
-            HttpGet getRequest = new HttpGet(GENERAL_URI + DAILY_FORECAST_URI + key + "?" + API_KEY_URI + LANGUAGUE_URI);
-            getRequest.addHeader("accept", "application/json");
-            HttpResponse response = httpClient.execute(getRequest);
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode != 200) {
-                throw new IOException("Failed with HTTP error code : " + statusCode);
-            }
-            HttpEntity httpEntity = response.getEntity();
-
+            HttpEntity httpEntity = getEntity(ACCUW_GENERAL_URI + ACCUW_DAILY_FORECAST_URI + key + "?" + ACCUW_API_KEY_URI + ACCUW_LANGUAGUE_URI);
             if (httpEntity != null) {
-                // parsing JSON
                 String content = EntityUtils.toString(httpEntity);
                 forecast = gson.fromJson(content, Forecast.class);
             } else {
-                throw new IOException("HttpEntity null");
+                throw new IOException(HTTP_ENTITY_NULL);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -314,8 +307,80 @@ public class BookingService implements IBookingService {
     }
 
     @Override
+    public EntityResult getEventsQuery(Map<String, Object> keyMap, List<String> attrList) {
+        int hotelId = Integer.parseInt(String.valueOf(((List<?>) this.daoHelper.query(this.bookingDao, keyMap, BookingDao.getColumns()).get(BookingDao.ATTR_HOTEL_ID)).get(0)));
+        Map<String, Object> hotelKey = new HashMap<>();
+        SQLStatementBuilder.BasicExpression be = BasicExpressionUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, HotelDao.ATTR_ID, String.valueOf(hotelId));
+        if (be != null) {
+            hotelKey.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
+        }
+        int hotelZipCode = Integer.parseInt(String.valueOf(((List<?>) hotelService.hotelQuery(hotelKey, List.of(HotelDao.ATTR_ZIP_ID)).get(HotelDao.ATTR_ZIP_ID)).get(0)));
+        Map<String, Object> zipKey = new HashMap<>();
+        be = BasicExpressionUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, PostalCodeDao.ATTR_ID, String.valueOf(hotelZipCode));
+        if (be != null) {
+            zipKey.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
+        }
+        EntityResult postalCodeQuery = postalCodeService.postalCodeQuery(zipKey, List.of(PostalCodeDao.ATTR_ZIP, PostalCodeDao.ATTR_ISO_ID));
+        int zipToSearch = Integer.parseInt(String.valueOf(((List<?>) postalCodeQuery.get(PostalCodeDao.ATTR_ZIP)).get(0)));
+        int isoToSearch = Integer.parseInt(String.valueOf(((List<?>) postalCodeQuery.get(PostalCodeDao.ATTR_ISO_ID)).get(0)));
+        Map<String, Object> countryCodeKey = new HashMap<>();
+        be = BasicExpressionUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, CountryCodeDao.ATTR_ID, String.valueOf(isoToSearch));
+        if (be != null) {
+            countryCodeKey.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, be);
+        }
+        String finalISO = String.valueOf(((List<?>) countryCodeService.countryCodeQuery(countryCodeKey, List.of(CountryCodeDao.ATTR_ISO)).get(CountryCodeDao.ATTR_ISO)).get(0));
+        LinkedList<Event> events = new LinkedList<>();
+        try {
+            HttpEntity httpEntity = getEntity(TM_GENERAL_URI + TM_COUNTRY_CODE + finalISO + TM_APIKEY + TM_POSTAL_CODE + zipToSearch + TM_DATETIME + DateTimeFormatter.ISO_INSTANT.format(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+            if (httpEntity != null) {
+                String src = EntityUtils.toString(httpEntity);
+                JsonObject fullResult = new Gson().fromJson(src, JsonObject.class);
+                JsonArray jsonEventArrays = fullResult.getAsJsonObject("_embedded").getAsJsonArray("events");
+                jsonEventArrays.forEach(event -> {
+                    JsonObject eventFromJsonElement = event.getAsJsonObject();
+                    Event e = new Event();
+                    e.setName(eventFromJsonElement.get("name").getAsString());
+                    e.setUrl(eventFromJsonElement.get("url").getAsString());
+                    try {
+                        e.setDate(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'").parse(eventFromJsonElement.getAsJsonObject("dates").getAsJsonObject("start").get("dateTime").getAsString()));
+                    } catch (ParseException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    JsonObject classifications = eventFromJsonElement.getAsJsonArray("classifications").get(0).getAsJsonObject();
+                    e.setEventType(classifications.getAsJsonObject("segment").get("name").getAsString());
+                    e.setGenre(classifications.getAsJsonObject("genre").get("name").getAsString());
+                    e.setSubGenre(classifications.getAsJsonObject("subGenre").get("name").getAsString());
+                    e.setFamily(classifications.get("family").getAsBoolean());
+                    e.setMaxPrice(eventFromJsonElement.getAsJsonArray("priceRanges").get(1).getAsJsonObject().get("max").getAsDouble());
+                    JsonObject embeddedInside = eventFromJsonElement.getAsJsonObject("_embedded");
+                    JsonObject venues = embeddedInside.getAsJsonArray("venues").get(0).getAsJsonObject();
+                    e.setHallName(venues.getAsJsonObject().get("name").getAsString());
+                    e.setAddress(venues.getAsJsonObject("address").get("line1").getAsString());
+                    JsonObject jsonArtist = embeddedInside.getAsJsonArray("attractions").get(0).getAsJsonObject();
+                    Artist a = new Artist();
+                    a.setName(jsonArtist.get("name").getAsString());
+                    JsonObject artistClassifications = jsonArtist.getAsJsonArray("classifications").get(0).getAsJsonObject();
+                    a.setGenre(artistClassifications.getAsJsonObject("genre").get("name").getAsString());
+                    a.setSubGenre(artistClassifications.getAsJsonObject("subGenre").get("name").getAsString());
+                    a.setType(artistClassifications.getAsJsonObject("type").get("name").getAsString());
+                    a.setSubType(artistClassifications.getAsJsonObject("subType").get("name").getAsString());
+                    a.setFamily(artistClassifications.get("family").getAsBoolean());
+                    e.setArtist(a);
+                    events.add(e);
+                });
+            } else {
+                throw new IOException(HTTP_ENTITY_NULL);
+            }
+        } catch (IOException e) {
+            throw new OntimizeJEERuntimeException();
+        }
+        EntityResult erEvents = new EntityResultMapImpl();
+        erEvents.setCode(EntityResult.OPERATION_SUCCESSFUL);
+        erEvents.put("events", List.of(events));
+        return erEvents;
+    }
+  
     public EntityResult payExpenses(Map<String, Object> getFilter, Map<String, Object> getData) throws OntimizeJEERuntimeException {
-
         int bookingId =  Integer.parseInt(String.valueOf(getFilter.get(BookingDao.ATTR_ID)));
         String documentId = (String) getFilter.get(CustomerDao.ATTR_IDNUMBER);
         double money = Double.parseDouble(String.valueOf((getData.get("paying"))));
@@ -324,18 +389,13 @@ public class BookingService implements IBookingService {
         EntityResult bookingExists =  this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
         EntityResult er = new EntityResultMapImpl();
         if (!bookingExists.isEmpty() && money > 0 && Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_EXPENSES)).get(0))) > 0) {
-
             Map<String, Object> customersBooking = new HashMap<>();
             customersBooking.put(CustomerDao.ATTR_ID, Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_CUSTOMER_ID)).get(0))));
             EntityResult customersDocumentId = this.daoHelper.query(this.customerDao, customersBooking, List.of(CustomerDao.ATTR_IDNUMBER));
-
             if(!String.valueOf(((List<?>) customersDocumentId.get(CustomerDao.ATTR_IDNUMBER)).get(0)).equalsIgnoreCase(documentId)){
-
                 er.setMessage("Invalid document id");
                 er.setCode(EntityResult.OPERATION_WRONG);
-
-            }else{
-
+            } else {
                 er.setCode(EntityResult.OPERATION_SUCCESSFUL);
                 double savedExpense = Double.parseDouble(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_EXPENSES)).get(0)));
                 double updatedExpense = savedExpense - money;
@@ -349,13 +409,11 @@ public class BookingService implements IBookingService {
                         er.setMessage("Thank you, your operation has been completed successfully");
                     }
                 }
-
                 Map<String, Object> updatedExpenseMap = new HashMap<>();
                 updatedExpenseMap.put(BookingDao.ATTR_EXPENSES, updatedExpense);
                 this.daoHelper.update(this.bookingDao, updatedExpenseMap, bookingIdKeyMap);
             }
-
-        }else {
+        } else {
             er.setCode(EntityResult.OPERATION_WRONG);
             er.setMessage(INVALID_DATA);
         }
@@ -386,5 +444,16 @@ public class BookingService implements IBookingService {
         Map<String, Object> getData = new HashMap<>();
         getData.put(HotelDao.ATTR_POPULARITY, count);
         return this.hotelService.hotelUpdate(getData, hotelIdForUpdateKeyMap);
+    }
+
+    private HttpEntity getEntity (String uri) throws IOException {
+        HttpGet getRequest = new HttpGet(uri);
+        getRequest.addHeader("accept", "application/json");
+        HttpResponse response = httpClient.execute(getRequest);
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != 200) {
+            throw new IOException("Failed with HTTP error code : " + statusCode);
+        }
+        return response.getEntity();
     }
 }
