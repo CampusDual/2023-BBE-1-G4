@@ -1,24 +1,26 @@
 package com.ontimize.dominiondiamondhotel.model.core.service;
+
 import com.ontimize.dominiondiamondhotel.api.core.service.IProductService;
-import com.ontimize.dominiondiamondhotel.model.core.dao.*;
+import com.ontimize.dominiondiamondhotel.model.core.dao.AllergensDao;
+import com.ontimize.dominiondiamondhotel.model.core.dao.ProductDao;
+import com.ontimize.dominiondiamondhotel.model.core.dao.ProductTypeDao;
+import com.ontimize.dominiondiamondhotel.model.core.dao.ProductsAllergensDao;
+import com.ontimize.dominiondiamondhotel.model.core.utils.BasicExpressionUtils;
 import com.ontimize.dominiondiamondhotel.model.core.utils.CommonUtils;
 import com.ontimize.dominiondiamondhotel.model.core.utils.ProductUtils;
 import com.ontimize.jee.common.db.AdvancedEntityResult;
 import com.ontimize.jee.common.db.AdvancedEntityResultMapImpl;
-import com.ontimize.dominiondiamondhotel.model.core.utils.BasicExpressionUtils;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
-import com.ontimize.jee.common.tools.EntityResultTools;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
-import java.awt.geom.Ellipse2D;
 import java.util.*;
+
 import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.FILTER;
 import static com.ontimize.dominiondiamondhotel.api.core.utils.HelperUtils.INVALID_DATA;
 
@@ -135,7 +137,6 @@ public class ProductService implements IProductService {
             Map<String, Object> filter = new HashMap<>();
             filter.put(ProductDao.ATTR_ID, 46);
             String description = getMenuAsString(finalMenu);
-            System.out.println(description);
             Map<String, Object> data = new HashMap<>();
             data.put(ProductDao.ATTR_DESCRIPTION, description);
             this.daoHelper.update(this.productDao, data, filter);
@@ -218,18 +219,15 @@ public class ProductService implements IProductService {
         ArrayList productsArrayList, allProductsArrayList;
         Map<String, Object> key = new HashMap<>();
         switch (option){
-
             case 1:
                 be2 = ProductUtils.opForSeafood();
                 break;
             case 2:
                 be2 = ProductUtils.opForVegans();
-
                 break;
             case 3:
                 be2 = ProductUtils.opForVegetarians();
                 break;
-
         }
         SQLStatementBuilder.BasicExpression be = BasicExpressionUtils.searchBy(SQLStatementBuilder.BasicOperator.EQUAL_OP, ProductDao.ATTR_PRODUCTTYPE_ID, dishId);
         if(be != null && be2 != null){

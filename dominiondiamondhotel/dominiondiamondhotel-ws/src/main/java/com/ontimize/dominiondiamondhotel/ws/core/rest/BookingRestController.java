@@ -2,6 +2,7 @@ package com.ontimize.dominiondiamondhotel.ws.core.rest;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IBookingService;
 import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
+import com.ontimize.dominiondiamondhotel.model.core.service.BookingService;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.rest.ORestController;
@@ -71,6 +72,17 @@ public class BookingRestController extends ORestController<IBookingService> {
     public EntityResult updateExpenses(@RequestBody Map<String, Object> req) {
         try {
             return this.bookingService.bookingExpenseUpdate(req);
+        } catch (Exception e) {
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
+    }
+
+    @GetMapping(value = "events", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult getEvents(@RequestBody Map<String, Object> req) {
+        try {
+            return this.bookingService.getEventsQuery((Map<String, Object>) req.get("filter"), BookingDao.getColumns());
         } catch (Exception e) {
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
