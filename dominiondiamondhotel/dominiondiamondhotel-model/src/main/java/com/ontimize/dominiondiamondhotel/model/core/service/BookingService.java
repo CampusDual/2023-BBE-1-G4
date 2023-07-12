@@ -152,7 +152,13 @@ public class BookingService implements IBookingService {
         bookingIdKeyMap.put(BookingDao.ATTR_ID, bookingId);
         EntityResult bookingExists = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
         EntityResult er = new EntityResultMapImpl();
-        if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) == null) {
+        if (((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0) != null
+                && ((List<?>) bookingExists.get(BookingDao.ATTR_CHECK_OUT)).get(0) == null) {
+            if (Double.parseDouble(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_EXPENSES)).get(0))) != 0){
+                EntityResult errorCheckout = new EntityResultMapImpl();
+                errorCheckout.setMessage("Expenses are not paid yet");
+                return errorCheckout;
+            }
             int roomIdFromBooking = Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_ROOM_ID)).get(0)));
             Map<String, Object> filter = new HashMap<>();
             filter.put("id", ((List<?>) bookingExists.get(BookingDao.ATTR_ID)).get(0));

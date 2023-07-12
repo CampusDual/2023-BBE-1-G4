@@ -142,6 +142,7 @@ public class BookingServiceTest {
             er.put(BookingDao.ATTR_ROOM_ID, List.of(1));
             er.put(BookingDao.ATTR_CHECK_IN, List.of(LocalDate.now().plusDays(10)));
             er.put(BookingDao.ATTR_HOTEL_ID, List.of(1));
+            er.put(BookingDao.ATTR_EXPENSES, List.of(0));
             EntityResult hotelEr = new EntityResultMapImpl();
             hotelEr.put("counting", List.of(1));
             List<String> nullList = new ArrayList<>();
