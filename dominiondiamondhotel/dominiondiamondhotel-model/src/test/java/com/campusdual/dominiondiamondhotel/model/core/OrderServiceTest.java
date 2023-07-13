@@ -1,8 +1,10 @@
 package com.campusdual.dominiondiamondhotel.model.core;
 
 import com.ontimize.dominiondiamondhotel.model.core.dao.*;
+import com.ontimize.dominiondiamondhotel.model.core.service.BookingService;
 import com.ontimize.dominiondiamondhotel.model.core.service.HotelService;
 import com.ontimize.dominiondiamondhotel.model.core.service.OrderService;
+import com.ontimize.dominiondiamondhotel.model.core.service.ProductService;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
@@ -35,11 +37,11 @@ public class OrderServiceTest {
     @Mock
     DefaultOntimizeDaoHelper daoHelper;
     @Mock
-    BookingDao bookingDao;
-    @Mock
-    ProductDao productDao;
-    @Mock
     OrderDao orderDao;
+    @Mock
+    BookingService bookingService;
+    @Mock
+    ProductService productService;
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -66,13 +68,13 @@ public class OrderServiceTest {
             productER.put(ProductDao.ATTR_PRODUCTTYPE_ID, List.of(1));
             EntityResult orderER = new EntityResultMapImpl();
             orderER.put(OrderDao.ATTR_ID, List.of(1));
-            when(daoHelper.query(any(BookingDao.class),anyMap(),anyList())).thenReturn(bookingER);
-            when(daoHelper.query(any(ProductDao.class),anyMap(),anyList())).thenReturn(productER);
+            when(bookingService.bookingQuery(anyMap(),anyList())).thenReturn(bookingER);
+            when(productService.productQuery(anyMap(),anyList())).thenReturn(productER);
             when(daoHelper.insert(any(OrderDao.class), anyMap())).thenReturn(orderER);
             EntityResult result = orderService.orderFood(req);
             Assertions.assertEquals(0, result.getCode());
-            verify(daoHelper, times(1)).query(any(BookingDao.class),anyMap(),anyList());
-            verify(daoHelper, times(arrayList.size())).query(any(ProductDao.class),anyMap(),anyList());
+            verify(bookingService, times(1)).bookingQuery(anyMap(),anyList());
+            verify(productService, times(arrayList.size())).productQuery(anyMap(),anyList());
             verify(daoHelper, times(arrayList.size())).insert(any(OrderDao.class),anyMap());
 
 

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface IBookingService {
+    public EntityResult bookingQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException;
+
     public EntityResult bookingInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException;
     public EntityResult bookingCheckInUpdate(Map<String, Object> keyMap) throws OntimizeJEERuntimeException;
     public EntityResult bookingCheckOutUpdate(Map<String, Object> keyMap) throws  OntimizeJEERuntimeException;

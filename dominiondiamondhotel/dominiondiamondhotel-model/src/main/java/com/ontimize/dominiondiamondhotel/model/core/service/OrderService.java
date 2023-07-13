@@ -29,9 +29,9 @@ public class OrderService implements IOrderService {
     @Autowired
     private DefaultOntimizeDaoHelper daoHelper;
     @Autowired
-    private ProductDao productDao;
+    private ProductService productService;
     @Autowired
-    private BookingDao bookingDao;
+    private BookingService bookingService;
 
     @Override
     public EntityResult orderFood(Map<String, Object> attrMap) throws OntimizeJEERuntimeException {
@@ -45,14 +45,14 @@ public class OrderService implements IOrderService {
         Map<String,Object> booking = new HashMap<>();
         int bookingId = Integer.parseInt(String.valueOf(filter.get(BookingDao.ATTR_ID)));
         booking.put(BookingDao.ATTR_ID,bookingId);
-        EntityResult bookingExist = this.daoHelper.query(this.bookingDao,booking,List.of(BookingDao.ATTR_ID));
+        EntityResult bookingExist = this.bookingService.bookingQuery(booking,List.of(BookingDao.ATTR_ID));
         if(!bookingExist.isEmpty()){
             Map<String,Object>productBooking = new HashMap<>();
             EntityResult productExist = new EntityResultMapImpl();
             ArrayList products = (ArrayList) data.get("products");
             for(int i =0; i<products.size();i++){
                 productBooking.put(ProductDao.ATTR_ID,products.get(i));
-                productExist = this.daoHelper.query(this.productDao,productBooking,List.of(ProductDao.ATTR_PRODUCTTYPE_ID));
+                productExist = productService.productQuery(productBooking,List.of(ProductDao.ATTR_PRODUCTTYPE_ID));
                 if(productExist.isEmpty()){
                     fin=true;
                     i=products.size();
