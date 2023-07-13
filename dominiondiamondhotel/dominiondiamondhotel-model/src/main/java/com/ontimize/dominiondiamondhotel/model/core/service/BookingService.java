@@ -91,6 +91,11 @@ public class BookingService implements IBookingService {
 
 
     @Override
+    public EntityResult bookingQuery(Map<String, Object> keyMap, List<String> attrList) throws OntimizeJEERuntimeException {
+        return this.daoHelper.query(this.bookingDao, keyMap, attrList);
+    }
+
+    @Override
     public EntityResult bookingInsert(Map<String, Object> attrMap) throws OntimizeJEERuntimeException {
         String entryDate = String.valueOf(attrMap.get(BookingDao.ATTR_ENTRY_DATE));
         String exitDate = String.valueOf(attrMap.get(BookingDao.ATTR_EXIT_DATE));
