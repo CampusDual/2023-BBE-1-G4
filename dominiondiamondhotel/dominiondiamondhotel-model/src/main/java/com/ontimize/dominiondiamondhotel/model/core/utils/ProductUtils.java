@@ -4,7 +4,7 @@ import com.ontimize.dominiondiamondhotel.model.core.dao.ProductDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.ProductsAllergensDao;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ProductUtils {
 
@@ -91,12 +91,12 @@ public class ProductUtils {
         return new SQLStatementBuilder.BasicExpression(allergensId, SQLStatementBuilder.BasicOperator.NULL_OP, null);
     }
 
-    public static SQLStatementBuilder.BasicExpression productsWithoutTheseAllergens(ArrayList idsWithAllergens) {
+    public static SQLStatementBuilder.BasicExpression productsWithoutTheseAllergens(List<?> idsWithAllergens) {
         SQLStatementBuilder.BasicField productId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ID);
         return new SQLStatementBuilder.BasicExpression(productId, SQLStatementBuilder.BasicOperator.NOT_IN_OP, idsWithAllergens);
     }
 
-    public static SQLStatementBuilder.BasicExpression productsWithTheseAllergens(ArrayList idsWithAllergens) {
+    public static SQLStatementBuilder.BasicExpression productsWithTheseAllergens(List<?> idsWithAllergens) {
         SQLStatementBuilder.BasicField productId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ID);
         return new SQLStatementBuilder.BasicExpression(productId, SQLStatementBuilder.BasicOperator.IN_OP, idsWithAllergens);
     }
