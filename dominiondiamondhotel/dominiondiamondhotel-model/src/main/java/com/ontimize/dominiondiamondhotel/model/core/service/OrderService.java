@@ -71,6 +71,15 @@ public class OrderService implements IOrderService {
                 }else{
                     Map<String,Object>productSimpleMap = new HashMap<>();
                     Map<String,Object>productMenuMap = new HashMap<>();
+                    for(int i=0;i<productMenu.size();i++){
+                        ArrayList insertMenu = (ArrayList) productsOrderList.get(i);
+                        int productId = (int) productMenu.get(i);
+                        if(productId == 52 && insertMenu.size() != 2){
+                            er.setMessage("Kid's menu only has 2 dishes");
+                            er.setCode(EntityResult.OPERATION_WRONG);
+                            return er;
+                        }
+                    }
                     for(int i=0;i<productSimple.size();i++){
                         productSimpleMap.put(OrderDao.ATTR_BOOKING_ID,bookingId);
                         productSimpleMap.put(OrderDao.ATTR_PRODUCT_ID,productSimple.get(i));
@@ -81,8 +90,8 @@ public class OrderService implements IOrderService {
                         productMenuMap.put(OrderDao.ATTR_PRODUCT_ID,productMenu.get(i));
                         ArrayList insertMenu = (ArrayList) productsOrderList.get(i);
                         String menuSelect = insertMenu.toString();
-                        productMenuMap.put(OrderDao.ATTR_PRODUCTS_LIST,menuSelect);
-                        this.daoHelper.insert(this.orderDao,productMenuMap);
+                        productMenuMap.put(OrderDao.ATTR_PRODUCTS_LIST, menuSelect);
+                        this.daoHelper.insert(this.orderDao, productMenuMap);
                     }
                     er.setMessage("booking´s id: "+bookingId);
                     er.setCode(EntityResult.OPERATION_SUCCESSFUL);
