@@ -172,19 +172,18 @@ public class BookingService implements IBookingService {
             Map<String, Object> data = new HashMap<>();
             LocalDateTime now = LocalDateTime.now();
             data.put(BookingDao.ATTR_CHECK_OUT, now);
-            this.daoHelper.update(this.bookingDao, data, filter);
-            EntityResult result = this.daoHelper.query(this.bookingDao, bookingIdKeyMap, BookingDao.getColumns());
+            EntityResult result = this.daoHelper.update(this.bookingDao, data, filter);
             if (result.getCode() == EntityResult.OPERATION_SUCCESSFUL) {
                 Map<String, Object> roomUpdateFilter = new HashMap<>();
                 Map<String, Object> roomUpdateData = new HashMap<>();
                 roomUpdateFilter.put(RoomDao.ATTR_ID, roomIdFromBooking);
                 roomUpdateData.put(RoomDao.ATTR_STATE_ID, 4);
                 updatePopularity(Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_HOTEL_ID)).get(0))));
-                this.roomService.roomUpdate(roomUpdateData, roomUpdateFilter);
-                EntityResult room = roomService.roomQuery(roomUpdateFilter, List.of(RoomDao.ATTR_ID, RoomDao.ATTR_STATE_ID));
-                String roomStatus = String.valueOf(((List<?>) room.get(RoomDao.ATTR_STATE_ID)).get(0));
-                er.setMessage("Fecha de check_out: " + now + " Estado de la habitación: " + roomStatus);
-                return er;
+                EntityResult roomUpdate = this.roomService.roomUpdate(roomUpdateData, roomUpdateFilter);
+                if (roomUpdate.getCode() == EntityResult.OPERATION_SUCCESSFUL) {
+                    er.setMessage("Thank you, your check-out has been completed successfully");
+                    return er;
+                }
             }
         } else {
             er.setMessage(INVALID_DATA);
@@ -341,7 +340,7 @@ public class BookingService implements IBookingService {
                     try {
                         e.setDate(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'").parse(eventFromJsonElement.getAsJsonObject("dates").getAsJsonObject("start").get("dateTime").getAsString()));
                     } catch (ParseException ex) {
-                        throw new RuntimeException(ex);
+                        throw new OntimizeJEERuntimeException();
                     }
                     JsonObject classifications = eventFromJsonElement.getAsJsonArray("classifications").get(0).getAsJsonObject();
                     e.setEventType(classifications.getAsJsonObject("segment").get("name").getAsString());
