@@ -3,8 +3,6 @@ package com.ontimize.dominiondiamondhotel.model.core.utils;
 import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.jee.common.db.SQLStatementBuilder;
 
-import javax.naming.directory.BasicAttribute;
-
 public class BookingUtils {
     private BookingUtils() {
 

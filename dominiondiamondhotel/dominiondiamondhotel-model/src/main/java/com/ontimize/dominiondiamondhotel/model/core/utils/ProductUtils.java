@@ -96,7 +96,8 @@ public class ProductUtils {
         return new SQLStatementBuilder.BasicExpression(productId, SQLStatementBuilder.BasicOperator.NOT_IN_OP, idsWithAllergens);
     }
 
-    public static SQLStatementBuilder.BasicExpression productsWithTheseAllergens(List<?> idsWithAllergens) {
+
+    public static SQLStatementBuilder.BasicExpression productsWithTheseAllergens(List<?>  idsWithAllergens) {
         SQLStatementBuilder.BasicField productId = new SQLStatementBuilder.BasicField(ProductDao.ATTR_ID);
         return new SQLStatementBuilder.BasicExpression(productId, SQLStatementBuilder.BasicOperator.IN_OP, idsWithAllergens);
     }

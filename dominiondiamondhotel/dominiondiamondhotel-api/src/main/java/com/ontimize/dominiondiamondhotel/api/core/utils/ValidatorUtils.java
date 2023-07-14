@@ -6,13 +6,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ValidatorUtils {
+    private ValidatorUtils() {
+
+    }
+
     public static boolean idValidator(int idType, String id) {
         switch (idType) {
             case 1:
-                String regexPassport = "^[A-Z]{3}[0-9]{6}[A-Z]?$";
+                String regexPassport = "^[A-Z]{3}\\d{6}[A-Z]?$";
                 return Pattern.matches(regexPassport, id);
             case 2:
-                String[] DNIletter = {"T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"};
+                String[] dniLetter = {"T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"};
                 int dni = 0;
                 try {
                     dni = Integer.parseInt(id.substring(0, 8));
@@ -20,7 +24,7 @@ public class ValidatorUtils {
                     return false;
                 }
                 String letter = id.substring(8);
-                String assignedLetter = DNIletter[dni % 23];
+                String assignedLetter = dniLetter[dni % 23];
                 return letter.equals(assignedLetter);
             default:
                 return false;
@@ -42,11 +46,11 @@ public class ValidatorUtils {
         return matcher.matches();
     }
 
-    public static boolean dateValidator(String entry_date, String exit_date) {
+    public static boolean dateValidator(String entry, String exit) {
         try {
             LocalDate nowDate = LocalDate.now();
-            LocalDate entryDate = LocalDate.parse(entry_date);
-            LocalDate exitDate = LocalDate.parse(exit_date);
+            LocalDate entryDate = LocalDate.parse(entry);
+            LocalDate exitDate = LocalDate.parse(exit);
             return (entryDate.isBefore(exitDate) || entryDate.isEqual(exitDate)) && (entryDate.isAfter(nowDate) || entryDate.isEqual(nowDate));
         } catch (Exception e) {
             return false;

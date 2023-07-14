@@ -1,7 +1,6 @@
 package com.ontimize.dominiondiamondhotel.ws.core.rest;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IProductService;
-import com.ontimize.dominiondiamondhotel.api.core.service.IProductTypeService;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.rest.ORestController;

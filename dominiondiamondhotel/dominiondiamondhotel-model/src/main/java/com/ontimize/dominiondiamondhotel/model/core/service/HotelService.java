@@ -108,7 +108,7 @@ public class HotelService implements IHotelService {
                 initialDate = LocalDate.parse(getFilter.get(YEAR) + "-01-01");
                 endDate = LocalDate.parse(getFilter.get(YEAR) + "-12-31");
             }
-            if (initialDate != null && endDate != null) {
+            if (initialDate != null) {
                 Map<String, Object> bookingKeyMap = new HashMap<>();
                 BasicField entryDate = new BasicField(BookingDao.ATTR_ENTRY_DATE);
                 BasicField entryDateToCompare = new BasicField("'" + initialDate + "'");

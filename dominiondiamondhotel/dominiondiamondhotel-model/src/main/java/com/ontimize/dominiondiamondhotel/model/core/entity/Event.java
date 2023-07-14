@@ -1,6 +1,5 @@
 package com.ontimize.dominiondiamondhotel.model.core.entity;
 
-import java.time.Instant;
 import java.util.Date;
 
 public class Event {

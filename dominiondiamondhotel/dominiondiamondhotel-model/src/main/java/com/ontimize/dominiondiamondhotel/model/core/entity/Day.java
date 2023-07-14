@@ -3,13 +3,13 @@ package com.ontimize.dominiondiamondhotel.model.core.entity;
 public class Day {
     private String date;
     private Temperature temperature;
-    private DayAndNight day;
+    private DayAndNight dayTime;
     private DayAndNight night;
 
-    public Day(String date, Temperature temperature, DayAndNight day, DayAndNight night) {
+    public Day(String date, Temperature temperature, DayAndNight dayTime, DayAndNight night) {
         this.date = date;
         this.temperature = temperature;
-        this.day = day;
+        this.dayTime = dayTime;
         this.night = night;
     }
 
@@ -29,12 +29,12 @@ public class Day {
         this.temperature = temperature;
     }
 
-    public DayAndNight getDay() {
-        return day;
+    public DayAndNight getDayTime() {
+        return dayTime;
     }
 
-    public void setDay(DayAndNight day) {
-        this.day = day;
+    public void setDayTime(DayAndNight dayTime) {
+        this.dayTime = dayTime;
     }
 
     public DayAndNight getNight() {
@@ -49,8 +49,8 @@ public class Day {
         private String iconPhrase;
         private boolean hasPrecipitation;
 
-        public DayAndNight(String IconPhrase, boolean hasPrecipitation) {
-            this.iconPhrase = IconPhrase;
+        public DayAndNight(String iconPhrase, boolean hasPrecipitation) {
+            this.iconPhrase = iconPhrase;
             this.hasPrecipitation = hasPrecipitation;
         }
 
