@@ -81,5 +81,30 @@ public class OrderServiceTest {
         }
 
     }
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class checkOrder {
+
+        @Test
+        void checkOrder(){
+
+            Map<String, Object> req = new HashMap<>();
+            Map<String, Object> orderMap = new HashMap<>();
+            orderMap.put(OrderDao.ATTR_ID, 7);
+            req.put(FILTER, orderMap);
+            EntityResult orderER = new EntityResultMapImpl();
+            orderER.put(OrderDao.ATTR_ID, List.of(1));
+            orderER.put(OrderDao.ATTR_CHECKED, List.of(false));
+            EntityResult orderUpdateER = new EntityResultMapImpl();
+            orderUpdateER.put(OrderDao.ATTR_ID, List.of(1));
+            when(daoHelper.query(any(OrderDao.class),anyMap(),anyList())).thenReturn(orderER);
+            when(daoHelper.update(any(OrderDao.class),anyMap(), anyMap())).thenReturn(orderUpdateER);
+            EntityResult result = orderService.checkOrder(req);
+            Assertions.assertEquals(0, result.getCode());
+            verify(daoHelper, times(1)).query(any(OrderDao.class),anyMap(),anyList());
+            verify(daoHelper, times(1)).update(any(OrderDao.class),anyMap(),anyMap());
+        }
+
+    }
 
 }

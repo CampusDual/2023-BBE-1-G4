@@ -95,7 +95,6 @@ public class ProductService implements IProductService {
     @Override
     public AdvancedEntityResult productPaginationQuery(Map<?, ?> keysValues, List<?> attributesValues, int pagesize, int offset, List<SQLStatementBuilder.SQLOrder> orderby) throws OntimizeJEERuntimeException {
         Map<String, Object> filterMap = new HashMap<>();
-
         if (keysValues.get("pricemin") != null && keysValues.get("pricemax") != null) {
             double min = Double.parseDouble(String.valueOf(keysValues.get("pricemin")));
             double max = Double.parseDouble(String.valueOf(keysValues.get("pricemax")));
@@ -109,7 +108,6 @@ public class ProductService implements IProductService {
             filterMap.put(ProductDao.ATTR_PRODUCTTYPE_ID, Integer.parseInt(String.valueOf(keysValues.get("producttype_id"))));
         }
         if (keysValues.get("allergens_id") != null) {
-
             List<Integer> listOfAllergens = (List<Integer>) keysValues.get("allergens_id");
             Map<String, Object> allergensMap = new HashMap<>();
             for (Integer listOfAllergen : listOfAllergens) {
@@ -275,7 +273,6 @@ public class ProductService implements IProductService {
 
     public String getMenuAsString(EntityResult finalMenu) {
         LinkedHashMap<String, Object> menuMap = (LinkedHashMap<String, Object>) finalMenu.get("Menu");
-
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, Object> entry : menuMap.entrySet()) {
             String category = entry.getKey();
@@ -288,7 +285,6 @@ public class ProductService implements IProductService {
             sb.setLength(sb.length() - 2);
             sb.append("; ");
         }
-
         return sb.toString();
     }
 

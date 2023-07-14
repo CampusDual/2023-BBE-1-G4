@@ -69,29 +69,19 @@ public class HotelService implements IHotelService {
 
     @Override
     public AdvancedEntityResult hotelPaginationQuery(Map<?, ?> keysValues, List<?> attributesValues, int pagesize, int offset, List<SQLStatementBuilder.SQLOrder> orderby) throws OntimizeJEERuntimeException {
-
         Map<String, Object> filterMap = new HashMap<>();
-
         if (keysValues.get("zip") == null) {
-
-            Double min = Double.parseDouble(String.valueOf(keysValues.get("qualitymin")));
-            Double max = Double.parseDouble(String.valueOf(keysValues.get("qualitymax")));
+            double min = Double.parseDouble(String.valueOf(keysValues.get("qualitymin")));
+            double max = Double.parseDouble(String.valueOf(keysValues.get("qualitymax")));
             if (min > 0 && max <= 10) {
                 filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, CommonUtils.andExpression(max, min, 1));
             } else {
                 return new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.type);
-
             }
-
         } else {
-
             filterMap.put(HotelDao.ATTR_ZIP_ID, Integer.parseInt(String.valueOf(keysValues.get("zip"))));
-
         }
-
-
         return this.daoHelper.paginationQuery(this.hotelDao, filterMap, attributesValues, pagesize, offset, orderby, "filteredget");
-
     }
 
     public EntityResult hotelOccupationQuery(Map<String, Object> keyMap) throws OntimizeJEERuntimeException {
