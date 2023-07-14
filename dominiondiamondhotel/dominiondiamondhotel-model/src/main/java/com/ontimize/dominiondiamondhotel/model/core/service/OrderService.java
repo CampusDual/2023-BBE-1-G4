@@ -4,12 +4,14 @@ import com.google.gson.JsonArray;
 import com.ontimize.dominiondiamondhotel.api.core.service.IOrderService;
 import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.OrderDao;
+import com.ontimize.dominiondiamondhotel.model.core.dao.PostalCodeDao;
 import com.ontimize.dominiondiamondhotel.model.core.dao.ProductDao;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.common.exceptions.OntimizeJEERuntimeException;
 import com.ontimize.jee.server.dao.DefaultOntimizeDaoHelper;
 import org.aspectj.weaver.ast.Or;
+import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -102,5 +104,36 @@ public class OrderService implements IOrderService {
         er.setMessage(INVALID_DATA);
         er.setCode(EntityResult.OPERATION_WRONG);
         return er;
+    }
+
+    @Override
+    public EntityResult checkOrder(Map<String, Object> req) throws OntimizeJEERuntimeException {
+
+        Map<String, Object> filter = (Map<String, Object>) req.get(FILTER);
+        int orderId = (int) filter.get(OrderDao.ATTR_ID);
+        Map<String, Object> orderMap = new HashMap<>();
+        orderMap.put(OrderDao.ATTR_ID, orderId);
+        EntityResult orderExists = this.daoHelper.query(this.orderDao, orderMap, List.of(OrderDao.ATTR_ID, OrderDao.ATTR_CHECKED));
+        EntityResult er = new EntityResultMapImpl();
+
+        if(!orderExists.isEmpty()){
+
+            boolean checked = (boolean) ((List<?>) orderExists.get(OrderDao.ATTR_CHECKED)).get(0);
+            if(!checked){
+
+                Map<String, Object> checkMap = new HashMap<>();
+                checkMap.put(OrderDao.ATTR_CHECKED, true);
+                this.daoHelper.update(this.orderDao, checkMap, filter);
+                er.setMessage("Checked = true");
+                er.setCode(EntityResult.OPERATION_SUCCESSFUL);
+                return er;
+
+            }
+
+        }
+        er.setCode(EntityResult.OPERATION_WRONG);
+        er.setMessage("This order does not exists or it's already checked");
+        return er;
+
     }
 }

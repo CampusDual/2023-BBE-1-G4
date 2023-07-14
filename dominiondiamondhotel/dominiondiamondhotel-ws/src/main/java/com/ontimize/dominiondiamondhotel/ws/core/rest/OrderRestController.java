@@ -24,6 +24,19 @@ public class OrderRestController extends ORestController<IOrderService> {
         try {
             return this.orderService.orderFood(req);
         } catch (Exception e) {
+            e.printStackTrace();
+            EntityResult res = new EntityResultMapImpl();
+            res.setCode(EntityResult.OPERATION_WRONG);
+            return res;
+        }
+    }
+
+    @PutMapping(value = "checkOrder", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EntityResult checkOrder(@RequestBody Map<String, Object> req) {
+        try {
+            return this.orderService.checkOrder(req);
+        } catch (Exception e) {
+            e.printStackTrace();
             EntityResult res = new EntityResultMapImpl();
             res.setCode(EntityResult.OPERATION_WRONG);
             return res;
