@@ -7,5 +7,6 @@ import java.util.Map;
 
 public interface IOrderService {
     public EntityResult orderFood(Map<String, Object> attrMap)throws OntimizeJEERuntimeException;
+    public EntityResult checkOrder(Map<String, Object> attrMap)throws OntimizeJEERuntimeException;
 
 }
