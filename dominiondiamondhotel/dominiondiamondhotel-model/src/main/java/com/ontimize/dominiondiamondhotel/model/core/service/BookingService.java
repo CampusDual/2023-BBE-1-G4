@@ -341,7 +341,7 @@ public class BookingService implements IBookingService {
                     try {
                         e.setDate(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'").parse(eventFromJsonElement.getAsJsonObject("dates").getAsJsonObject("start").get("dateTime").getAsString()));
                     } catch (ParseException ex) {
-                        throw new RuntimeException(ex);
+                        throw new OntimizeJEERuntimeException();
                     }
                     JsonObject classifications = eventFromJsonElement.getAsJsonArray("classifications").get(0).getAsJsonObject();
                     e.setEventType(classifications.getAsJsonObject("segment").get("name").getAsString());

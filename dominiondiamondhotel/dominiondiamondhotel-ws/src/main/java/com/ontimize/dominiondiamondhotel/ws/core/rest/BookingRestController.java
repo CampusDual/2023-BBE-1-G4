@@ -2,7 +2,6 @@ package com.ontimize.dominiondiamondhotel.ws.core.rest;
 
 import com.ontimize.dominiondiamondhotel.api.core.service.IBookingService;
 import com.ontimize.dominiondiamondhotel.model.core.dao.BookingDao;
-import com.ontimize.dominiondiamondhotel.model.core.service.BookingService;
 import com.ontimize.jee.common.dto.EntityResult;
 import com.ontimize.jee.common.dto.EntityResultMapImpl;
 import com.ontimize.jee.server.rest.ORestController;

@@ -68,22 +68,22 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public AdvancedEntityResult hotelPaginationQuery(Map<?,?> keysValues, List<?> attributesValues, int pagesize, int offset, List<SQLStatementBuilder.SQLOrder> orderby) throws OntimizeJEERuntimeException {
+    public AdvancedEntityResult hotelPaginationQuery(Map<?, ?> keysValues, List<?> attributesValues, int pagesize, int offset, List<SQLStatementBuilder.SQLOrder> orderby) throws OntimizeJEERuntimeException {
 
         Map<String, Object> filterMap = new HashMap<>();
 
-        if(keysValues.get("zip") == null){
+        if (keysValues.get("zip") == null) {
 
             Double min = Double.parseDouble(String.valueOf(keysValues.get("qualitymin")));
             Double max = Double.parseDouble(String.valueOf(keysValues.get("qualitymax")));
-            if(min > 0 && max <= 10) {
+            if (min > 0 && max <= 10) {
                 filterMap.put(SQLStatementBuilder.ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, CommonUtils.andExpression(max, min, 1));
-            }else{
-                return new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG,EntityResult.type);
+            } else {
+                return new AdvancedEntityResultMapImpl(EntityResult.OPERATION_WRONG, EntityResult.type);
 
             }
 
-        }else{
+        } else {
 
             filterMap.put(HotelDao.ATTR_ZIP_ID, Integer.parseInt(String.valueOf(keysValues.get("zip"))));
 
@@ -118,19 +118,19 @@ public class HotelService implements IHotelService {
                 initialDate = LocalDate.parse(getFilter.get(YEAR) + "-01-01");
                 endDate = LocalDate.parse(getFilter.get(YEAR) + "-12-31");
             }
-            if (initialDate != null && endDate != null) {
+            if (initialDate != null) {
                 Map<String, Object> bookingKeyMap = new HashMap<>();
                 BasicField entryDate = new BasicField(BookingDao.ATTR_ENTRY_DATE);
-                BasicField entryDateToCompare = new BasicField("'"+initialDate+"'");
+                BasicField entryDateToCompare = new BasicField("'" + initialDate + "'");
                 BasicField finalDate = new BasicField(BookingDao.ATTR_EXIT_DATE);
-                BasicField finalDateToCompare = new BasicField("'"+endDate+"'");
+                BasicField finalDateToCompare = new BasicField("'" + endDate + "'");
                 bookingKeyMap.put(ExtendedSQLConditionValuesProcessor.EXPRESSION_KEY, basicExpressionBetween(entryDate, entryDateToCompare, finalDate, finalDateToCompare));
                 bookingKeyMap.put(BookingDao.ATTR_HOTEL_ID, hotelId);
                 EntityResult bookings = daoHelper.query(this.bookingDao, bookingKeyMap, BookingDao.getColumns());
                 if (bookings != null) {
                     double occupation = 0.0;
                     LocalDate initDate = initialDate;
-                    double totalRooms = Double.parseDouble(String.valueOf(((List<?>)hotelExists.get(HotelDao.ATTR_TOTALROOMS)).get(0)));
+                    double totalRooms = Double.parseDouble(String.valueOf(((List<?>) hotelExists.get(HotelDao.ATTR_TOTALROOMS)).get(0)));
                     do {
                         int roomCount = 0;
                         for (int i = 0; i < ((List<?>) bookings.get(BookingDao.ATTR_ENTRY_DATE)).size(); i++) {
@@ -144,7 +144,7 @@ public class HotelService implements IHotelService {
                         occupation += roomCount / totalRooms;
                         initDate = initDate.plusDays(1);
                     } while (initDate.isBefore(endDate));
-                    double periodOccupation = (occupation*100) / (Duration.between(initialDate.atStartOfDay(), endDate.atStartOfDay()).toDays() + 1);
+                    double periodOccupation = (occupation * 100) / (Duration.between(initialDate.atStartOfDay(), endDate.atStartOfDay()).toDays() + 1);
                     EntityResult result = new EntityResultMapImpl();
                     Map<String, Object> data = new HashMap<>();
                     data.put("occupation", periodOccupation);
@@ -159,7 +159,7 @@ public class HotelService implements IHotelService {
         return res;
     }
 
-    private BasicExpression basicExpressionBetween(BasicField entryDate, BasicField entryDateToCompare, BasicField finalDate, BasicField finalDateToCompare){
+    private BasicExpression basicExpressionBetween(BasicField entryDate, BasicField entryDateToCompare, BasicField finalDate, BasicField finalDateToCompare) {
         BasicExpression initialDateBe1 = new BasicExpression(entryDate, BasicOperator.MORE_EQUAL_OP, entryDateToCompare);
         BasicExpression initialDateBe2 = new BasicExpression(finalDate, BasicOperator.MORE_EQUAL_OP, entryDateToCompare);
         BasicExpression finalDateBe1 = new BasicExpression(entryDate, BasicOperator.LESS_EQUAL_OP, finalDateToCompare);
