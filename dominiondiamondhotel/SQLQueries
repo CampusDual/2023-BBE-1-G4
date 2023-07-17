@@ -285,4 +285,30 @@ UPDATE postalcodes SET iso_id=1 WHERE id=2
 
 ALTER TABLE postalcodes ALTER COLUMN iso_id SET NOT NULL;
 
+---
+
+SELECT SETVAL(pg_get_serial_sequence('customers', 'id'), (SELECT MAX(id) FROM customers));
+SELECT SETVAL(pg_get_serial_sequence('hotels', 'id'), (SELECT MAX(id) FROM hotels));
+SELECT SETVAL(pg_get_serial_sequence('bookings', 'id'), (SELECT MAX(id) FROM bookings));
+
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Jose Manuel', 'Gamez', 'Arranz', '+34708757380', '23614641N', '1hmecst4u0@lycos.co.uk', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Carla', 'Cruz', 'Salvador', '+34748958360', '08700140E', '2x6gmmprm@scientist.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Ramon', 'Perea', 'Moran', '+34763455421', '49645958K', 'evy08e3a@witty.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Jimena', 'Mateos', 'Padilla', '+34752527479', '34704168C', '8p8r223o@whoever.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Luis Fernando', 'Roca', 'Chacon', '+34729419483', '31454733W', '4289mcpdu@whoever.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Begoña', 'Rueda', 'Espejo', '+34629584746', '40856442R', 'un109pgzd@lycos.de', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Laura', 'Arjona', 'Del Valle', '+34663471576', '43347550W', 'l61gj8eg8@btinternet.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Eulalia', 'De La Rosa', 'Tapia', '+34694447039', '25369237F', 'mh7n2vt79@whoever.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Jonathan', 'Peralta', 'Nieto', '+34738899033', '04506373Y', '5ouqrjymz@gmail.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Modesto', 'Muñoz', 'Puig', '+34705578083', '96719549H', '7lf2d5p1v@earthling.net', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Anna', 'Figueroa', 'Cobos', '+34641114406', '47994763L', 'ppso2y6bx@unforgettable.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Khadija', 'Del Pozo', 'Nicolas', '+34646968006', '93729335B', 'ukt7gd30@scientist.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Armando', 'Romero', 'Arranz', '+34766688429', '19612889F', 'otg5movufx@blu.it', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Jose Ramon', 'Paredes', 'Ochoa', '+34680280043', '58587741W', 'upy6k2u91@usa.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Faustino', 'Manzano', 'Barrio', '+34681174923', '18968489K', 'r0fqbrlbr@teacher.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Teodoro', 'Bermudez', 'Lazaro', '+34630084219', '65092417W', 'qfievtdor@lycos.de', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Jose Manuel', 'Asensio', 'Muñoz', '+34674486808', '67665674L', 'rp94vro0@techie.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Alvaro', 'Manzano', 'Prieto', '+34659429669', '38785175E', 'riiplq2kxwc@caramail.com', 2);
+INSERT INTO customers (name, lastname1, lastname2, phone, idnumber, mail, idtype_id) VALUES ('Pilar', 'Carvajal', 'Parra', '+34632223231', '50556384S', '0k4nnpvwqq@yahoo.es', 2);
+
 
