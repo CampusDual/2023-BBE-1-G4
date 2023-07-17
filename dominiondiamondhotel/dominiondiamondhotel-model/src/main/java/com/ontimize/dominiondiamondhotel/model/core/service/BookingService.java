@@ -178,9 +178,9 @@ public class BookingService implements IBookingService {
                 Map<String, Object> roomUpdateData = new HashMap<>();
                 roomUpdateFilter.put(RoomDao.ATTR_ID, roomIdFromBooking);
                 roomUpdateData.put(RoomDao.ATTR_STATE_ID, 4);
-                updatePopularity(Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_HOTEL_ID)).get(0))));
+                EntityResult hotelUpdate = updatePopularity(Integer.parseInt(String.valueOf(((List<?>) bookingExists.get(BookingDao.ATTR_HOTEL_ID)).get(0))));
                 EntityResult roomUpdate = this.roomService.roomUpdate(roomUpdateData, roomUpdateFilter);
-                if (roomUpdate.getCode() == EntityResult.OPERATION_SUCCESSFUL) {
+                if (roomUpdate.getCode() == EntityResult.OPERATION_SUCCESSFUL && hotelUpdate.getCode() == EntityResult.OPERATION_SUCCESSFUL) {
                     er.setMessage("Thank you, your check-out has been completed successfully");
                     return er;
                 }
