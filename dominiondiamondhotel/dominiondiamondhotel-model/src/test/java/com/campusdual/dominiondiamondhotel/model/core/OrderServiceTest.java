@@ -46,21 +46,19 @@ public class OrderServiceTest {
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class AddOrder {
-
         @Test
-        void addOrder(){
-
+        void addOrderTest(){
             Map<String, Object> req = new HashMap<>();
             Map<String, Object> filter = new HashMap<>();
             filter.put(BookingDao.ATTR_ID, 1);
             Map<String, Object> data = new HashMap<>();
-            ArrayList arrayList = new ArrayList<>();
+            List<Integer> arrayList = new ArrayList<>();
             arrayList.add(1);
             arrayList.add(2);
             data.put("products", arrayList);
             req.put(FILTER, filter);
             req.put(DATA, data);
-            ArrayList arrayList1 = new ArrayList();
+            List<?> arrayList1 = new ArrayList<>();
             req.put("products_list", arrayList1);
             EntityResult bookingER = new EntityResultMapImpl();
             bookingER.put(BookingDao.ATTR_ID, List.of(1));
@@ -76,18 +74,14 @@ public class OrderServiceTest {
             verify(bookingService, times(1)).bookingQuery(anyMap(),anyList());
             verify(productService, times(arrayList.size())).productQuery(anyMap(),anyList());
             verify(daoHelper, times(arrayList.size())).insert(any(OrderDao.class),anyMap());
-
-
         }
 
     }
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    class checkOrder {
-
+    class CheckOrder {
         @Test
-        void checkOrder(){
-
+        void checkOrderTest(){
             Map<String, Object> req = new HashMap<>();
             Map<String, Object> orderMap = new HashMap<>();
             orderMap.put(OrderDao.ATTR_ID, 7);
@@ -104,7 +98,5 @@ public class OrderServiceTest {
             verify(daoHelper, times(1)).query(any(OrderDao.class),anyMap(),anyList());
             verify(daoHelper, times(1)).update(any(OrderDao.class),anyMap(),anyMap());
         }
-
     }
-
 }

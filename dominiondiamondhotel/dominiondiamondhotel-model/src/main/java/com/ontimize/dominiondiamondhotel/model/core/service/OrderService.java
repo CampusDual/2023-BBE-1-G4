@@ -47,8 +47,8 @@ public class OrderService implements IOrderService {
         if (!bookingExist.isEmpty()) {
             Map<String, Object> productBooking = new HashMap<>();
             EntityResult productExist;
-            List<Integer> products = (List<Integer>) data.get("products");
-            for (Integer product : products) {
+            List<?> products = (List<?>) data.get("products");
+            for (Object product : products) {
                 productBooking.put(ProductDao.ATTR_ID, product);
                 productExist = productService.productQuery(productBooking, List.of(ProductDao.ATTR_PRODUCTTYPE_ID));
                 if (productExist.isEmpty()) {
@@ -56,9 +56,9 @@ public class OrderService implements IOrderService {
                     break;
                 } else {
                     if (Integer.parseInt(String.valueOf(((List<?>) productExist.get(ProductDao.ATTR_PRODUCTTYPE_ID)).get(0))) == 9) {
-                        productMenu.add(String.valueOf(product));
+                        productMenu.add(product.toString());
                     } else {
-                        productSimple.add(String.valueOf(product));
+                        productSimple.add(product.toString());
                     }
                 }
             }
@@ -104,32 +104,25 @@ public class OrderService implements IOrderService {
 
     @Override
     public EntityResult checkOrder(Map<String, Object> req) throws OntimizeJEERuntimeException {
-
         Map<String, Object> filter = (Map<String, Object>) req.get(FILTER);
         int orderId = (int) filter.get(OrderDao.ATTR_ID);
         Map<String, Object> orderMap = new HashMap<>();
         orderMap.put(OrderDao.ATTR_ID, orderId);
         EntityResult orderExists = this.daoHelper.query(this.orderDao, orderMap, List.of(OrderDao.ATTR_ID, OrderDao.ATTR_CHECKED));
         EntityResult er = new EntityResultMapImpl();
-
         if(!orderExists.isEmpty()){
-
             boolean checked = (boolean) ((List<?>) orderExists.get(OrderDao.ATTR_CHECKED)).get(0);
             if(!checked){
-
                 Map<String, Object> checkMap = new HashMap<>();
                 checkMap.put(OrderDao.ATTR_CHECKED, true);
                 this.daoHelper.update(this.orderDao, checkMap, filter);
                 er.setMessage("Checked = true");
                 er.setCode(EntityResult.OPERATION_SUCCESSFUL);
                 return er;
-
             }
-
         }
         er.setCode(EntityResult.OPERATION_WRONG);
         er.setMessage("This order does not exists or it's already checked");
         return er;
-
     }
 }
