@@ -47,8 +47,8 @@ public class OrderService implements IOrderService {
         if (!bookingExist.isEmpty()) {
             Map<String, Object> productBooking = new HashMap<>();
             EntityResult productExist;
-            List<String> products = (List<String>) data.get("products");
-            for (String product : products) {
+            List<?> products = (List<?>) data.get("products");
+            for (Object product : products) {
                 productBooking.put(ProductDao.ATTR_ID, product);
                 productExist = productService.productQuery(productBooking, List.of(ProductDao.ATTR_PRODUCTTYPE_ID));
                 if (productExist.isEmpty()) {
@@ -56,9 +56,9 @@ public class OrderService implements IOrderService {
                     break;
                 } else {
                     if (Integer.parseInt(String.valueOf(((List<?>) productExist.get(ProductDao.ATTR_PRODUCTTYPE_ID)).get(0))) == 9) {
-                        productMenu.add(product);
+                        productMenu.add(product.toString());
                     } else {
-                        productSimple.add(product);
+                        productSimple.add(product.toString());
                     }
                 }
             }
