@@ -49,7 +49,7 @@ public class CustomerService implements ICustomerService {
         customerKeyMap.put(CustomerDao.ATTR_IDNUMBER, idNumber);
         EntityResult idDocNumberAlreadyExist = this.daoHelper.query(this.customerDao, customerKeyMap, List.of(CustomerDao.ATTR_ID));
         EntityResult er = new EntityResultMapImpl();
-        if (typeIdExist.get(CustomerDao.ATTR_IDTYPE_ID) != null &&
+        if (typeIdExist.get(IdDocumentTypesDao.ATTR_IDTYPE) != null &&
                 ValidatorUtils.idValidator(idTypeid, idNumber) &&
                 ValidatorUtils.emailValidator(email) &&
                 idDocNumberAlreadyExist.get(IdDocumentTypesDao.ATTR_ID) == null &&

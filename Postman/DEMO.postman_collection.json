@@ -1,0 +1,798 @@
+{
+	"info": {
+		"_postman_id": "422aeb1e-f0fc-4256-a3a8-b0fc903cf344",
+		"name": "DEMO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27242673",
+		"_collection_link": "https://grey-moon-647371.postman.co/workspace/G4~577e3c7b-0da2-455b-b60c-56df3e900a0b/collection/27242673-422aeb1e-f0fc-4256-a3a8-b0fc903cf344?action=share&creator=27242673&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "BUSCAR HOTEL",
+			"item": [
+				{
+					"name": "GET ALL",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/hotels/hotel?columns=id,name",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"hotels",
+								"hotel"
+							],
+							"query": [
+								{
+									"key": "columns",
+									"value": "id,name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET HOTEL BY NAME",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:33333/hotels/hotelByName/Vila",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"hotels",
+								"hotelByName",
+								"Vila"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET HOTEL BY UBICATION",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:33333/hotels/hotelByZip/14",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"hotels",
+								"hotelByZip",
+								"14"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FILTERED GET",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"zip\": 1\r\n    },\r\n    \"columns\": [\"id\",\"rating\",\"name\",\"popularity\",\"zip_id\"],\r\n    \"orderBy\": [{\"columnName\": \"popularity\", \"ascendent\": false}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/hotels/hotel/advancedsearch",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"hotels",
+								"hotel",
+								"advancedsearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FILTERED GET 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"qualitymin\": 1,\r\n        \"qualitymax\": 7\r\n    },\r\n    \"columns\": [\"id\",\"rating\",\"name\",\"popularity\",\"zip_id\"],\r\n    \"orderBy\": [{\"columnName\": \"popularity\", \"ascendent\": true}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/hotels/hotel/advancedsearch",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"hotels",
+								"hotel",
+								"advancedsearch"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RESERVAR HABITACIÓN",
+			"item": [
+				{
+					"name": "ADD CUSTOMER",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"mail\": \"nanoalonso14@gmail.com\",\r\n        \"phone\": \"+34644257396\",\r\n        \"name\": \"Fernando\",\r\n        \"lastname2\": \"Alonso\",\r\n        \"lastname1\": \"Diaz\",\r\n        \"idnumber\": \"80033380G\",\r\n        \"idtype_id\": 2\r\n    },\r\n    \"sqltypes\": {\r\n        \"mail\": 12,\r\n        \"phone\": 1,\r\n        \"name\": 12,\r\n        \"lastname2\": 12,\r\n        \"lastname1\": 12,\r\n        \"dni\": 1\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/customers/customer",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"customers",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 7\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/customers/customer",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"customers",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADD BOOKING",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"entry_date\": \"2023-11-05\",\r\n        \"exit_date\": \"2023-11-15\",\r\n        \"hotel_id\": 1,\r\n        \"customer_id\": 25\r\n    },\r\n    \"sqltypes\": {\r\n        \"entry_date\": 12,\r\n        \"exit_date\": 12,\r\n        \"hotel_id\": 4,\r\n        \"customer_id\": 4\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/bookings/booking",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"bookings",
+								"booking"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ASIGNAR HABITACIÓN",
+			"item": [
+				{
+					"name": "CHECK IN",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 23,\r\n        \"idnumber\": \"80033380G\"\r\n    },\r\n    \"sqltypes\": {\r\n        \"check_in\": 91,\r\n        \"id\": 12\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/bookings/bookingCheck",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"bookings",
+								"bookingCheck"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GESTIONAR HABITACIÓN",
+			"item": [
+				{
+					"name": "ADD ROOM",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"number\":100,\r\n        \"hotel_id\":5,\r\n        \"state_id\":1\r\n    },\r\n    \"sqltypes\": {\r\n        \"number\": 12,\r\n        \"hotel_id\":1,\r\n        \"state_id\":1\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/rooms/room",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"rooms",
+								"room"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ROOM",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 39\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/rooms/room",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"rooms",
+								"room"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE ROOM",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 37\r\n    },\r\n    \"data\": {\r\n        \"state_id\":4\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/rooms/room",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"rooms",
+								"room"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ROOM BY HOTEL ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"hotel_id\": 1\r\n    },\r\n    \"columns\": [\r\n        \"id\",\r\n        \"number\",\r\n        \"hotel_id\",\r\n        \"state_id\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/rooms/getRoomFromHotelId",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"rooms",
+								"getRoomFromHotelId"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CLEANING MANAGEMENT",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 37\r\n    },\r\n    \"sqltypes\": {\r\n        \"id\": 4\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/rooms/cleaningManagement",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"rooms",
+								"cleaningManagement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EXPENSES",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 23\r\n    },\r\n    \"data\": {\r\n        \"expenses\" : 300.00\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/bookings/expenses",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"bookings",
+								"expenses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ROOM HIST",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 1\r\n    },\r\n    \"columns\": [\r\n        \"id\",\r\n        \"room_id\",\r\n        \"change_date\",\r\n        \"state_id\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/histroom/histroom/search",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"histroom",
+								"histroom",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ROOM  HIST BY HOTEL ID",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"hotel_id\": 1\r\n    },\r\n    \"columns\": [\r\n        \"room_id\",\r\n        \"change_date\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/histroom/histRoomByHotelId/search",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"histroom",
+								"histRoomByHotelId",
+								"search"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SERVICIOS DEL HOTEL",
+			"item": [
+				{
+					"name": "FORECAST",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 23\r\n    },\r\n    \"columns\": [\r\n        \"hotel_id\",\r\n        \"id\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/bookings/forecast",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"bookings",
+								"forecast"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTS",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 23\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/bookings/events",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"bookings",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET MENU",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:33333/products/getMenu",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"products",
+								"getMenu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET VARIETY MENUS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:33333/products/getVarietyMenu",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"products",
+								"getVarietyMenu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ORDER FOOD",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 23\r\n    },\r\n    \"data\": {\r\n        \"products\": [\r\n            50, //VEGAN MENU\r\n            51, //SEAFOOD MENU\r\n            52 //KIDS MENU\r\n        ]\r\n    },\r\n    \"products_list\": [\r\n        [\r\n            1,\r\n            2,\r\n            3\r\n        ],\r\n        [\r\n            1,\r\n            2,\r\n            3\r\n        ],\r\n        [\r\n            1,\r\n            2\r\n        ]\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/orders/orderFood",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"orders",
+								"orderFood"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CHECK ORDER",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 23\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/orders/checkOrder",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"orders",
+								"checkOrder"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OCCUPATION REPORT",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"hotel_id\": 1,\r\n        \"year\": 2023\r\n    }\r\n}\r\n//{\r\n//    \"filter\": {\r\n//        \"hotel_id\": 1,\r\n//        \"year\": \"2023\",\r\n//        \"month\": \"01\",\r\n//    }\r\n//}\r\n//{\r\n//    \"filter\": {\r\n//        \"hotel_id\": 1,\r\n//        \"initial_date: \"12-03-2022\",\r\n//        \"end_date\": \"01-01-2023\"\r\n//    }\r\n//}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/hotels/generateOccupationalReport",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"hotels",
+								"generateOccupationalReport"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CHECK-OUT",
+			"item": [
+				{
+					"name": "PAY EXPENSES",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 23,\r\n        \"idnumber\" : \"80033380G\"\r\n    },\r\n    \"data\": {\r\n        \"paying\": 300.00\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/bookings/payExpenses",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"bookings",
+								"payExpenses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CHECK OUT",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 23\r\n    },\r\n    \"sqltypes\": {\r\n        \"check_out\": 91,\r\n        \"id\": 12\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/bookings/bookingCheckOut",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"bookings",
+								"bookingCheckOut"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CALIFICATE",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filter\": {\r\n        \"id\": 23,\r\n        \"idnumber\": \"80033380G\"\r\n    },\r\n    \"data\": {\r\n        \"cleaning\": 7,\r\n        \"facilities\": 5,\r\n        \"pricequality\": 3,\r\n        \"comm\":\"Price could be better\"\r\n    },\r\n    \"sqltypes\": {\r\n        \"check_out\": 91,\r\n        \"id\": 12\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:33333/bookings/calification",
+							"host": [
+								"localhost"
+							],
+							"port": "33333",
+							"path": [
+								"bookings",
+								"calification"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
