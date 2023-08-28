@@ -13,5 +13,5 @@ import org.springframework.stereotype.Repository;
 )
 public class IdDocumentTypesDao extends OntimizeJdbcDaoSupport {
     public static final String ATTR_ID = "id";
-    public static final String ATTR_IDTYPE = "idtype";
+    public static final String ATTR_IDTYPE = "idtype_id";
 }
