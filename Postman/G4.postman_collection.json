@@ -28,11 +28,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/hotels/add",
+									"raw": "localhost:30067/hotels/add",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"add"
@@ -47,11 +47,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:33333/hotels/getAll",
+									"raw": "localhost:30067/hotels/getAll",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"getAll"
@@ -75,11 +75,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/hotels/delete",
+									"raw": "localhost:30067/hotels/delete",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"delete"
@@ -103,11 +103,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/hotels/update",
+									"raw": "localhost:30067/hotels/update",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"update"
@@ -122,11 +122,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:33333/hotels/managerGetHotel/1",
+									"raw": "localhost:30067/hotels/managerGetHotel/1",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"managerGetHotel",
@@ -142,11 +142,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:33333/hotels/getByName/best",
+									"raw": "localhost:30067/hotels/getByName/best",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"getByName",
@@ -176,11 +176,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/customers/add",
+									"raw": "localhost:30067/customers/add",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"customers",
 										"add"
@@ -204,11 +204,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/customers/delete",
+									"raw": "localhost:30067/customers/delete",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"customers",
 										"delete"
@@ -232,11 +232,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/customers/update",
+									"raw": "localhost:30067/customers/update",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"customers",
 										"update"
@@ -265,11 +265,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/rooms/add",
+									"raw": "localhost:30067/rooms/add",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"add"
@@ -284,11 +284,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:33333/rooms/getAll",
+									"raw": "localhost:30067/rooms/getAll",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"getAll"
@@ -312,11 +312,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/rooms/update",
+									"raw": "localhost:30067/rooms/update",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"update"
@@ -340,11 +340,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/rooms/updateState",
+									"raw": "localhost:30067/rooms/updateState",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"updateState"
@@ -359,11 +359,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:33333/rooms/manageGetRoom/1",
+									"raw": "localhost:30067/rooms/manageGetRoom/1",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"manageGetRoom",
@@ -379,11 +379,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:33333/rooms/customerGetRoom/1",
+									"raw": "localhost:30067/rooms/customerGetRoom/1",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"customerGetRoom",
@@ -424,11 +424,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/hotels/hotel?columns=id,name",
+									"raw": "localhost:30067/hotels/hotel?columns=id,name",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"hotel"
@@ -458,11 +458,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/hotels/hotel",
+									"raw": "localhost:30067/hotels/hotel",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"hotel"
@@ -484,11 +484,11 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "localhost:33333/hotels/hotelByName/Best",
+									"raw": "localhost:30067/hotels/hotelByName/Best",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"hotelByName",
@@ -511,11 +511,11 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "localhost:33333/hotels/hotelById/10",
+									"raw": "localhost:30067/hotels/hotelById/10",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"hotelById",
@@ -531,11 +531,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:33333/hotels/hotelByZip/2",
+									"raw": "localhost:30067/hotels/hotelByZip/2",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"hotelByZip",
@@ -560,11 +560,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/hotels/hotel",
+									"raw": "localhost:30067/hotels/hotel",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"hotel"
@@ -588,11 +588,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/hotels/hotel",
+									"raw": "localhost:30067/hotels/hotel",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"hotel"
@@ -616,11 +616,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/hotels/hotel/advancedsearch",
+									"raw": "localhost:30067/hotels/hotel/advancedsearch",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"hotel",
@@ -645,11 +645,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/hotels/generateOccupationalReport",
+									"raw": "localhost:30067/hotels/generateOccupationalReport",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"hotels",
 										"generateOccupationalReport"
@@ -678,11 +678,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/rooms/room",
+									"raw": "localhost:30067/rooms/room",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"room"
@@ -712,11 +712,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/rooms/room?columns=id,number,hotel_id,state_id",
+									"raw": "localhost:30067/rooms/room?columns=id,number,hotel_id,state_id",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"room"
@@ -746,11 +746,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/rooms/room",
+									"raw": "localhost:30067/rooms/room",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"room"
@@ -774,11 +774,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/rooms/room",
+									"raw": "localhost:30067/rooms/room",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"room"
@@ -808,11 +808,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/rooms/managerGetRoom",
+									"raw": "localhost:30067/rooms/managerGetRoom",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"managerGetRoom"
@@ -842,11 +842,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/rooms/getRoomFromHotelId",
+									"raw": "localhost:30067/rooms/getRoomFromHotelId",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"getRoomFromHotelId"
@@ -876,11 +876,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/rooms/assignRoom",
+									"raw": "localhost:30067/rooms/assignRoom",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"assignRoom"
@@ -904,11 +904,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/rooms/cleaningManagement",
+									"raw": "localhost:30067/rooms/cleaningManagement",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"rooms",
 										"cleaningManagement"
@@ -943,11 +943,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/customers/customer?columns=name,lastname1,lastname2,phone,idnumber,mail,idtype_id",
+									"raw": "localhost:30067/customers/customer?columns=name,lastname1,lastname2,phone,idnumber,mail,idtype_id",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"customers",
 										"customer"
@@ -977,11 +977,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/customers/customer",
+									"raw": "localhost:30067/customers/customer",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"customers",
 										"customer"
@@ -1005,11 +1005,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/customers/customer",
+									"raw": "localhost:30067/customers/customer",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"customers",
 										"customer"
@@ -1033,11 +1033,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/customers/customer",
+									"raw": "localhost:30067/customers/customer",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"customers",
 										"customer"
@@ -1061,11 +1061,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/customers/customer/search",
+									"raw": "localhost:30067/customers/customer/search",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"customers",
 										"customer",
@@ -1095,11 +1095,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/bookings/booking",
+									"raw": "localhost:30067/bookings/booking",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"bookings",
 										"booking"
@@ -1123,11 +1123,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/bookings/bookingCheck",
+									"raw": "localhost:30067/bookings/bookingCheck",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"bookings",
 										"bookingCheck"
@@ -1151,11 +1151,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/bookings/bookingCheckOut",
+									"raw": "localhost:30067/bookings/bookingCheckOut",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"bookings",
 										"bookingCheckOut"
@@ -1179,11 +1179,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/bookings/calification",
+									"raw": "localhost:30067/bookings/calification",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"bookings",
 										"calification"
@@ -1210,11 +1210,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/bookings/forecast",
+									"raw": "localhost:30067/bookings/forecast",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"bookings",
 										"forecast"
@@ -1241,11 +1241,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/bookings/events",
+									"raw": "localhost:30067/bookings/events",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"bookings",
 										"events"
@@ -1325,11 +1325,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/bookings/expenses",
+									"raw": "localhost:30067/bookings/expenses",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"bookings",
 										"expenses"
@@ -1353,11 +1353,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/bookings/payExpenses",
+									"raw": "localhost:30067/bookings/payExpenses",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"bookings",
 										"payExpenses"
@@ -1386,11 +1386,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/histroom/histroom/search",
+									"raw": "localhost:30067/histroom/histroom/search",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"histroom",
 										"histroom",
@@ -1415,11 +1415,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/histroom/histRoomByHotelId/search",
+									"raw": "localhost:30067/histroom/histRoomByHotelId/search",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"histroom",
 										"histRoomByHotelId",
@@ -1449,11 +1449,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/products/addProduct",
+									"raw": "localhost:30067/products/addProduct",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"products",
 										"addProduct"
@@ -1468,11 +1468,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:33333/products/getMenu",
+									"raw": "localhost:30067/products/getMenu",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"products",
 										"getMenu"
@@ -1487,11 +1487,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:33333/products/getVarietyMenu",
+									"raw": "localhost:30067/products/getVarietyMenu",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"products",
 										"getVarietyMenu"
@@ -1515,11 +1515,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/products/product/advancedsearch",
+									"raw": "localhost:30067/products/product/advancedsearch",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"products",
 										"product",
@@ -1549,11 +1549,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/orders/orderFood",
+									"raw": "localhost:30067/orders/orderFood",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"orders",
 										"orderFood"
@@ -1577,11 +1577,11 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:33333/orders/checkOrder",
+									"raw": "localhost:30067/orders/checkOrder",
 									"host": [
 										"localhost"
 									],
-									"port": "33333",
+									"port": "30067",
 									"path": [
 										"orders",
 										"checkOrder"
